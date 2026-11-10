@@ -12,7 +12,7 @@ export function safeSet(key: string, value: string): void {
   try {
     localStorage.setItem(key, value);
   } catch {
-    /* storage unavailable — ignore */
+    /* storage unavailable, ignore */
   }
 }
 

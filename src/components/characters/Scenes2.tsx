@@ -28,6 +28,7 @@ function Bubble({
   const h = lines[1] ? 64 : 44;
   return (
     <g>
+      <rect x={x} y={y + 6} width={w} height={h} rx={14} fill={tone} opacity={0.4} />
       <rect
         x={x}
         y={y}
@@ -74,11 +75,30 @@ function make(spec: Spec) {
         aria-hidden="true"
         style={{ display: 'block', height: 'auto' }}
       >
+        <defs>
+          <filter id="s2-depth" x="-10%" y="-10%" width="120%" height="125%">
+            <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#3b0764" floodOpacity="0.28" />
+          </filter>
+          <radialGradient id="s2-node" cx="35%" cy="30%" r="80%">
+            <stop offset="0" stopColor="#f3e3ff" />
+            <stop offset="1" stopColor="#a96be0" />
+          </radialGradient>
+          <linearGradient id="s2-floor" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="var(--surface-2)" />
+            <stop offset="1" stopColor="var(--brand-tint)" />
+          </linearGradient>
+        </defs>
         <rect width="800" height="360" fill={spec.bg ?? 'var(--accent-tint)'} />
-        <rect y="300" width="800" height="60" fill="var(--surface-2)" />
-        {spec.deco}
-        <Avatarize who={spec.left} x={60} y={160} />
-        {spec.right && <Avatarize who={spec.right} x={590} y={160} />}
+        <rect y="300" width="800" height="60" fill="url(#s2-floor)" />
+        <g filter="url(#s2-depth)">
+          {spec.deco}
+          <ellipse cx={135} cy={318} rx={80} ry={12} fill="#4c1d95" opacity={0.22} />
+          {spec.right && (
+            <ellipse cx={665} cy={318} rx={80} ry={12} fill="#4c1d95" opacity={0.22} />
+          )}
+          <Avatarize who={spec.left} x={60} y={160} />
+          {spec.right && <Avatarize who={spec.right} x={590} y={160} />}
+        </g>
         <Bubble
           x={50}
           y={24}
@@ -103,7 +123,7 @@ function Avatarize({ who, x, y }: { who: CharacterId; x: number; y: number }) {
 }
 
 const treeDeco = (
-  <g stroke="var(--ink-soft)" strokeWidth={3} fill="var(--brand-tint)">
+  <g stroke="var(--ink-soft)" strokeWidth={3} fill="url(#s2-node)">
     <line x1={400} y1={150} x2={340} y2={230} />
     <line x1={400} y1={150} x2={460} y2={230} />
     <circle cx={400} cy={150} r={22} />
@@ -142,7 +162,7 @@ const specs: Record<string, Spec> = {
     alt: 'লেদু আর মিনু খাতায় লেদু মার্টের জিনিসগুলোর তালিকা বানাচ্ছে',
     left: 'minu',
     right: 'ledu',
-    leftSays: ['আগে বলো — তোমার ব্যবসায়', 'কী কী "জিনিস" আছে?'],
+    leftSays: ['আগে বলো, তোমার ব্যবসায়', 'কী কী "জিনিস" আছে?'],
     rightSays: ['কাস্টমার, পণ্য, অর্ডার,', 'রাইডার… অনেক!'],
     deco: tableDeco,
   },
@@ -151,12 +171,12 @@ const specs: Record<string, Spec> = {
     left: 'ledu',
     right: 'minu',
     leftSays: ['একটা অর্ডারে অনেক পণ্য,', 'একটা পণ্য অনেক অর্ডারে!'],
-    rightSays: ['এটাই M:N — সুতোর জট', 'খুলতে মাঝে আরেকটা টেবিল লাগে।'],
+    rightSays: ['এটাই M:N, সুতোর জট', 'খুলতে মাঝে আরেকটা টেবিল লাগে।'],
     bg: 'var(--brand-tint)',
     deco: treeDeco,
   },
   'employee-types': {
-    alt: 'রাইডার, ম্যানেজার ও সাপোর্ট এজেন্ট — একই কর্মী-পরিবারের তিন রূপ',
+    alt: 'রাইডার, ম্যানেজার ও সাপোর্ট এজেন্ট, একই কর্মী-পরিবারের তিন রূপ',
     left: 'ledu',
     right: 'kodom',
     leftSays: ['সবাই কর্মী, কিন্তু রাইডারের', 'বাইক নম্বর লাগে, ম্যানেজারের না…'],
@@ -209,7 +229,7 @@ const specs: Record<string, Spec> = {
     alt: 'লেদু তার চাওয়ার তালিকা লিখছে, কীভাবে পাবে সেটা নয়',
     left: 'ledu',
     right: 'kodom',
-    leftSays: ['আমি শুধু বলব কী চাই,', 'কীভাবে পাব — ডাটাবেস ভাবুক!'],
+    leftSays: ['আমি শুধু বলব কী চাই,', 'কীভাবে পাব, ডাটাবেস ভাবুক!'],
     rightSays: ['এটাই calculus —', 'চাওয়ার ভাষা।'],
     deco: tableDeco,
   },

@@ -85,7 +85,7 @@ export const attrKindsErd: ErDiagramDef = {
 
 /* ধাপ ১: শুধু এন্টিটি (অধ্যায় ৫) */
 export const leduStep5: ErDiagramDef = {
-  title: 'ধাপ ১ — লেদু মার্টের মূল এন্টিটি: Customer, Order, Product',
+  title: 'ধাপ ১, লেদু মার্টের মূল এন্টিটি: Customer, Order, Product',
   entities: [
     {
       id: 'c',
@@ -245,9 +245,9 @@ export const weakEntityErd: ErDiagramDef = {
   ],
 };
 
-/** ধাপ ২: অধ্যায় ৬ শেষে — সম্পর্কসহ মূল গঠন */
+/** ধাপ ২: অধ্যায় ৬ শেষে, সম্পর্কসহ মূল গঠন */
 export const leduStep6: ErDiagramDef = {
-  title: 'ধাপ ২ — Customer, Order, Product, Category, Supplier ও তাদের সম্পর্ক',
+  title: 'ধাপ ২, Customer, Order, Product, Category, Supplier ও তাদের সম্পর্ক',
   entities: [
     {
       id: 'c',

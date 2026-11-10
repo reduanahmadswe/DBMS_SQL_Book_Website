@@ -7,7 +7,7 @@ export interface GlossaryEntry {
   chapter: string;
 }
 
-/** শব্দকোষ — প্রতিটি অধ্যায় লেখার সাথে সাথে এখানে নতুন শব্দ যোগ হবে। */
+/** শব্দকোষ, প্রতিটি অধ্যায় লেখার সাথে সাথে এখানে নতুন শব্দ যোগ হবে। */
 export const glossary: GlossaryEntry[] = [
   {
     en: 'Data',
@@ -24,7 +24,7 @@ export const glossary: GlossaryEntry[] = [
   {
     en: 'File-Processing System',
     bn: 'ফাইল-প্রসেসিং সিস্টেম',
-    def: 'প্রতিটি অ্যাপ্লিকেশন নিজের মতো আলাদা ফাইলে ডাটা রাখে — এমন ব্যবস্থা।',
+    def: 'প্রতিটি অ্যাপ্লিকেশন নিজের মতো আলাদা ফাইলে ডাটা রাখে, এমন ব্যবস্থা।',
     chapter: 'khatar-jontrona',
   },
   {
@@ -156,7 +156,7 @@ export const glossary: GlossaryEntry[] = [
   {
     en: 'Three-Schema Architecture',
     bn: 'তিন-স্কিমা আর্কিটেকচার',
-    def: 'External, Conceptual ও Internal — তিন স্তরে ডাটাবেস বর্ণনা (ANSI/SPARC)।',
+    def: 'External, Conceptual ও Internal, তিন স্তরে ডাটাবেস বর্ণনা (ANSI/SPARC)।',
     chapter: 'database-er-tin-tola',
   },
   {
@@ -412,7 +412,7 @@ export const glossary: GlossaryEntry[] = [
   {
     en: 'Tuple Relational Calculus',
     bn: 'টাপল রিলেশনাল ক্যালকুলাস',
-    def: '{ t | P(t) } — tuple variable-ভিত্তিক declarative ভাষা।',
+    def: '{ t | P(t) }, tuple variable-ভিত্তিক declarative ভাষা।',
     chapter: 'relational-calculus',
   },
   {

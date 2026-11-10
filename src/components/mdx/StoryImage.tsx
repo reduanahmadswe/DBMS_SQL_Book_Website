@@ -1,8 +1,14 @@
+import type { ReactNode } from 'react';
 import { Figure, useChapter } from './Figure';
 import { scenes as scenes1 } from '../characters/Scenes';
 import { scenes2 } from '../characters/Scenes2';
+import { HeroScene } from '../characters/HeroScene';
 
-const scenes = { ...scenes1, ...scenes2 };
+const scenes: Record<string, { Component: () => ReactNode; alt: string }> = {
+  ...scenes1,
+  ...scenes2,
+  'tea-stall': { Component: HeroScene, alt: scenes1['tea-stall']!.alt },
+};
 import images from '@/generated/images.json';
 
 /**

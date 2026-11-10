@@ -2,17 +2,17 @@ import { ch09 as questions } from '@/content/quizzes/phase2b';
 
 ## গল্প: টেবিলকে ওরা "রিলেশন" বলে কেন?
 
-মিনু একদিন বলল, "লেদুভাই, আমাদের বইয়ে টেবিলকে বলে relation, সারিকে tuple, কলামকে attribute। এত নাম কেন?" লেদু বলল, "টেবিল তো টেবিলই!" মিনু হাসল, "পরীক্ষার খাতায় টেবিল লিখলে আর relation লিখলে — দুই জায়গায় দুই নম্বর।"
+মিনু একদিন বলল, "লেদুভাই, আমাদের বইয়ে টেবিলকে বলে relation, সারিকে tuple, কলামকে attribute। এত নাম কেন?" লেদু বলল, "টেবিল তো টেবিলই!" মিনু হাসল, "পরীক্ষার খাতায় টেবিল লিখলে আর relation লিখলে, দুই জায়গায় দুই নম্বর।"
 
 <StoryImage name="table-anatomy" n={1} caption="মিনু টেবিলের সারি, কলাম আর ঘর চিনিয়ে দিচ্ছে" alt="মিনু আঙুল দিয়ে একটি টেবিলের সারি, কলাম ও ঘর দেখাচ্ছে আর লেদু অবাক হয়ে তাকিয়ে" />
 
 ## সমস্যাটা আসলে কী
 
-রিলেশনাল মডেলের ভাষা গণিত থেকে এসেছে (Codd, সেট-তত্ত্বের ভিত্তিতে)। ভাষাটা না জানলে পরবর্তী অধ্যায় — key, constraint, algebra — বোঝা কঠিন। এই অধ্যায়ে পরিভাষা ও relation-এর বৈশিষ্ট্য একদম পরিষ্কার করব।
+রিলেশনাল মডেলের ভাষা গণিত থেকে এসেছে (Codd, সেট-তত্ত্বের ভিত্তিতে)। ভাষাটা না জানলে পরবর্তী অধ্যায়, key, constraint, algebra, বোঝা কঠিন। এই অধ্যায়ে পরিভাষা ও relation-এর বৈশিষ্ট্য একদম পরিষ্কার করব।
 
 ## কদম চাচার ক্লাস
 
-### পরিভাষা — দুই নামের তালিকা
+### পরিভাষা: দুই নামের তালিকা
 
 | আনুষ্ঠানিক (formal) | সাধারণ (informal) | উদাহরণ |
 |---|---|---|
@@ -28,37 +28,37 @@ import { ch09 as questions } from '@/content/quizzes/phase2b';
 একটি টেবিলের বিভিন্ন অংশ এক ঝলকে (একটি `riders` টেবিল):
 
 <Figure n={2} caption="একটি relation-এর অংশগুলো: header-এ attribute, প্রতিটি সারি একটি tuple, প্রতিটি ঘরে domain-এর একটি মান" alt="riders টেবিল যার কলামের নাম attribute, প্রতিটি সারি tuple, প্রতিটি ঘরের মান domain থেকে" wide>
-  <TableView name="riders (degree = ৫, cardinality = ৩ — দেখানো সারি)" columns={['rider_id', 'name', 'phone', 'bike_no', 'store_id']} rows={[[1, 'জামাল', '01811-200001', 'ঢাকা মেট্রো-হ ১২-৩৪৫৬', 1], [2, 'কামাল', '01811-200002', 'ঢাকা মেট্রো-হ ১২-৭৮৯০', 1], [3, 'বাবু', '01811-200003', 'ঢাকা মেট্রো-ল ১১-১১১১', 2]]} pk={[0]} hiRows={[1]} hiCols={[3]} />
+  <TableView name="riders (degree = ৫, cardinality = ৩, দেখানো সারি)" columns={['rider_id', 'name', 'phone', 'bike_no', 'store_id']} rows={[[1, 'জামাল', '01811-200001', 'ঢাকা মেট্রো-হ ১২-৩৪৫৬', 1], [2, 'কামাল', '01811-200002', 'ঢাকা মেট্রো-হ ১২-৭৮৯০', 1], [3, 'বাবু', '01811-200003', 'ঢাকা মেট্রো-ল ১১-১১১১', 2]]} pk={[0]} hiRows={[1]} hiCols={[3]} />
 </Figure>
 
-(হাইলাইট: দ্বিতীয় সারি = একটি **tuple**; `bike_no` কলাম = একটি **attribute**।)
+(হাইলাইট: দ্বিতীয় সারি = একটি tuple; `bike_no` কলাম = একটি attribute।)
 
 ### Relation Schema ও Instance
 
-গাণিতিকভাবে: relation schema `R(A₁, A₂, …, Aₙ)`, প্রতিটি `Aᵢ`-র domain `dom(Aᵢ)`। Relation `r(R)` হলো `dom(A₁) × … × dom(Aₙ)`-এর একটি **উপসেট** — অর্থাৎ বৈধ মান-সমন্বয়ের কিছু অংশ, যেগুলো ডাটাবেসে আছে।
+গাণিতিকভাবে: relation schema `R(A₁, A₂, …, Aₙ)`, প্রতিটি `Aᵢ`-র domain `dom(Aᵢ)`। Relation `r(R)` হলো `dom(A₁) × … × dom(Aₙ)`-এর একটি উপসেট, অর্থাৎ বৈধ মান-সমন্বয়ের কিছু অংশ, যেগুলো ডাটাবেসে আছে।
 
 ### Relation-এর বৈশিষ্ট্য
 
-১. **Tuple-এর ক্রম গুরুত্বহীন** — সেটের মতো; সারি যেকোনো ক্রমে থাকলেও relation একই।
-২. **Attribute-এর ক্রম** গুরুত্বহীন (নাম-ভিত্তিক সংজ্ঞায়)।
-৩. **ডুপ্লিকেট tuple নেই** — relation একটি সেট।
-৪. **প্রতিটি attribute-নাম অনন্য** relation-এর ভেতরে।
-৫. **প্রতিটি ঘরের মান atomic** — একাধিক মান নয় (এটাই 1NF)। Multi-valued ও composite মান নিষিদ্ধ।
-৬. **NULL** অনুমোদিত (যদি constraint বাধা না দেয়)।
+১. Tuple-এর ক্রম গুরুত্বহীন, সেটের মতো; সারি যেকোনো ক্রমে থাকলেও relation একই।
+২. Attribute-এর ক্রম গুরুত্বহীন (নাম-ভিত্তিক সংজ্ঞায়)।
+৩. ডুপ্লিকেট tuple নেই, relation একটি সেট।
+৪. প্রতিটি attribute-নাম অনন্য relation-এর ভেতরে।
+৫. প্রতিটি ঘরের মান atomic, একাধিক মান নয় (এটাই 1NF)। Multi-valued ও composite মান নিষিদ্ধ।
+৬. NULL অনুমোদিত (যদি constraint বাধা না দেয়)।
 
 <Callout type="warning" title="Relation আর SQL টেবিল পুরোপুরি এক নয়">
-গাণিতিক relation সেট, তাই ডুপ্লিকেট নেই। কিন্তু SQL টেবিল (primary key না থাকলে) ডুপ্লিকেট সারি রাখতে পারে — তাকে **bag (multiset)** বলে। এজন্যই SQL-এ `DISTINCT` আছে। পরীক্ষায় "relation-এ ডুপ্লিকেট থাকে না" লিখবে; বাস্তবে SQL-এ PK দিয়ে তা নিশ্চিত করতে হয়।
+গাণিতিক relation সেট, তাই ডুপ্লিকেট নেই। কিন্তু SQL টেবিল (primary key না থাকলে) ডুপ্লিকেট সারি রাখতে পারে, তাকে bag (multiset) বলে। এজন্যই SQL-এ `DISTINCT` আছে। পরীক্ষায় "relation-এ ডুপ্লিকেট থাকে না" লিখবে; বাস্তবে SQL-এ PK দিয়ে তা নিশ্চিত করতে হয়।
 </Callout>
 
 ### ডাটাবেস স্কিমা
 
-একাধিক relation schema + integrity constraint মিলে **relational database schema**। লেদু মার্ট: ১১টি relation schema।
+একাধিক relation schema + integrity constraint মিলে relational database schema। লেদু মার্ট: ১১টি relation schema।
 
 ## টেকনিক্যাল গভীরে
 
 ### Domain ও Atomicity
 
-Domain হতে পারে built-in type (INTEGER, TEXT, DATE) বা সংজ্ঞায়িত সেট। একটি মান **atomic** — রিলেশনাল মডেলের কাছে অবিভাজ্য। `"০১৭১…, ০১৮১…"` একটি ঘরে দুই নম্বর রাখলে atomicity ভাঙে।
+Domain হতে পারে built-in type (INTEGER, TEXT, DATE) বা সংজ্ঞায়িত সেট। একটি মান atomic, রিলেশনাল মডেলের কাছে অবিভাজ্য। `"০১৭১…, ০১৮১…"` একটি ঘরে দুই নম্বর রাখলে atomicity ভাঙে।
 
 ### NULL-এর বিশেষ অর্থ
 
@@ -70,17 +70,17 @@ SQL-এ কোনো কলামের নাম/সংখ্যাকে `PRAG
 
 ## হাতে-কলমে
 
-`customers`-এর **degree** (কলাম সংখ্যা) — `PRAGMA table_info` প্রতিটি কলামের জন্য একটি সারি দেয়:
+`customers`-এর degree (কলাম সংখ্যা), `PRAGMA table_info` প্রতিটি কলামের জন্য একটি সারি দেয়:
 
 <SqlRunner initialQuery={`PRAGMA table_info(customers);`} expectRows={7} minRows={1} />
 
-সাতটি সারি = degree ৭। এবার **cardinality** আর কলামের **domain**-এর বাস্তব মান:
+সাতটি সারি = degree ৭। এবার cardinality আর কলামের domain-এর বাস্তব মান:
 
 <SqlRunner initialQuery={`SELECT COUNT(*) AS cardinality FROM customers;`} expectRows={1} minRows={1} />
 
 <SqlRunner initialQuery={`SELECT DISTINCT city FROM customers ORDER BY city;`} expectRows={4} minRows={1} />
 
-`city` কলামে বর্তমানে ৪টি মান আছে — কিন্তু domain এর চেয়ে বড় (যেকোনো শহরের নাম)। Instance সবসময় domain-এর উপসেট।
+`city` কলামে বর্তমানে ৪টি মান আছে, কিন্তু domain এর চেয়ে বড় (যেকোনো শহরের নাম)। Instance সবসময় domain-এর উপসেট।
 
 ## ফটকার ভুল
 
@@ -92,15 +92,15 @@ SQL-এ কোনো কলামের নাম/সংখ্যাকে `PRAG
 ফটকা, relation-এ সারির ক্রম বলে কিছু নেই। ডাটাবেস ইচ্ছেমতো সারি বদলে রাখতে পারে। কাস্টমার কবে এসেছে জানতে চাইলে `joined_on` কলাম রাখো, আর `ORDER BY` দিয়ে সাজাও।
 </Dialogue>
 
-- **"Relation মানে দুই টেবিলের সম্পর্ক"** — না; relation = একটি টেবিল।
-- **Degree ও cardinality উল্টে ফেলা** — degree = কলাম, cardinality = সারি।
-- **সারির ক্রমের উপর নির্ভর করা** — `ORDER BY` ছাড়া ক্রম গ্যারান্টিহীন।
+- **"Relation মানে দুই টেবিলের সম্পর্ক"**: না; relation = একটি টেবিল।
+- **Degree ও cardinality উল্টে ফেলা**: degree = কলাম, cardinality = সারি।
+- **সারির ক্রমের উপর নির্ভর করা**: `ORDER BY` ছাড়া ক্রম গ্যারান্টিহীন।
 - **একটি ঘরে একাধিক মান রাখা**।
 
 ## পরীক্ষার টিপস
 
 <Callout type="exam">
-**লিখিত:** পরিভাষার (relation/tuple/attribute/domain/degree/cardinality) সংজ্ঞা + relation-এর বৈশিষ্ট্য। **গণনা:** R(A,B,C) ও ৫টি সারি → degree ৩, cardinality ৫। **ট্র্যাপ:** (১) Cartesian product-এ degree যোগ, cardinality গুণ। (২) "Relation schema vs instance"। (৩) relation = সেট, তাই ডুপ্লিকেট নেই (SQL bag ছাড়া)।
+লিখিত: পরিভাষার (relation/tuple/attribute/domain/degree/cardinality) সংজ্ঞা + relation-এর বৈশিষ্ট্য। গণনা: R(A,B,C) ও ৫টি সারি → degree ৩, cardinality ৫। ট্র্যাপ: (১) Cartesian product-এ degree যোগ, cardinality গুণ। (২) "Relation schema vs instance"। (৩) relation = সেট, তাই ডুপ্লিকেট নেই (SQL bag ছাড়া)।
 </Callout>
 
 <Summary>
@@ -146,6 +146,6 @@ SELECT COUNT(DISTINCT area) FROM customers;
 কেন গাণিতিকভাবে relation-এ দুটি একরকম tuple থাকতে পারে না, অথচ SQL টেবিলে পারে?
 
 <Answer>
-Relation একটি সেট; সেটে একই উপাদান একবারই থাকে। SQL টেবিল bag/multiset — PK/UNIQUE constraint না থাকলে ডুপ্লিকেট সারি ঢোকানো যায়; তাই SQL-এ ডুপ্লিকেট এড়াতে primary key বা `DISTINCT` ব্যবহার হয়।
+Relation একটি সেট; সেটে একই উপাদান একবারই থাকে। SQL টেবিল bag/multiset, PK/UNIQUE constraint না থাকলে ডুপ্লিকেট সারি ঢোকানো যায়; তাই SQL-এ ডুপ্লিকেট এড়াতে primary key বা `DISTINCT` ব্যবহার হয়।
 </Answer>
 </Exercise>

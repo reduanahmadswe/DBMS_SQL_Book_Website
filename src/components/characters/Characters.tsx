@@ -1,7 +1,7 @@
 import { useId, type ReactNode } from 'react';
 
 /**
- * লেদু, কদম চাচা, ফটকা ও মিনু — মৌলিক flat-style SVG অবতার (বুক-সমান)।
+ * লেদু, কদম চাচা, ফটকা ও মিনু, মৌলিক flat-style SVG অবতার (বুক-সমান)।
  * সব রঙ CSS variable বা নির্দিষ্ট স্কিন-টোন; আলো/অন্ধকার দুই থিমেই পড়া যায়।
  */
 export type CharacterId = 'ledu' | 'kodom' | 'fotka' | 'minu';
@@ -21,11 +21,38 @@ function Frame({ children, bg = 'var(--brand-tint)' }: { children: ReactNode; bg
   const id = `av${useId().replace(/[^a-zA-Z0-9]/g, '')}`; // প্রতিটি অবতারের নিজস্ব clipPath id
   return (
     <>
+      <defs>
+        <radialGradient id={`${id}s`} cx="50%" cy="35%" r="70%">
+          <stop offset="0.6" stopColor="#000" stopOpacity="0" />
+          <stop offset="1" stopColor="#2a0b4a" stopOpacity="0.28" />
+        </radialGradient>
+      </defs>
       <circle cx="50" cy="50" r="48" fill={bg} />
       <clipPath id={id}>
         <circle cx="50" cy="50" r="48" />
       </clipPath>
-      <g clipPath={`url(#${id})`}>{children}</g>
+      <g clipPath={`url(#${id})`}>
+        {children}
+        <ellipse
+          cx="34"
+          cy="26"
+          rx="20"
+          ry="11"
+          fill="#fff"
+          opacity="0.16"
+          transform="rotate(-28 34 26)"
+        />
+        <circle cx="50" cy="50" r="48" fill={`url(#${id}s)`} />
+      </g>
+      <circle
+        cx="50"
+        cy="50"
+        r="47"
+        fill="none"
+        stroke="#fff"
+        strokeOpacity="0.55"
+        strokeWidth="2"
+      />
     </>
   );
 }
@@ -254,7 +281,7 @@ export function Avatar({
   title?: boolean;
 }) {
   const A = avatars[who];
-  const label = `${characterInfo[who].name} — ${characterInfo[who].role}`;
+  const label = `${characterInfo[who].name}, ${characterInfo[who].role}`;
   return (
     <svg
       viewBox="0 0 100 100"
@@ -263,7 +290,7 @@ export function Avatar({
       role="img"
       aria-label={title === false ? undefined : label}
       aria-hidden={title === false ? true : undefined}
-      className="shrink-0"
+      className="shrink-0 drop-shadow-[0_5px_4px_rgb(76_29_149/0.28)]"
     >
       <A />
     </svg>

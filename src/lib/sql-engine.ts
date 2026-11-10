@@ -4,7 +4,7 @@ import { createDb } from './sql-core';
 let sqlPromise: Promise<SqlJsStatic> | null = null;
 let seedPromise: Promise<string> | null = null;
 
-/** sql.js (WASM) শুধু প্রথমবার দরকার হলেই লোড হয় — অন্য পেজে এটা বান্ডলে আসে না। */
+/** sql.js (WASM) শুধু প্রথমবার দরকার হলেই লোড হয়, অন্য পেজে এটা বান্ডলে আসে না। */
 export function loadSqlJs(): Promise<SqlJsStatic> {
   sqlPromise ??= (async () => {
     const [{ default: initSqlJs }, { default: wasmUrl }] = await Promise.all([

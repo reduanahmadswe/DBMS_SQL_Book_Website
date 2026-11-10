@@ -5,20 +5,26 @@ export const siteConfig = {
   tagline:
     'খাতায় বাকির হিসাব লিখতে লিখতে লেদুর মাথা খারাপ! কোড লিখতে পারো, কিন্তু ডাটা সামলাতে না জানলে অ্যাপ বাঁচাবে কীভাবে?',
   description:
-    'গল্পে গল্পে DBMS আর SQL — একদম শূন্য থেকে অ্যাডভান্সড পর্যন্ত, পুরোটা বাংলায়। বিশ্ববিদ্যালয় ও ব্যাংক আইটি পরীক্ষার প্রস্তুতির জন্যও।',
+    'গল্পে গল্পে DBMS আর SQL, একদম শূন্য থেকে অ্যাডভান্সড পর্যন্ত, পুরোটা বাংলায়। বিশ্ববিদ্যালয় ও ব্যাংক আইটি পরীক্ষার প্রস্তুতির জন্যও।',
   /** প্রোডাকশন URL (canonical, sitemap, OG এর জন্য)। শেষে স্ল্যাশ নেই। */
-  baseUrl: 'https://ledu-database-odhiyan.example.com',
+  baseUrl: 'https://ledur-database.bornosoft.bd',
   author: {
     name: 'Reduan Ahmad',
     nameEn: 'Reduan Ahmad',
     org: 'BornoSoft',
+    orgUrl: 'https://bornosoft.bd',
   },
   links: {
     /** হোমপেজের "ফলো করুন" বাটন */
-    follow: 'https://www.facebook.com/your-page-here',
-    github: 'https://github.com/your-username',
-    linkedin: 'https://www.linkedin.com/in/your-username',
-    facebook: 'https://www.facebook.com/your-page-here',
+    follow: 'https://www.facebook.com/reduanahmadswe',
+    github: 'https://github.com/reduanahmadswe',
+    linkedin: 'https://www.linkedin.com/in/reduanahmadswe',
+    facebook: 'https://www.facebook.com/reduanahmadswe',
+  },
+  /** ইমেইল সাবস্ক্রাইব: Google Form-এর ID ও ইমেইল প্রশ্নের entry নম্বর */
+  subscribe: {
+    formId: '1FAIpQLSfIc-ASjjHPAvPyzEQ4KkEYmzNidBd0imoEGyhKpMcZLYGTpQ',
+    emailEntry: 'entry.679152294',
   },
   brand: { purple: '#6E14A9', teal: '#11A39A' },
 } as const;

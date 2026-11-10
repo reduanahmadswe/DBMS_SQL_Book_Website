@@ -40,6 +40,7 @@
     "globals": "^17.14.0",
     "jsdom": "^27.0.1",
     "prettier": "^3.9.10",
+    "puppeteer-core": "^25.17.0",
     "remark-gfm": "^4.0.1",
     "shiki": "^4.6.0",
     "tailwindcss": "^4.3.5",

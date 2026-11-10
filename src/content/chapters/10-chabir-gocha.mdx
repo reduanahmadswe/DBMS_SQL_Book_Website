@@ -2,33 +2,33 @@ import { ch10 as questions } from '@/content/quizzes/phase2c';
 
 ## গল্প: দুই রহিম, এক গোলমাল
 
-লেদু মার্টের কাস্টমার তালিকায় দুজন "রহিম উদ্দিন" — একজন সাভারের, একজন মিরপুরের। অ্যাপে "রহিম উদ্দিনের বাকি দেখাও" বলতেই কোন রহিমের হিসাব আসবে? লেদু হিমশিম। কদম চাচা বললেন, "লেদু বাপজান, নাম দিয়ে মানুষ চেনা যায় না। এমন একটা জিনিস দরকার যা কখনো রিপিট করে না — একটা **চাবি**।"
+লেদু মার্টের কাস্টমার তালিকায় দুজন "রহিম উদ্দিন", একজন সাভারের, একজন মিরপুরের। অ্যাপে "রহিম উদ্দিনের বাকি দেখাও" বলতেই কোন রহিমের হিসাব আসবে? লেদু হিমশিম। কদম চাচা বললেন, "লেদু বাপজান, নাম দিয়ে মানুষ চেনা যায় না। এমন একটা জিনিস দরকার যা কখনো রিপিট করে না, একটা চাবি।"
 
 <StoryImage name="key-bunch" n={1} caption="চাবির গোছা: কোন চাবিটা কোন তালার?" alt="লেদুর হাতে অনেক চাবি এবং কদম চাচা বলছেন কোনটা ন্যূনতম আর কখনো রিপিট করে না" />
 
 ## সমস্যাটা আসলে কী
 
-রিলেশনাল মডেলে ডাটা সারির সমষ্টি। একটি সারিকে নির্ভুলভাবে খুঁজে পেতে ও অন্য টেবিল থেকে তাকে refer করতে **key** দরকার। Key-এর নানা প্রকার — প্রতিটির ভূমিকা আলাদা।
+রিলেশনাল মডেলে ডাটা সারির সমষ্টি। একটি সারিকে নির্ভুলভাবে খুঁজে পেতে ও অন্য টেবিল থেকে তাকে refer করতে key দরকার। Key-এর নানা প্রকার, প্রতিটির ভূমিকা আলাদা।
 
 ## কদম চাচার ক্লাস
 
 ### Super Key
 
-<KeyTerm en="Super Key" bn="সুপার কি">এক বা একাধিক attribute-এর সেট, যার মান দিয়ে relation-এর প্রতিটি tuple অনন্যভাবে চেনা যায়</KeyTerm> — বাড়তি attribute থাকলেও সমস্যা নেই।
+<KeyTerm en="Super Key" bn="সুপার কি">এক বা একাধিক attribute-এর সেট, যার মান দিয়ে relation-এর প্রতিটি tuple অনন্যভাবে চেনা যায়</KeyTerm>, বাড়তি attribute থাকলেও সমস্যা নেই।
 
-`customers(customer_id, name, phone, city, …)`: ধরি `customer_id` ও `phone` দুটোই unique। তাহলে super key: `{customer_id}`, `{phone}`, `{customer_id, name}`, `{phone, city}`, `{customer_id, phone, city}`…। শুধু `{name}` বা `{city}` নয় — দুই রহিম।
+`customers(customer_id, name, phone, city, …)`: ধরি `customer_id` ও `phone` দুটোই unique। তাহলে super key: `{customer_id}`, `{phone}`, `{customer_id, name}`, `{phone, city}`, `{customer_id, phone, city}`…। শুধু `{name}` বা `{city}` নয়, দুই রহিম।
 
 ### Candidate Key
 
-<KeyTerm en="Candidate Key" bn="ক্যান্ডিডেট কি">ন্যূনতম (minimal) super key — এর কোনো প্রকৃত উপসেট আর super key নয়</KeyTerm>। `{customer_id}` ও `{phone}` দুটোই candidate key; `{customer_id, name}` নয়, কারণ `name` বাদ দিলেও থাকে।
+<KeyTerm en="Candidate Key" bn="ক্যান্ডিডেট কি">ন্যূনতম (minimal) super key, এর কোনো প্রকৃত উপসেট আর super key নয়</KeyTerm>। `{customer_id}` ও `{phone}` দুটোই candidate key; `{customer_id, name}` নয়, কারণ `name` বাদ দিলেও থাকে।
 
 ### Primary Key
 
-Candidate key-গুলোর মধ্য থেকে ডিজাইনারের **বাছাই করা একটি**। নিয়ম: NULL নয়, অনন্য, সাধারণত ছোট ও অপরিবর্তনীয়। প্রতি টেবিলে একটিই।
+Candidate key-গুলোর মধ্য থেকে ডিজাইনারের বাছাই করা একটি। নিয়ম: NULL নয়, অনন্য, সাধারণত ছোট ও অপরিবর্তনীয়। প্রতি টেবিলে একটিই।
 
 ### Alternate Key
 
-বাছাই-না-হওয়া বাকি candidate key — `customers.phone` (UNIQUE NOT NULL হিসেবে)।
+বাছাই-না-হওয়া বাকি candidate key, `customers.phone` (UNIQUE NOT NULL হিসেবে)।
 
 ### Foreign Key
 
@@ -36,7 +36,7 @@ Candidate key-গুলোর মধ্য থেকে ডিজাইনার
 
 ### Composite Key
 
-একাধিক attribute মিলে গঠিত key — `order_items(order_id, product_id)`। কোনো একটি একা unique নয়, জোড়াটি unique।
+একাধিক attribute মিলে গঠিত key, `order_items(order_id, product_id)`। কোনো একটি একা unique নয়, জোড়াটি unique।
 
 ### Surrogate Key
 
@@ -62,7 +62,7 @@ Candidate key-গুলোর মধ্য থেকে ডিজাইনার
 
 ### Key নির্ধারণের নিয়ম
 
-Key হলো **স্কিমার বৈশিষ্ট্য** (ডিজাইনের সিদ্ধান্ত), বর্তমান ডাটার নয়। এখন কোনো কলামে ডুপ্লিকেট না থাকলেই সেটি key নয়; কারণ ভবিষ্যতে ঢুকতে পারে। অর্থ ও ব্যবসায়িক নিয়ম দেখে key ঠিক হয়।
+Key হলো স্কিমার বৈশিষ্ট্য (ডিজাইনের সিদ্ধান্ত), বর্তমান ডাটার নয়। এখন কোনো কলামে ডুপ্লিকেট না থাকলেই সেটি key নয়; কারণ ভবিষ্যতে ঢুকতে পারে। অর্থ ও ব্যবসায়িক নিয়ম দেখে key ঠিক হয়।
 
 ### Super key গণনা
 
@@ -89,14 +89,14 @@ Natural key (NID, ISBN) অর্থবহ কিন্তু বদলে য�
        COUNT(DISTINCT city)    AS distinct_city
 FROM customers;`} expectRows={1} minRows={5} />
 
-`phone`-এ ২০/২০ (সব ভিন্ন) — candidate-এর যোগ্য; `city`-তে মাত্র ৪ — কখনোই নয়। (মনে রাখো: এটা শুধু ইঙ্গিত; চূড়ান্ত সিদ্ধান্ত ব্যবসায়িক নিয়মে।)
+`phone`-এ ২০/২০ (সব ভিন্ন), candidate-এর যোগ্য; `city`-তে মাত্র ৪, কখনোই নয়। (মনে রাখো: এটা শুধু ইঙ্গিত; চূড়ান্ত সিদ্ধান্ত ব্যবসায়িক নিয়মে।)
 
-Alternate key `phone` কাজ করছে — ডুপ্লিকেট ফোন ঢোকানোর চেষ্টা:
+Alternate key `phone` কাজ করছে, ডুপ্লিকেট ফোন ঢোকানোর চেষ্টা:
 
 <SqlRunner initialQuery={`INSERT INTO customers (name, phone, city, joined_on)
 VALUES ('নকল রহিম', '01710000000', 'ঢাকা', '2024-11-01');`} expectError minRows={3} />
 
-Composite key `(order_id, product_id)` — একই পণ্য একই অর্ডারে দ্বিতীয়বার সারি হিসেবে ঢোকানো যাবে না (পরিমাণ বাড়াতে হলে আপডেট করো):
+Composite key `(order_id, product_id)`, একই পণ্য একই অর্ডারে দ্বিতীয়বার সারি হিসেবে ঢোকানো যাবে না (পরিমাণ বাড়াতে হলে আপডেট করো):
 
 <SqlRunner initialQuery={`INSERT INTO order_items (order_id, product_id, quantity, unit_price)
 VALUES (1, 1, 2, 72);`} expectError minRows={3} />
@@ -113,14 +113,14 @@ VALUES (1, 1, 2, 72);`} expectError minRows={3} />
 
 - **নাম/ঠিকানার মতো বদলানো-যায় এমন কলাম PK রাখা**।
 - **বর্তমান ডাটা দেখে key ঠিক করা**।
-- **Candidate key ও super key গুলিয়ে ফেলা** — candidate-ই minimal।
-- **"PK-তে NULL চলে"** — না; UNIQUE-তে চলতে পারে।
+- **Candidate key ও super key গুলিয়ে ফেলা**: candidate-ই minimal।
+- **"PK-তে NULL চলে"**: না; UNIQUE-তে চলতে পারে।
 - **Composite key-র একটি attribute-ও NULL রাখা**।
 
 ## পরীক্ষার টিপস
 
 <Callout type="exam">
-**লিখিত:** সব key-র সংজ্ঞা ও উদাহরণ; super vs candidate; PK vs UNIQUE। **গণনা:** "R(A,B,C,D)-তে candidate key AB হলে super key কয়টি?" → AB যুক্ত উপসেট = `2^(4−2) = 4`। (বহু candidate key থাকলে inclusion-exclusion; অধ্যায় ২৯-এ FD দিয়ে key বের করা শিখব।) **MCQ ট্র্যাপ:** (১) প্রতি টেবিলে PK একটিই, candidate key একাধিক। (২) FK-এ ডুপ্লিকেট চলে।
+লিখিত: সব key-র সংজ্ঞা ও উদাহরণ; super vs candidate; PK vs UNIQUE। গণনা: "R(A,B,C,D)-তে candidate key AB হলে super key কয়টি?" → AB যুক্ত উপসেট = `2^(4−2) = 4`। (বহু candidate key থাকলে inclusion-exclusion; অধ্যায় ২৯-এ FD দিয়ে key বের করা শিখব।) MCQ ট্র্যাপ: (১) প্রতি টেবিলে PK একটিই, candidate key একাধিক। (২) FK-এ ডুপ্লিকেট চলে।
 </Callout>
 
 <Summary>
@@ -140,7 +140,7 @@ VALUES (1, 1, 2, 72);`} expectError minRows={3} />
 `R(A, B, C)`-এ কেবল `A` candidate key। সব super key লেখো।
 
 <Answer>
-`{A}`, `{A,B}`, `{A,C}`, `{A,B,C}` — মোট ৪টি।
+`{A}`, `{A,B}`, `{A,C}`, `{A,B,C}`, মোট ৪টি।
 </Answer>
 </Exercise>
 
@@ -164,6 +164,6 @@ VALUES (1, 1, 2, 72);`} expectError minRows={3} />
 Surrogate ও natural key-র একটি করে সুবিধা-অসুবিধা লেখো।
 
 <Answer>
-Surrogate: সুবিধা — ছোট, স্থির, join দ্রুত; অসুবিধা — ব্যবসায়িক অর্থ নেই, আলাদা করে natural key-তে UNIQUE দিতে হয়। Natural: সুবিধা — অর্থবহ, বাড়তি কলাম লাগে না; অসুবিধা — বদলাতে/ভুল হতে পারে, বড় বা composite হতে পারে।
+Surrogate: সুবিধা, ছোট, স্থির, join দ্রুত; অসুবিধা, ব্যবসায়িক অর্থ নেই, আলাদা করে natural key-তে UNIQUE দিতে হয়। Natural: সুবিধা, অর্থবহ, বাড়তি কলাম লাগে না; অসুবিধা, বদলাতে/ভুল হতে পারে, বড় বা composite হতে পারে।
 </Answer>
 </Exercise>

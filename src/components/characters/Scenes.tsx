@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 
-/** গল্পের দৃশ্য — মৌলিক SVG। /public/images/chapters/<slug>/<name>.webp থাকলে StoryImage সেটাই দেখায়। */
+/** গল্পের দৃশ্য, মৌলিক SVG। /public/images/chapters/<slug>/<name>.webp থাকলে StoryImage সেটাই দেখায়। */
 const SKIN = '#d9a273';
 const HAIR = '#1b1424';
 
-function Ledu({
+export function Ledu({
   x,
   y,
   s = 1,
@@ -17,11 +17,30 @@ function Ledu({
 }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <defs>
+        <linearGradient id="ledu-shirt" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#4fe0d3" />
+          <stop offset="1" stopColor="#0c8c84" />
+        </linearGradient>
+        <radialGradient id="ledu-skin" cx="38%" cy="30%" r="75%">
+          <stop offset="0" stopColor="#f0c297" />
+          <stop offset="1" stopColor="#c98a58" />
+        </radialGradient>
+      </defs>
       {/* শরীর */}
-      <path d="M-34 90 C-32 56 -18 44 0 44 C18 44 32 56 34 90Z" fill="#11a39a" />
+      <path d="M-34 90 C-32 56 -18 44 0 44 C18 44 32 56 34 90Z" fill="url(#ledu-shirt)" />
       <path d="M-14 46 C-6 56 6 56 14 46 L10 40 C4 46 -4 46 -10 40Z" fill="#6e14a9" />
       <rect x="-8" y="30" width="16" height="16" rx="6" fill="#c58b5c" />
-      <ellipse cx="0" cy="8" rx="23" ry="26" fill={SKIN} />
+      <ellipse cx="0" cy="8" rx="23" ry="26" fill="url(#ledu-skin)" />
+      <ellipse
+        cx="-9"
+        cy="-6"
+        rx="9"
+        ry="5"
+        fill="#fff"
+        opacity=".28"
+        transform="rotate(-25 -9 -6)"
+      />
       <circle cx="-23" cy="10" r="5" fill="#c58b5c" />
       <circle cx="23" cy="10" r="5" fill="#c58b5c" />
       <path
@@ -73,7 +92,12 @@ function Svg({ children, h = 360 }: { children: ReactNode; h?: number }) {
       aria-hidden="true"
       style={{ display: 'block', height: 'auto' }}
     >
-      {children}
+      <defs>
+        <filter id="sc-depth" x="-10%" y="-10%" width="120%" height="125%">
+          <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#3b0764" floodOpacity="0.28" />
+        </filter>
+      </defs>
+      <g filter="url(#sc-depth)">{children}</g>
     </svg>
   );
 }
@@ -391,7 +415,7 @@ export function DbmsStoreroomScene() {
         fill="var(--ink)"
         style={{ fontFamily: 'var(--font-body)' }}
       >
-        আর একজন ম্যানেজার — এটাই DBMS।
+        আর একজন ম্যানেজার, এটাই DBMS।
       </text>
     </Svg>
   );

@@ -9,7 +9,7 @@ export const ch07: QuizQuestion[] = [
       'Top-down: সুপারক্লাস থেকে সাবক্লাস তৈরি = Specialization। উল্টো (bottom-up, সাধারণ বৈশিষ্ট্য টেনে সুপারক্লাস বানানো) = Generalization।',
   },
   {
-    q: 'Subclass সুপারক্লাসের attribute ও relationship পায় — এই বৈশিষ্ট্যকে বলে—',
+    q: 'Subclass সুপারক্লাসের attribute ও relationship পায়, এই বৈশিষ্ট্যকে বলে—',
     options: ['Aggregation', 'Attribute inheritance', 'Encapsulation', 'Union'],
     answer: 1,
     explain: 'Subclass সুপারক্লাসের সব attribute ও সম্পর্ক উত্তরাধিকারসূত্রে পায়।',
@@ -67,7 +67,7 @@ export const ch07: QuizQuestion[] = [
     options: ['Top-down', 'Bottom-up', 'Lateral', 'Random'],
     answer: 1,
     explain:
-      'Generalization = নিচের (আলাদা) entity-গুলোর সাধারণ বৈশিষ্ট্য টেনে উপরে সুপারক্লাস তৈরি — bottom-up।',
+      'Generalization = নিচের (আলাদা) entity-গুলোর সাধারণ বৈশিষ্ট্য টেনে উপরে সুপারক্লাস তৈরি, bottom-up।',
   },
 ];
 
@@ -116,7 +116,7 @@ export const ch08: QuizQuestion[] = [
       'JSON কলাম (সবসময়)',
     ],
     answer: 1,
-    explain: 'যেমন supplier_phones(supplier_id, phone) — দুই কলাম মিলে primary key।',
+    explain: 'যেমন supplier_phones(supplier_id, phone), দুই কলাম মিলে primary key।',
   },
   {
     q: 'Weak entity-র টেবিলের primary key কী?',
@@ -207,6 +207,6 @@ export const ch09: QuizQuestion[] = [
       'view',
     ],
     answer: 1,
-    explain: 'R(A1, A2, …, An) — relation schema; তার কোনো মুহূর্তের মানগুলোই relation instance।',
+    explain: 'R(A1, A2, …, An), relation schema; তার কোনো মুহূর্তের মানগুলোই relation instance।',
   },
 ];

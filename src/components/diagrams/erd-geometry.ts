@@ -61,7 +61,7 @@ export function pickAngles(n: number, blocked: number[]): number[] {
       if (chosen.includes(c)) continue;
       const others = [...blocked, ...chosen];
       const score = others.length ? Math.min(...others.map((o) => angDist(c, o))) : 180;
-      // একটু পছন্দ: ওপর/নিচ/পাশ — অনুভূমিক অবস্থা ঠিক রাখতে
+      // একটু পছন্দ: ওপর/নিচ/পাশ, অনুভূমিক অবস্থা ঠিক রাখতে
       if (score > bestScore) {
         bestScore = score;
         best = c;

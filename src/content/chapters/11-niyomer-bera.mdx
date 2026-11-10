@@ -2,12 +2,12 @@ import { ch11 as questions } from '@/content/quizzes/phase2c';
 
 ## গল্প: ফটকার "অসম্ভব" অর্ডার
 
-ফটকা লেদু মার্টের ডাটাবেসে হাত পেতে একটা অর্ডার ঢোকাল — কাস্টমার নম্বর ৯৯৯ (যে নেই), পণ্যের দাম মাইনাস দশ, পরিমাণ শূন্য। অ্যাপ বিনা বাধায় ঢুকিয়ে দিল! পরদিন রিপোর্টে মোট বিক্রি উল্টো, আর একটি অর্ডারের কোনো মালিক নেই।
+ফটকা লেদু মার্টের ডাটাবেসে হাত পেতে একটা অর্ডার ঢোকাল, কাস্টমার নম্বর ৯৯৯ (যে নেই), পণ্যের দাম মাইনাস দশ, পরিমাণ শূন্য। অ্যাপ বিনা বাধায় ঢুকিয়ে দিল! পরদিন রিপোর্টে মোট বিক্রি উল্টো, আর একটি অর্ডারের কোনো মালিক নেই।
 
 <StoryImage name="fence" n={1} caption="ফটকা ভুল ডাটা ঢোকাতে চাইছে, কদম চাচার constraint-বেড়া আটকে দিচ্ছে" alt="ফটকা ভুল অর্ডার ঢোকাতে চাইছে আর কদম চাচা নিয়মের বেড়া দিয়ে আটকাচ্ছেন" />
 
 <Dialogue who="kodom">
-লেদু বাপজান, ডাটাবেসকে শুধু জমানোর জায়গা ভেবো না। তাকে *পাহারাদার* বানাও — ভুল ডাটা ঢুকতেই দেবে না। এই পাহারাদারের নাম integrity constraint।
+লেদু বাপজান, ডাটাবেসকে শুধু জমানোর জায়গা ভেবো না। তাকে *পাহারাদার* বানাও, ভুল ডাটা ঢুকতেই দেবে না। এই পাহারাদারের নাম integrity constraint।
 </Dialogue>
 
 ## সমস্যাটা আসলে কী
@@ -18,15 +18,15 @@ import { ch11 as questions } from '@/content/quizzes/phase2c';
 
 ### চার ধরনের মূল integrity
 
-১. **Domain constraint:** প্রতিটি attribute-এর মান তার domain-এর ভেতরে (type, পরিসর, বিন্যাস)। SQL: data type, `NOT NULL`, `CHECK`, `DEFAULT`।
+১. Domain constraint: প্রতিটি attribute-এর মান তার domain-এর ভেতরে (type, পরিসর, বিন্যাস)। SQL: data type, `NOT NULL`, `CHECK`, `DEFAULT`।
 
-২. **Key constraint:** প্রতিটি relation-এ কমপক্ষে একটি key; key-র মান অনন্য। SQL: `PRIMARY KEY`, `UNIQUE`।
+২. Key constraint: প্রতিটি relation-এ কমপক্ষে একটি key; key-র মান অনন্য। SQL: `PRIMARY KEY`, `UNIQUE`।
 
-৩. **Entity integrity:** **Primary key-র কোনো অংশই NULL হতে পারবে না**। (NULL মানে "অজানা"; অজানা দিয়ে সারি চেনা যায় না।)
+৩. Entity integrity: Primary key-র কোনো অংশই NULL হতে পারবে না। (NULL মানে "অজানা"; অজানা দিয়ে সারি চেনা যায় না।)
 
-৪. **Referential integrity:** Foreign key-র মান হয় NULL, নয়তো রেফারকৃত টেবিলে বিদ্যমান key-র সমান। কোনো "ঝুলন্ত" (dangling) রেফারেন্স থাকবে না। SQL: `FOREIGN KEY … REFERENCES`।
+৪. Referential integrity: Foreign key-র মান হয় NULL, নয়তো রেফারকৃত টেবিলে বিদ্যমান key-র সমান। কোনো "ঝুলন্ত" (dangling) রেফারেন্স থাকবে না। SQL: `FOREIGN KEY … REFERENCES`।
 
-(এর বাইরে *semantic* বা ব্যবসায়িক নিয়ম — "রাইডার একসাথে ১০টির বেশি অর্ডার পাবে না" — trigger/assertion দিয়ে।)
+(এর বাইরে *semantic* বা ব্যবসায়িক নিয়ম, "রাইডার একসাথে ১০টির বেশি অর্ডার পাবে না", trigger/assertion দিয়ে।)
 
 ### SQL Constraint-এর তালিকা
 
@@ -55,7 +55,7 @@ Parent-এর সারি মুছলে (ON DELETE) বা key বদলা�
   <TableRow>
     <TableView name="CASCADE" columns={['order_id', 'customer_id']} rows={[[7, 'মুছে গেল'], [9, 'মুছে গেল']]} badRows={[0, 1]} compact />
     <TableView name="SET NULL" columns={['order_id', 'customer_id']} rows={[[7, null], [9, null]]} hiRows={[0, 1]} compact />
-    <TableView name="RESTRICT / NO ACTION" columns={['অপারেশন', 'ফল']} rows={[['DELETE customer', 'ত্রুটি — প্রত্যাখ্যাত']]} goodRows={[0]} compact />
+    <TableView name="RESTRICT / NO ACTION" columns={['অপারেশন', 'ফল']} rows={[['DELETE customer', 'ত্রুটি, প্রত্যাখ্যাত']]} goodRows={[0]} compact />
   </TableRow>
 </Figure>
 
@@ -67,9 +67,9 @@ Parent-এর সারি মুছলে (ON DELETE) বা key বদলা�
 |---|---|
 | **INSERT** | domain, key (ডুপ্লিকেট), entity (PK NULL), referential (FK-র মান নেই) |
 | **DELETE** | শুধু referential (অন্য টেবিলের FK এটিকে refer করলে) |
-| **UPDATE** | যে attribute বদলায় তার উপর নির্ভর করে — PK/FK বদলালে key/entity/referential; সাধারণ attribute বদলালে domain |
+| **UPDATE** | যে attribute বদলায় তার উপর নির্ভর করে, PK/FK বদলালে key/entity/referential; সাধারণ attribute বদলালে domain |
 
-এটি পরীক্ষার প্রিয় প্রশ্ন: **DELETE কেবল referential integrity ভাঙতে পারে।**
+এটি পরীক্ষার প্রিয় প্রশ্ন: DELETE কেবল referential integrity ভাঙতে পারে।
 
 ### Constraint-এর নাম দেওয়া
 
@@ -87,7 +87,7 @@ CREATE TABLE payments (
 
 ### Deferred constraint
 
-Transaction-এর শেষে যাচাই (DEFERRABLE INITIALLY DEFERRED) — PostgreSQL, SQLite সমর্থন করে; দুটি টেবিল পরস্পরকে refer করলে দরকার।
+Transaction-এর শেষে যাচাই (DEFERRABLE INITIALLY DEFERRED), PostgreSQL, SQLite সমর্থন করে; দুটি টেবিল পরস্পরকে refer করলে দরকার।
 
 <Callout type="note" title="SQLite-এ Foreign key চালু করতে হয়">
 SQLite-এ foreign key যাচাই ডিফল্টে বন্ধ থাকে; `PRAGMA foreign_keys = ON;` লাগে। আমাদের প্লেগ্রাউন্ডে এটি আগে থেকেই চালু। MySQL (InnoDB) ও PostgreSQL-এ সবসময় চালু।
@@ -95,23 +95,23 @@ SQLite-এ foreign key যাচাই ডিফল্টে বন্ধ থা
 
 ## হাতে-কলমে
 
-**NOT NULL:** নাম ছাড়া কাস্টমার ঢোকানো যাবে না:
+NOT NULL: নাম ছাড়া কাস্টমার ঢোকানো যাবে না:
 
 <SqlRunner initialQuery={`INSERT INTO customers (name, phone, city, joined_on)
 VALUES (NULL, '01999999999', 'ঢাকা', '2024-11-01');`} expectError minRows={3} />
 
-**Referential integrity (RESTRICT/NO ACTION আচরণ):** যে পণ্য কোনো অর্ডারে আছে তা মোছা যাবে না:
+Referential integrity (RESTRICT/NO ACTION আচরণ): যে পণ্য কোনো অর্ডারে আছে তা মোছা যাবে না:
 
 <SqlRunner initialQuery={`DELETE FROM products WHERE product_id = 1;`} expectError minRows={1} />
 
-**DEFAULT:** `stock` না দিলে ০ বসে:
+DEFAULT: `stock` না দিলে ০ বসে:
 
 <SqlRunner initialQuery={`INSERT INTO products (name, category_id, supplier_id, price, unit)
 VALUES ('নতুন পণ্য', 1, 1, 10, 'পিস');
 
 SELECT name, stock FROM products WHERE name = 'নতুন পণ্য';`} expectRows={1} minRows={4} />
 
-**CASCADE ও SET NULL একসাথে:** নিজস্ব ছোট টেবিলে দেখি। পণ্য মুছলে রিভিউ মুছে যাবে (CASCADE), ব্র্যান্ড মুছলে পণ্যের ব্র্যান্ড NULL হবে (SET NULL):
+CASCADE ও SET NULL একসাথে: নিজস্ব ছোট টেবিলে দেখি। পণ্য মুছলে রিভিউ মুছে যাবে (CASCADE), ব্র্যান্ড মুছলে পণ্যের ব্র্যান্ড NULL হবে (SET NULL):
 
 <SqlRunner initialQuery={`CREATE TABLE brand (brand_id INTEGER PRIMARY KEY, name TEXT);
 CREATE TABLE item (
@@ -141,19 +141,19 @@ Constraint দিলে ডাটাবেস ধীর হয়। আমি �
 </Dialogue>
 
 <Dialogue who="kodom">
-ফটকা, অ্যাপ চেক করে, কিন্তু ডাটা তো অ্যাপ ছাড়াও ঢোকে। একটা পুরনো স্ক্রিপ্ট, একটা ভুল ইম্পোর্ট — ব্যস, গোটা ডাটাবেস দূষিত। constraint-এর খরচ সামান্য, দূষিত ডাটার খরচ অসীম।
+ফটকা, অ্যাপ চেক করে, কিন্তু ডাটা তো অ্যাপ ছাড়াও ঢোকে। একটা পুরনো স্ক্রিপ্ট, একটা ভুল ইম্পোর্ট, ব্যস, গোটা ডাটাবেস দূষিত। constraint-এর খরচ সামান্য, দূষিত ডাটার খরচ অসীম।
 </Dialogue>
 
 - **ভাবা যে অ্যাপে যাচাই-ই যথেষ্ট**।
-- **`ON DELETE CASCADE` সবখানে দেওয়া** — একটি ভুল DELETE চেইনে অনেক ডাটা মুছে ফেলতে পারে। আর্থিক রেকর্ডে (payments) সাধারণত RESTRICT বা soft delete।
+- **`ON DELETE CASCADE` সবখানে দেওয়া**: একটি ভুল DELETE চেইনে অনেক ডাটা মুছে ফেলতে পারে। আর্থিক রেকর্ডে (payments) সাধারণত RESTRICT বা soft delete।
 - **PK NULL হতে পারে ভাবা** (বিশেষত composite-এ)।
-- **DELETE-এ key/domain ভাঙার কথা বলা** — DELETE শুধু referential।
+- **DELETE-এ key/domain ভাঙার কথা বলা**: DELETE শুধু referential।
 - **SQLite-এ `PRAGMA foreign_keys` ভুলে যাওয়া**।
 
 ## পরীক্ষার টিপস
 
 <Callout type="exam">
-**লিখিত:** চার ধরনের integrity + উদাহরণ; ON DELETE/UPDATE অ্যাকশন; "INSERT/DELETE/UPDATE কোন constraint ভাঙতে পারে" টেবিল (এটি প্রায় প্রতি বছর আসে)। **MCQ ট্র্যাপ:** (১) Entity integrity = PK NOT NULL। (২) Referential = FK মিলতে হবে। (৩) DELETE → শুধু referential। (৪) CHECK = domain/semantic।
+লিখিত: চার ধরনের integrity + উদাহরণ; ON DELETE/UPDATE অ্যাকশন; "INSERT/DELETE/UPDATE কোন constraint ভাঙতে পারে" টেবিল (এটি প্রায় প্রতি বছর আসে)। MCQ ট্র্যাপ: (১) Entity integrity = PK NOT NULL। (২) Referential = FK মিলতে হবে। (৩) DELETE → শুধু referential। (৪) CHECK = domain/semantic।
 </Callout>
 
 <Summary>
@@ -182,12 +182,12 @@ DELETE। কারণ কিছু মুছলে নতুন মান আ�
 `payments`-এ `amount > 0` নিশ্চিত করতে কোন constraint ও কীভাবে?
 
 <Answer>
-`CHECK (amount > 0)` — যেমন `ALTER`/`CREATE`-এ `CONSTRAINT ck_amount_positive CHECK (amount > 0)`। (এটি domain integrity।)
+`CHECK (amount > 0)`, যেমন `ALTER`/`CREATE`-এ `CONSTRAINT ck_amount_positive CHECK (amount > 0)`। (এটি domain integrity।)
 </Answer>
 </Exercise>
 
 <Exercise n={3}>
-কাস্টমার মুছলে অর্ডার কেন CASCADE দিয়ে মোছা ঠিক নয়, বরং RESTRICT ভালো — এক লাইনে যুক্তি দাও।
+কাস্টমার মুছলে অর্ডার কেন CASCADE দিয়ে মোছা ঠিক নয়, বরং RESTRICT ভালো, এক লাইনে যুক্তি দাও।
 
 <Answer>
 অর্ডার ও পেমেন্ট আর্থিক/আইনি রেকর্ড; কাস্টমার মুছলে স্বয়ংক্রিয়ভাবে মুছে গেলে ইতিহাস হারাবে। RESTRICT অসাবধানে মোছা আটকায়; প্রয়োজনে soft delete (status কলাম) ব্যবহার করা ভালো।

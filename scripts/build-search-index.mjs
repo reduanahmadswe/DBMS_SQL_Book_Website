@@ -77,6 +77,27 @@ for (const m of gSrc.matchAll(gRe)) {
 
 writeFileSync(join(out, 'search-index.json'), JSON.stringify(docs));
 
+// হোমপেজের সত্যিকারের পরিসংখ্যান (কনটেন্ট থেকে গোনা — কোনো বানানো সংখ্যা নয়)
+const count = (re, text) => (text.match(re) ?? []).length;
+let sqlRunners = 0;
+for (const f of readdirSync(chapDir).filter((x) => x.endsWith('.mdx'))) {
+  sqlRunners += count(/<SqlRunner\b/g, readFileSync(join(chapDir, f), 'utf8'));
+}
+const quizDir = join(root, 'src/content/quizzes');
+let quizQuestions = 0;
+for (const f of readdirSync(quizDir).filter((x) => x.endsWith('.ts'))) {
+  quizQuestions += count(/\banswer:\s*\d/g, readFileSync(join(quizDir, f), 'utf8'));
+}
+writeFileSync(
+  join(out, 'stats.json'),
+  JSON.stringify({
+    sqlRunners,
+    quizQuestions,
+    glossaryTerms: docs.filter((d) => d.kind === 'term').length,
+    tables: 11,
+  }),
+);
+
 // ছবির ম্যানিফেস্ট (public/ফোল্ডারে থাকা WebP)
 const pub = join(root, 'public');
 const walk = (dir) =>

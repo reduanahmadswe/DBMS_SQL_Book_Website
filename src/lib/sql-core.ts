@@ -39,20 +39,20 @@ const ERROR_HINTS: [RegExp, (m: RegExpMatchArray) => string][] = [
   [/near "([^"]+)"/i, (m) => `"${m[1]}" শব্দের কাছাকাছি কোথাও গোলমাল।`],
   [
     /UNIQUE constraint failed: (\S+)/i,
-    (m) => `${m[1]} কলামে ডুপ্লিকেট মান ঢোকানোর চেষ্টা — UNIQUE/PRIMARY KEY নিয়ম ভাঙছে।`,
+    (m) => `${m[1]} কলামে ডুপ্লিকেট মান ঢোকানোর চেষ্টা, UNIQUE/PRIMARY KEY নিয়ম ভাঙছে।`,
   ],
   [/NOT NULL constraint failed: (\S+)/i, (m) => `${m[1]} কলামে NULL রাখা যাবে না (NOT NULL)।`],
-  [/CHECK constraint failed/i, () => 'CHECK নিয়ম ভাঙছে — মানটি শর্তের বাইরে।'],
+  [/CHECK constraint failed/i, () => 'CHECK নিয়ম ভাঙছে, মানটি শর্তের বাইরে।'],
   [
     /FOREIGN KEY constraint failed/i,
     () =>
-      'Foreign key নিয়ম ভাঙছে — যে রেকর্ডকে রেফার করছ সেটা নেই, বা এই রেকর্ডকে অন্য টেবিল রেফার করছে।',
+      'Foreign key নিয়ম ভাঙছে, যে রেকর্ডকে রেফার করছ সেটা নেই, বা এই রেকর্ডকে অন্য টেবিল রেফার করছে।',
   ],
   [
     /ambiguous column name: (\S+)/i,
-    (m) => `"${m[1]}" কলামটি একাধিক টেবিলে আছে — টেবিলের নাম বা alias দিয়ে লেখো (যেমন c.${m[1]})।`,
+    (m) => `"${m[1]}" কলামটি একাধিক টেবিলে আছে, টেবিলের নাম বা alias দিয়ে লেখো (যেমন c.${m[1]})।`,
   ],
-  [/incomplete input/i, () => 'স্টেটমেন্ট অসম্পূর্ণ — হয়তো বন্ধনী বা কোটেশন বন্ধ করোনি।'],
+  [/incomplete input/i, () => 'স্টেটমেন্ট অসম্পূর্ণ, হয়তো বন্ধনী বা কোটেশন বন্ধ করোনি।'],
   [/readonly|read-only/i, () => 'ডাটাবেসটি read-only।'],
 ];
 

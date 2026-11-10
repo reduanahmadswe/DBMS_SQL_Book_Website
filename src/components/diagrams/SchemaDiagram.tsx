@@ -4,7 +4,7 @@ import type { Pt } from './erd-geometry';
 export interface SchemaColumn {
   name: string;
   pk?: boolean;
-  /** "টেবিল.কলাম" — FK যেখানে রেফার করে */
+  /** "টেবিল.কলাম", FK যেখানে রেফার করে */
   fk?: string;
 }
 export interface SchemaTable {

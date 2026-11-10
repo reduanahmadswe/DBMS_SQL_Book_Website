@@ -20,7 +20,7 @@ interface Props {
   compact?: boolean;
 }
 
-/** আগে/পরে দেখানোর সুন্দর টেবিল — সাধারণ HTML table, তাই স্ক্রিন-রিডারও পড়তে পারে। */
+/** আগে/পরে দেখানোর সুন্দর টেবিল, সাধারণ HTML table, তাই স্ক্রিন-রিডারও পড়তে পারে। */
 export function TableView({
   name,
   columns,

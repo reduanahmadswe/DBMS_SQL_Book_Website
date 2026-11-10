@@ -33,7 +33,7 @@ const samples: { label: string; sql: string }[] = [
 export default function PlaygroundPage() {
   usePageMeta(
     'SQL খেলার মাঠ',
-    'ব্রাউজারেই SQL চালাও — লেদু মার্টের ডাটাবেস দিয়ে, কোনো ইনস্টলেশন ছাড়া।',
+    'ব্রাউজারেই SQL চালাও, লেদু মার্টের ডাটাবেস দিয়ে, কোনো ইনস্টলেশন ছাড়া।',
     '/playground',
   );
   const dbRef = useRef<Database | null>(null);
@@ -89,10 +89,10 @@ export default function PlaygroundPage() {
   }, [sql]);
 
   return (
-    <main id="main" className="mx-auto max-w-[90rem] px-4 py-8 sm:px-6">
+    <main id="main" className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <h1 className="font-display text-3xl sm:text-4xl">SQL খেলার মাঠ</h1>
       <p className="mt-1 text-ink-soft">
-        তোমার ব্রাউজারেই SQLite চলছে — যা খুশি করো, ভুল হলে "ডাটাবেস রিসেট" চাপলেই আবার তাজা।
+        তোমার ব্রাউজারেই SQLite চলছে, যা খুশি করো, ভুল হলে "ডাটাবেস রিসেট" চাপলেই আবার তাজা।
         (MySQL/PostgreSQL-এর stored procedure, GRANT ইত্যাদি এখানে চলবে না।)
       </p>
 
@@ -188,7 +188,7 @@ export default function PlaygroundPage() {
             )}
             {out?.ok && out.results.length === 0 && (
               <p className="rounded-xl bg-[var(--good-bg)] p-4 text-[var(--good-text)]">
-                সফলভাবে চলেছে{out.changes > 0 ? ` — ${bnDigits(out.changes)}টি সারি প্রভাবিত` : ''}।
+                সফলভাবে চলেছে{out.changes > 0 ? `, ${bnDigits(out.changes)}টি সারি প্রভাবিত` : ''}।
               </p>
             )}
             {out?.ok && out.results.map((r, i) => <ResultTable key={i} result={r} />)}

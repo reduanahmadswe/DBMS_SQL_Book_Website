@@ -15,7 +15,7 @@ export function Dialogue({ who, children }: { who: CharacterId; children: ReactN
     <div className="not-prose my-5 flex items-start gap-3">
       <Avatar who={who} size={52} title={false} />
       <div
-        className={`relative min-w-0 flex-1 rounded-2xl rounded-tl-sm border-2 px-4 py-2.5 ${bubble[who]}`}
+        className={`lift-sm relative min-w-0 flex-1 rounded-2xl rounded-tl-sm border-2 px-4 py-2.5 ${bubble[who]}`}
       >
         <p className="mb-0.5 text-sm font-semibold text-ink-soft">{info.name}</p>
         <div className="space-y-2 text-[1.02rem] leading-[1.8] text-ink [&_code]:rounded [&_code]:bg-surface [&_code]:px-1 [&_code]:font-mono [&_code]:text-[0.88em] [&_p]:m-0">
@@ -64,7 +64,10 @@ export function Callout({
 }) {
   const c = callout[type];
   return (
-    <aside className={`not-prose my-6 rounded-xl border-l-[6px] px-4 py-3 ${c.cls}`} role="note">
+    <aside
+      className={`lift-sm not-prose my-6 rounded-xl border-l-[6px] px-4 py-3 ${c.cls}`}
+      role="note"
+    >
       <p className="mb-1 flex items-center gap-2 font-semibold text-ink">
         <svg
           width="20"
@@ -88,14 +91,14 @@ export function Callout({
   );
 }
 
-/* ───────── KeyTerm: "Primary Key (প্রাইমারি কি — যে চাবি দিয়ে…)" ───────── */
+/* ───────── KeyTerm: "Primary Key (প্রাইমারি কি, যে চাবি দিয়ে…)" ───────── */
 export function KeyTerm({ en, bn, children }: { en: string; bn: string; children?: ReactNode }) {
   return (
     <span>
       <strong className="font-semibold text-brand">{en}</strong>{' '}
       <span className="text-ink-soft">
         ({bn}
-        {children ? <> — {children}</> : null})
+        {children ? <>: {children}</> : null})
       </span>
     </span>
   );
@@ -105,7 +108,7 @@ export function KeyTerm({ en, bn, children }: { en: string; bn: string; children
 export function Summary({ children }: { children: ReactNode }) {
   return (
     <section
-      className="not-prose my-8 rounded-2xl border-2 border-dashed border-accent bg-accent-tint p-5"
+      className="lift-sm not-prose my-8 rounded-2xl border-2 border-dashed border-accent bg-accent-tint p-5"
       aria-label="এক নজরে"
     >
       <p className="mb-2 font-display text-xl text-ink">এক নজরে</p>
@@ -119,7 +122,7 @@ export function Summary({ children }: { children: ReactNode }) {
 /* ───────── Exercise + Answer ───────── */
 export function Exercise({ n, children }: { n: number; children: ReactNode }) {
   return (
-    <div className="not-prose my-5 rounded-xl border border-line bg-surface p-4 shadow-[var(--shadow)]">
+    <div className="not-prose my-5 rounded-xl border border-line bg-surface p-4 card-3d">
       <p className="mb-2 font-semibold text-brand">অনুশীলনী {n}</p>
       <div className="space-y-3 leading-[1.8] [&_code]:rounded [&_code]:bg-surface-2 [&_code]:px-1 [&_code]:font-mono [&_code]:text-[0.88em] [&_p]:m-0">
         {children}
@@ -130,7 +133,7 @@ export function Exercise({ n, children }: { n: number; children: ReactNode }) {
 
 export function Answer({ children }: { children: ReactNode }) {
   return (
-    <details className="group mt-3 rounded-lg border border-line bg-surface-2 px-3 py-2">
+    <details className="lift-sm group mt-3 rounded-lg border border-line bg-surface-2 px-3 py-2">
       <summary className="cursor-pointer select-none font-semibold text-accent-text marker:text-accent">
         সমাধান দেখো
       </summary>
@@ -141,7 +144,7 @@ export function Answer({ children }: { children: ReactNode }) {
   );
 }
 
-/* ───────── StaticCode — প্লেগ্রাউন্ডে চলবে না এমন কোড ───────── */
+/* ───────── StaticCode, প্লেগ্রাউন্ডে চলবে না এমন কোড ───────── */
 const langLabel: Record<string, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
@@ -171,7 +174,7 @@ export function StaticCode({
         </span>
         {!runnable && (
           <span className="text-ink-soft">
-            {note ?? `এটা ${label} সিনট্যাক্স — প্লেগ্রাউন্ডে (SQLite) চালানো যাবে না`}
+            {note ?? `এটা ${label} সিনট্যাক্স, প্লেগ্রাউন্ডে (SQLite) চালানো যাবে না`}
           </span>
         )}
       </div>

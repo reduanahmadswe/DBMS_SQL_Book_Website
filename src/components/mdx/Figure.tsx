@@ -17,17 +17,18 @@ interface FigureProps {
   children: ReactNode;
   /** লাইটবক্স বন্ধ করতে চাইলে false */
   zoomable?: boolean;
+  /** আগে চওড়া ছবির জন্য ছিল; এখন লেখার সাথে একই কলাম, তাই কিছু করে না */
   wide?: boolean;
 }
 
-export function Figure({ n, caption, alt, children, zoomable = true, wide = false }: FigureProps) {
+export function Figure({ n, caption, alt, children, zoomable = true }: FigureProps) {
   const { number } = useChapter();
   const label = `চিত্র ${bnDigits(number)}.${bnDigits(n)}`;
   const [open, setOpen] = useState(false);
 
   return (
-    <figure className={`not-prose my-8 ${wide ? '' : 'max-w-[42rem]'}`}>
-      <div className="relative overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow)]">
+    <figure className={`not-prose my-8`}>
+      <div className="relative overflow-hidden rounded-2xl border border-line bg-surface card-3d">
         <p className="sr-only">{alt}</p>
         <div className="overflow-x-auto p-2 sm:p-4">{children}</div>
         {zoomable && (
@@ -81,7 +82,7 @@ function Lightbox({
   useEffect(() => {
     const d = ref.current;
     if (d && !d.open) d.showModal();
-    return () => d?.close();
+    // unmount-এ DOM থেকে সরে গেলে modal নিজেই বন্ধ হয়; এখানে close() ডাকলে StrictMode-এ উল্টো onClose চলে
   }, []);
 
   const clamp = (z: number) => Math.min(4, Math.max(0.5, Math.round(z * 100) / 100));

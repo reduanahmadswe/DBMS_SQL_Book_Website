@@ -29,7 +29,7 @@ export function SqlRunner({ initialQuery, minRows }: Props) {
       const { openLeduMart } = await import('@/lib/sql-engine');
       const db = await openLeduMart();
       if (!alive.current) {
-        db.close(); // কম্পোনেন্ট এর মধ্যে সরে গেছে — WASM মেমরি ছাড়ি
+        db.close(); // কম্পোনেন্ট এর মধ্যে সরে গেছে, WASM মেমরি ছাড়ি
         throw new Error('unmounted');
       }
       dbRef.current = db;
@@ -69,7 +69,7 @@ export function SqlRunner({ initialQuery, minRows }: Props) {
   const modified = sql.trim() !== query;
 
   return (
-    <div className="not-prose my-6 rounded-xl border border-line bg-surface-2 p-3 shadow-[var(--shadow)]">
+    <div className="not-prose my-6 rounded-xl border border-line bg-surface-2 p-3 card-3d">
       <SqlEditor
         value={sql}
         onChange={setSql}
@@ -113,7 +113,7 @@ export function SqlRunner({ initialQuery, minRows }: Props) {
         {out?.ok && out.results.length === 0 && (
           <p className="rounded-lg bg-[var(--good-bg)] p-3 text-[var(--good-text)]">
             সফলভাবে চলেছে
-            {out.changes > 0 ? ` — ${bnDigits(out.changes)}টি সারি প্রভাবিত হয়েছে` : ''}। (কোনো
+            {out.changes > 0 ? `, ${bnDigits(out.changes)}টি সারি প্রভাবিত হয়েছে` : ''}। (কোনো
             ফলাফল-টেবিল নেই)
           </p>
         )}

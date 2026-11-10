@@ -38,7 +38,7 @@ import type { ErDiagramDef } from '../diagrams/erd-types';
 
 const erdDefs = { ...erdA, ...erdB } as unknown as Record<string, ErDiagramDef>;
 
-/** <Erd d="universityErd" /> — নাম দিয়ে ERD সংজ্ঞা বসায় */
+/** <Erd d="universityErd" />, নাম দিয়ে ERD সংজ্ঞা বসায় */
 function Erd({ d, ...rest }: { d: string; notation?: 'chen' | 'crow'; minmax?: boolean }) {
   const def = erdDefs[d];
   if (!def) return <p>ERD পাওয়া যায়নি: {d}</p>;

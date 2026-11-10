@@ -21,7 +21,7 @@ export function validateQuestions(questions: QuizQuestion[]): string[] {
   return errs;
 }
 
-/** Fisher–Yates (সিড-যোগ্য rng দেওয়া যায়) — practice mode-এর জন্য */
+/** Fisher–Yates (সিড-যোগ্য rng দেওয়া যায়), practice mode-এর জন্য */
 export function shuffled<T>(arr: readonly T[], rng: () => number = Math.random): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {

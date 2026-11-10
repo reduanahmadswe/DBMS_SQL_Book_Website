@@ -42,7 +42,7 @@ export const questions: QuizQuestion[] = [
     q: 'COMMIT ও ROLLBACK কোন শ্রেণির কমান্ড?',
     options: ['DDL', 'DML', 'DCL', 'TCL (Transaction Control Language)'],
     answer: 3,
-    explain: 'COMMIT, ROLLBACK ও SAVEPOINT ট্রানজ্যাকশন নিয়ন্ত্রণ করে — তাই TCL।',
+    explain: 'COMMIT, ROLLBACK ও SAVEPOINT ট্রানজ্যাকশন নিয়ন্ত্রণ করে, তাই TCL।',
   },
   {
     q: 'DBMS ব্যবহারের একটি অসুবিধা কোনটি?',
@@ -54,7 +54,7 @@ export const questions: QuizQuestion[] = [
     ],
     answer: 1,
     explain:
-      'DBMS-এর হার্ডওয়্যার/সফটওয়্যার খরচ, জটিলতা এবং দক্ষ লোকের প্রয়োজন — এগুলো প্রধান অসুবিধা। বাকি তিনটি আসলে DBMS-এর সুবিধার উল্টো কথা।',
+      'DBMS-এর হার্ডওয়্যার/সফটওয়্যার খরচ, জটিলতা এবং দক্ষ লোকের প্রয়োজন, এগুলো প্রধান অসুবিধা। বাকি তিনটি আসলে DBMS-এর সুবিধার উল্টো কথা।',
   },
   {
     q: 'SELECT কমান্ডকে কোন শ্রেণিতে ফেলা হয়?',

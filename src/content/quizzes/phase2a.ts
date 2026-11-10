@@ -37,18 +37,18 @@ export const ch03: QuizQuestion[] = [
       'Logical data independence = conceptual schema-র পরিবর্তন external schema-কে প্রভাবিত করে না। এটি অর্জন করা তুলনামূলক কঠিন।',
   },
   {
-    q: 'ডিস্কে ফাইল সংগঠন বা ইনডেক্স বদলালেও conceptual schema অপরিবর্তিত থাকে — এটি কোন ধরনের independence?',
+    q: 'ডিস্কে ফাইল সংগঠন বা ইনডেক্স বদলালেও conceptual schema অপরিবর্তিত থাকে, এটি কোন ধরনের independence?',
     options: ['Logical', 'Physical', 'Network', 'Semantic'],
     answer: 1,
     explain:
       'Internal schema-র পরিবর্তন conceptual schema-কে প্রভাবিত না করাই Physical data independence।',
   },
   {
-    q: 'ওয়েব ব্রাউজার → অ্যাপ সার্ভার → ডাটাবেস সার্ভার — এটি কোন আর্কিটেকচার?',
+    q: 'ওয়েব ব্রাউজার → অ্যাপ সার্ভার → ডাটাবেস সার্ভার, এটি কোন আর্কিটেকচার?',
     options: ['1-tier', '2-tier', '3-tier', 'Peer-to-peer'],
     answer: 2,
     explain:
-      'ক্লায়েন্ট, মধ্যবর্তী অ্যাপ সার্ভার (business logic) ও ডাটাবেস সার্ভার — এই তিন স্তর = 3-tier।',
+      'ক্লায়েন্ট, মধ্যবর্তী অ্যাপ সার্ভার (business logic) ও ডাটাবেস সার্ভার, এই তিন স্তর = 3-tier।',
   },
   {
     q: 'কোন উপাদান SQL কোয়েরির সবচেয়ে কম খরচের execution plan বাছাই করে?',
@@ -71,7 +71,7 @@ export const ch04: QuizQuestion[] = [
     options: ['Network', 'Hierarchical', 'Relational', 'Object-oriented'],
     answer: 1,
     explain:
-      'Hierarchical মডেল গাছের মতো — প্রতিটি child-এর একটিই parent, তাই M:N সম্পর্ক সরাসরি দেখানো যায় না।',
+      'Hierarchical মডেল গাছের মতো, প্রতিটি child-এর একটিই parent, তাই M:N সম্পর্ক সরাসরি দেখানো যায় না।',
   },
   {
     q: 'Relational মডেলের প্রস্তাবক কে এবং কত সালে?',
@@ -105,13 +105,13 @@ export const ch04: QuizQuestion[] = [
       'কোয়েরি অপটিমাইজেশনে',
     ],
     answer: 1,
-    explain: 'ER মডেল একটি high-level conceptual data model — বাস্তবায়নের আগে নকশা করার জন্য।',
+    explain: 'ER মডেল একটি high-level conceptual data model, বাস্তবায়নের আগে নকশা করার জন্য।',
   },
   {
     q: 'MongoDB কোন ধরনের ডাটাবেস?',
     options: ['Relational', 'Document-oriented NoSQL', 'Hierarchical', 'Graph'],
     answer: 1,
-    explain: 'MongoDB JSON-সদৃশ (BSON) ডকুমেন্ট সংরক্ষণ করে — Document NoSQL।',
+    explain: 'MongoDB JSON-সদৃশ (BSON) ডকুমেন্ট সংরক্ষণ করে, Document NoSQL।',
   },
   {
     q: 'Object-relational ডাটাবেসের বৈশিষ্ট্য কোনটি?',
@@ -184,21 +184,21 @@ export const ch06: QuizQuestion[] = [
     q: 'Customer–Order সম্পর্কে একজন কাস্টমার অনেক অর্ডার দিতে পারে, কিন্তু একটি অর্ডার একজনেরই। কার্ডিনালিটি কত?',
     options: ['1:1', '1:N (Customer : Order)', 'M:N', 'N:1 (Customer : Order)'],
     answer: 1,
-    explain: 'Customer-এর দিকে ১, Order-এর দিকে N — অর্থাৎ Customer : Order = 1:N।',
+    explain: 'Customer-এর দিকে ১, Order-এর দিকে N, অর্থাৎ Customer : Order = 1:N।',
   },
   {
     q: 'Order–Product সম্পর্ক কোন কার্ডিনালিটির?',
     options: ['1:1', '1:N', 'M:N', 'কোনোটিই নয়'],
     answer: 2,
     explain:
-      'একটি অর্ডারে অনেক পণ্য, একটি পণ্য অনেক অর্ডারে — M:N। এটি রিলেশনাল মডেলে আলাদা সংযোগ-টেবিল (order_items) চায়।',
+      'একটি অর্ডারে অনেক পণ্য, একটি পণ্য অনেক অর্ডারে, M:N। এটি রিলেশনাল মডেলে আলাদা সংযোগ-টেবিল (order_items) চায়।',
   },
   {
     q: 'Total participation কীভাবে দেখানো হয় (Chen)?',
     options: ['একক লাইন', 'ডবল লাইন', 'ড্যাশ লাইন', 'তীরচিহ্ন'],
     answer: 1,
     explain:
-      'Total participation = এন্টিটি সেটের প্রতিটি সদস্য সম্পর্কে অংশ নেয় — Chen-এ ডবল লাইন।',
+      'Total participation = এন্টিটি সেটের প্রতিটি সদস্য সম্পর্কে অংশ নেয়, Chen-এ ডবল লাইন।',
   },
   {
     q: 'Weak entity-র ক্ষেত্রে কোনটি সত্য?',
@@ -213,7 +213,7 @@ export const ch06: QuizQuestion[] = [
       'Weak entity-র পূর্ণ key নেই; owner-এর key + নিজের partial key (discriminator) মিলে চেনা যায়। Identifying relationship-এ এর participation total।',
   },
   {
-    q: 'Employee supervises Employee — এটি কোন degree-র সম্পর্ক?',
+    q: 'Employee supervises Employee, এটি কোন degree-র সম্পর্ক?',
     options: ['Unary (recursive)', 'Binary', 'Ternary', 'Quaternary'],
     answer: 0,
     explain: 'একই entity set একাধিক role-এ অংশ নিলে unary বা recursive সম্পর্ক।',
@@ -222,7 +222,7 @@ export const ch06: QuizQuestion[] = [
     q: 'Supplier–Product–Store এর "supplies" সম্পর্কের degree কত?',
     options: ['১', '২', '৩', '৪'],
     answer: 2,
-    explain: 'তিনটি entity set জড়িত — degree ৩, অর্থাৎ ternary।',
+    explain: 'তিনটি entity set জড়িত, degree ৩, অর্থাৎ ternary।',
   },
   {
     q: '(min,max) নোটেশনে (1,N) এর অর্থ কী?',
@@ -240,6 +240,6 @@ export const ch06: QuizQuestion[] = [
     ],
     answer: 1,
     explain:
-      'M:N সম্পর্কের attribute কোনো একপক্ষের নয়, সম্পর্কেরই — তাই সংযোগ-টেবিলে (order_items.quantity)।',
+      'M:N সম্পর্কের attribute কোনো একপক্ষের নয়, সম্পর্কেরই, তাই সংযোগ-টেবিলে (order_items.quantity)।',
   },
 ];

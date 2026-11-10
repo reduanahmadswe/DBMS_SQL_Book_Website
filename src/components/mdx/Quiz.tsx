@@ -25,7 +25,7 @@ export function Quiz({ questions, id }: { questions: QuizQuestion[]; id?: string
 
   return (
     <section
-      className="not-prose my-8 rounded-2xl border border-line bg-surface p-4 shadow-[var(--shadow)] sm:p-6"
+      className="not-prose my-8 rounded-2xl border border-line bg-surface p-4 card-3d sm:p-6"
       aria-label="কুইজ"
     >
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
@@ -92,7 +92,7 @@ export function Quiz({ questions, id }: { questions: QuizQuestion[]; id?: string
                     className={`mt-2 rounded-lg px-3 py-2 text-[0.97rem] leading-relaxed ${chosen === q.answer ? 'bg-[var(--good-bg)] text-[var(--good-text)]' : 'bg-[var(--bad-bg)] text-[var(--bad-text)]'}`}
                   >
                     <strong>
-                      {chosen === q.answer ? 'ঠিক! ' : `ভুল — সঠিক উত্তর (${letters[q.answer]})। `}
+                      {chosen === q.answer ? 'ঠিক! ' : `ভুল, সঠিক উত্তর (${letters[q.answer]})। `}
                     </strong>
                     {q.explain}
                   </p>
@@ -109,7 +109,7 @@ export function Quiz({ questions, id }: { questions: QuizQuestion[]; id?: string
         >
           <p className="text-lg font-semibold">
             তোমার স্কোর: {bnDigits(score)}/{bnDigits(questions.length)}
-            {score === questions.length ? ' — দারুণ!' : ''}
+            {score === questions.length ? ', সবগুলো ঠিক' : ''}
           </p>
           <button
             type="button"

@@ -79,7 +79,7 @@ export function ERDiagram({
         viewBox={`${view.box.x} ${view.box.y} ${view.box.w} ${view.box.h}`}
         style={{ minWidth: Math.min(view.box.w, 560), width: '100%', height: 'auto' }}
         role="img"
-        aria-label={`${def.title} — ${notation === 'chen' ? 'Chen' : "Crow's Foot"} নোটেশন`}
+        aria-label={`${def.title}, ${notation === 'chen' ? 'Chen' : "Crow's Foot"} নোটেশন`}
       >
         {view.node}
       </svg>
@@ -217,8 +217,8 @@ function renderChen(def: ErDiagramDef, minmax: boolean): View {
   def.rels.forEach((r) => centers.set(r.id, { x: r.x, y: r.y }));
   (def.isas ?? []).forEach((i) => centers.set(i.id, { x: i.x, y: i.y }));
 
-  /* অ্যাট্রিবিউট (ellipse) আঁকা — composite হলে উপাদানসহ */
-  /* দখলকৃত জায়গা: এন্টিটি, সম্পর্ক, ISA আর আগে বসানো অ্যাট্রিবিউট — নতুন অ্যাট্রিবিউট এগুলোর উপর পড়বে না */
+  /* অ্যাট্রিবিউট (ellipse) আঁকা, composite হলে উপাদানসহ */
+  /* দখলকৃত জায়গা: এন্টিটি, সম্পর্ক, ISA আর আগে বসানো অ্যাট্রিবিউট, নতুন অ্যাট্রিবিউট এগুলোর উপর পড়বে না */
   const occ: { x: number; y: number; rx: number; ry: number }[] = [];
   def.entities.forEach((e) => {
     const { w, h } = entityDims(e);

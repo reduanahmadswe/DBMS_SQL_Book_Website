@@ -25,7 +25,7 @@ export function ThreeSchema() {
             w={500}
             h={64}
             label="Conceptual schema"
-            sub="সব টেবিল, সম্পর্ক, constraint — পুরো সংস্থার ডাটার নকশা"
+            sub="সব টেবিল, সম্পর্ক, constraint, পুরো সংস্থার ডাটার নকশা"
             tone="brand"
             size={17}
           />
@@ -39,7 +39,7 @@ export function ThreeSchema() {
             w={500}
             h={64}
             label="Internal schema"
-            sub="ফাইল, ইনডেক্স, পেজ — ডাটা ডিস্কে কীভাবে থাকে"
+            sub="ফাইল, ইনডেক্স, পেজ, ডাটা ডিস্কে কীভাবে থাকে"
             tone="good"
             size={17}
           />
@@ -117,7 +117,7 @@ export function DbmsComponents() {
             y={8}
             w={780}
             h={44}
-            label="ব্যবহারকারী / অ্যাপ্লিকেশন — SQL কোয়েরি"
+            label="ব্যবহারকারী / অ্যাপ্লিকেশন, SQL কোয়েরি"
             tone="brand"
             size={15}
           />
@@ -274,11 +274,11 @@ export function KeyHierarchy() {
         <>
           <rect x={10} y={10} width={800} height={310} rx={26} className="dg-box-teal" />
           <Label x={410} y={38} soft={false} weight={700} size={17}>
-            Super Key — যেকোনো attribute-সেট যা সারিকে অনন্যভাবে চেনায়
+            Super Key, যেকোনো attribute-সেট যা সারিকে অনন্যভাবে চেনায়
           </Label>
           <rect x={60} y={60} width={700} height={240} rx={22} className="dg-box-brand" />
           <Label x={410} y={88} soft={false} weight={700} size={17}>
-            Candidate Key — ন্যূনতম super key (এর কোনো অংশ আর super key নয়)
+            Candidate Key, ন্যূনতম super key (এর কোনো অংশ আর super key নয়)
           </Label>
           <rect x={110} y={108} width={290} height={170} rx={18} className="dg-good" />
           <Label x={255} y={140} soft={false} weight={700} size={16}>

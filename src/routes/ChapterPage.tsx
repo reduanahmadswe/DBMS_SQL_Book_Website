@@ -8,7 +8,7 @@ import { useShell } from '@/components/layout/Shell';
 import { ChapterContext } from '@/components/mdx/Figure';
 import { mdxComponents } from '@/components/mdx/mdx-components';
 import { ShareIcon } from '@/components/Icons';
-import { TeaStallScene } from '@/components/characters/Scenes';
+import { HeroScene } from '@/components/characters/HeroScene';
 import NotFound from './NotFound';
 
 type MdxModule = { default: ComponentType<{ components?: Record<string, ComponentType<never>> }> };
@@ -65,16 +65,16 @@ export default function ChapterPage() {
   const { prev, next } = neighbours(slug);
 
   return (
-    <div className="mx-auto flex max-w-[96rem]">
+    <div className="mx-auto flex max-w-6xl gap-6 px-4 sm:px-6">
       <Sidebar currentSlug={slug} />
-      <main id="main" className="min-w-0 flex-1 px-4 pb-8 pt-8 sm:px-8 lg:px-10">
+      <main id="main" className="min-w-0 flex-1 pb-8 pt-8">
         <ReadingProgress />
         <ChapterBody
           key={slug}
           chapter={{ slug, number: meta.number }}
           header={
-            <header className="mb-8 max-w-[42rem]">
-              <p className="text-sm font-medium text-accent-text">{part?.title}</p>
+            <header className="mb-8">
+              <p className="chapter-chip">{part?.title}</p>
               <h1 className="mt-1 font-display text-[2rem] leading-tight text-ink sm:text-[2.5rem]">
                 <span className="mr-2 text-brand">{bnDigits(meta.number)}.</span>
                 {meta.title}
@@ -86,12 +86,12 @@ export default function ChapterPage() {
           footer={
             <nav
               aria-label="আগের-পরের অধ্যায়"
-              className="no-print mt-12 grid max-w-[42rem] gap-3 sm:grid-cols-2"
+              className="no-print mt-12 grid gap-3 sm:grid-cols-2"
             >
               {prev ? (
                 <Link
                   to={`/chapters/${prev.slug}`}
-                  className="rounded-xl border border-line bg-surface p-4 no-underline shadow-[var(--shadow)] hover:border-brand"
+                  className="rounded-xl border border-line bg-surface p-4 no-underline card-3d hover:border-brand"
                 >
                   <span className="text-sm text-ink-faint">← আগের অধ্যায়</span>
                   <span className="mt-1 block font-semibold text-ink">{prev.title}</span>
@@ -102,7 +102,7 @@ export default function ChapterPage() {
               {next && (
                 <Link
                   to={`/chapters/${next.slug}`}
-                  className="rounded-xl border border-line bg-surface p-4 text-right no-underline shadow-[var(--shadow)] hover:border-brand sm:col-start-2"
+                  className="rounded-xl border border-line bg-surface p-4 text-right no-underline card-3d hover:border-brand sm:col-start-2"
                 >
                   <span className="text-sm text-ink-faint">পরের অধ্যায় →</span>
                   <span className="mt-1 block font-semibold text-ink">{next.title}</span>
@@ -132,6 +132,7 @@ function ChapterBody({
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [active, setActive] = useState('');
   const [toast, setToast] = useState('');
+  const { openSubscribe } = useShell();
   const location = useLocation();
 
   // হেডিং থেকে TOC বানাই এবং স্থির id বসাই (সার্চ ইনডেক্সের h-N-এর সাথে মেলে)
@@ -201,7 +202,7 @@ function ChapterBody({
       setToast('লিংক কপি হয়েছে');
     } catch (e) {
       if (e instanceof DOMException && e.name === 'AbortError') return; // ব্যবহারকারী নিজেই বাতিল করেছে
-      setToast('শেয়ার করা যায়নি — ঠিকানা বার থেকে কপি করো');
+      setToast('শেয়ার করা যায়নি, ঠিকানা বার থেকে কপি করো');
     }
     setTimeout(() => setToast(''), 2500);
   };
@@ -211,9 +212,31 @@ function ChapterBody({
 
   return (
     <ChapterContext.Provider value={ctx}>
-      <div className="flex gap-10">
+      <div className="mx-auto max-w-[46rem]">
         <div className="min-w-0 flex-1">
           {header}
+          {headings.some((h) => h.level === 2) && (
+            <details className="card-3d no-print group mb-8 p-4" open>
+              <summary className="cursor-pointer select-none font-display text-lg">
+                এই অধ্যায়ে
+              </summary>
+              <ul className="mt-3 grid gap-x-6 text-[0.95rem] leading-snug sm:grid-cols-2">
+                {headings
+                  .filter((h) => h.level === 2)
+                  .map((h) => (
+                    <li key={h.id}>
+                      <a
+                        href={`#${h.id}`}
+                        aria-current={active === h.id ? 'true' : undefined}
+                        className={`block rounded-lg px-2 py-1 no-underline ${active === h.id ? 'bg-brand-tint font-semibold text-brand' : 'text-ink-soft hover:bg-brand-tint hover:text-ink'}`}
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </details>
+          )}
           <article ref={articleRef} className="prose-ledu">
             {Content ? (
               <Suspense
@@ -229,10 +252,13 @@ function ChapterBody({
               <ComingSoon />
             )}
           </article>
-          <div ref={endRef} className="mt-10 h-px max-w-[42rem]" />
-          <div className="no-print mt-4 flex max-w-[42rem] items-center gap-3">
+          <div ref={endRef} className="mt-10 h-px" />
+          <div className="no-print mt-4 flex items-center gap-3">
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => void share()}>
               <ShareIcon width={18} height={18} /> শেয়ার করো
+            </button>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={openSubscribe}>
+              ইমেইলে আপডেট পেতে চাই
             </button>
             <span role="status" className="text-sm text-accent-text">
               {toast}
@@ -240,27 +266,6 @@ function ChapterBody({
           </div>
           {footer}
         </div>
-        {headings.length > 0 && (
-          <aside
-            className="no-print sticky top-[calc(var(--topbar-h)+1.5rem)] hidden h-fit max-h-[calc(100vh-6rem)] w-60 shrink-0 overflow-y-auto xl:block"
-            aria-label="এই অধ্যায়ে"
-          >
-            <p className="mb-2 font-display text-lg">এই অধ্যায়ে</p>
-            <ul className="border-l border-line text-[0.92rem] leading-snug">
-              {headings.map((h) => (
-                <li key={h.id}>
-                  <a
-                    href={`#${h.id}`}
-                    aria-current={active === h.id ? 'true' : undefined}
-                    className={`block border-l-2 py-1 no-underline ${h.level === 3 ? 'pl-6' : 'pl-3'} ${active === h.id ? '-ml-px border-brand font-semibold text-brand' : '-ml-px border-transparent text-ink-soft hover:text-ink'}`}
-                  >
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        )}
       </div>
     </ChapterContext.Provider>
   );
@@ -268,12 +273,12 @@ function ChapterBody({
 
 function ComingSoon() {
   return (
-    <div className="max-w-[42rem]">
+    <div>
       <div className="overflow-hidden rounded-2xl border border-line" aria-hidden="true">
-        <TeaStallScene />
+        <HeroScene />
       </div>
       <p className="mt-6 text-lg">
-        এই অধ্যায়টা এখনো লেখা চলছে — লেদু আর কদম চাচা চা খেতে খেতে খসড়া করছেন! ততক্ষণ{' '}
+        এই অধ্যায়টা এখনো লেখা চলছে, লেদু আর কদম চাচা চা খেতে খেতে খসড়া করছেন! ততক্ষণ{' '}
         <Link to="/playground">SQL খেলার মাঠে</Link> হাত পাকিয়ে নাও, কিংবা আগের অধ্যায়গুলো আরেকবার
         পড়ে ফেলো।
       </p>

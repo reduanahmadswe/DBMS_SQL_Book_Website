@@ -38,7 +38,8 @@ function page(path, title, desc) {
     .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${esc(full)}$2`)
     .replace(/(<meta property="og:description" content=")[^"]*(")/, `$1${esc(desc)}$2`)
     .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${url}$2`)
-    .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${baseUrl}/og-default.svg$2`)
+    .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${baseUrl}/og-default.png$2`)
+    .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${baseUrl}/og-default.png$2`)
     .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${esc(full)}$2`)
     .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${esc(desc)}$2`);
   if (path !== '/') {

@@ -15,44 +15,44 @@ export interface ChapterMeta {
 }
 
 export const parts: Part[] = [
-  { id: 'p0', title: 'পর্ব ০ — শুরু', blurb: 'লেদুর টং থেকে লেদু মার্ট: গল্পের শুরু।' },
+  { id: 'p0', title: 'পর্ব ০, শুরু', blurb: 'লেদুর টং থেকে লেদু মার্ট: গল্পের শুরু।' },
   {
     id: 'p1',
-    title: 'পর্ব ১ — ডাটাবেসের দুনিয়ায় প্রথম পা',
+    title: 'পর্ব ১, ডাটাবেসের দুনিয়ায় প্রথম পা',
     blurb: 'খাতার যন্ত্রণা থেকে DBMS, আর্কিটেকচার ও ডাটা মডেল।',
   },
-  { id: 'p2', title: 'পর্ব ২ — নকশা আঁকা (ER Model)', blurb: 'ER, EER আর ER থেকে টেবিল।' },
+  { id: 'p2', title: 'পর্ব ২, নকশা আঁকা (ER Model)', blurb: 'ER, EER আর ER থেকে টেবিল।' },
   {
     id: 'p3',
-    title: 'পর্ব ৩ — রিলেশনাল মডেল',
+    title: 'পর্ব ৩, রিলেশনাল মডেল',
     blurb: 'টেবিল, চাবি, constraint, অ্যালজেব্রা ও ক্যালকুলাস।',
   },
-  { id: 'p4', title: 'পর্ব ৪ — SQL শেখা', blurb: 'CREATE থেকে Window ফাংশন, Trigger ও DCL/TCL।' },
+  { id: 'p4', title: 'পর্ব ৪, SQL শেখা', blurb: 'CREATE থেকে Window ফাংশন, Trigger ও DCL/TCL।' },
   {
     id: 'p5',
-    title: 'পর্ব ৫ — ভালো নকশা (Normalization)',
+    title: 'পর্ব ৫, ভালো নকশা (Normalization)',
     blurb: 'Anomaly, FD, 1NF–5NF ও decomposition।',
   },
   {
     id: 'p6',
-    title: 'পর্ব ৬ — স্টোরেজ, ইনডেক্সিং ও কোয়েরি অপটিমাইজেশন',
+    title: 'পর্ব ৬, স্টোরেজ, ইনডেক্সিং ও কোয়েরি অপটিমাইজেশন',
     blurb: 'B+ Tree, Hashing, query plan।',
   },
-  { id: 'p7', title: 'পর্ব ৭ — ট্রানজ্যাকশন', blurb: 'ACID, schedule ও serializability।' },
+  { id: 'p7', title: 'পর্ব ৭, ট্রানজ্যাকশন', blurb: 'ACID, schedule ও serializability।' },
   {
     id: 'p8',
-    title: 'পর্ব ৮ — কনকারেন্সি কন্ট্রোল',
+    title: 'পর্ব ৮, কনকারেন্সি কন্ট্রোল',
     blurb: 'Lock, deadlock, MVCC, isolation level।',
   },
-  { id: 'p9', title: 'পর্ব ৯ — রিকভারি', blurb: 'Log, WAL, checkpoint, ARIES, backup।' },
+  { id: 'p9', title: 'পর্ব ৯, রিকভারি', blurb: 'Log, WAL, checkpoint, ARIES, backup।' },
   {
     id: 'p10',
-    title: 'পর্ব ১০ — নিরাপত্তা',
+    title: 'পর্ব ১০, নিরাপত্তা',
     blurb: 'Authentication, SQL injection প্রতিরোধ, encryption।',
   },
   {
     id: 'p11',
-    title: 'পর্ব ১১ — বড় হওয়ার পালা',
+    title: 'পর্ব ১১, বড় হওয়ার পালা',
     blurb: 'Distributed DB, sharding, NoSQL, Data Warehouse।',
   },
   { id: 'p12', title: 'শেষ অংশ', blurb: 'নতুন বিপত্তি আর লেখকের কথা।' },
@@ -79,7 +79,7 @@ const rows: Row[] = [
   [9, 'টেবিলের ভাষা', 'Relation, tuple, attribute, domain', 'p3', 'table-er-bhasha'],
   [10, 'চাবির গোছা', 'Super key থেকে surrogate key', 'p3', 'chabir-gocha'],
   [11, 'নিয়মের বেড়া', 'Integrity constraint-এর পাহারা', 'p3', 'niyomer-bera'],
-  [12, 'রিলেশনাল অ্যালজেব্রা', 'σ, π, ⋈, ÷ — কোয়েরির গণিত', 'p3', 'relational-algebra'],
+  [12, 'রিলেশনাল অ্যালজেব্রা', 'σ, π, ⋈, ÷, কোয়েরির গণিত', 'p3', 'relational-algebra'],
   [13, 'রিলেশনাল ক্যালকুলাস', 'কী চাই, কীভাবে নয়', 'p3', 'relational-calculus'],
   [14, 'SQL-এর সাথে পরিচয়', 'ইতিহাস, DDL/DML/DCL/TCL আর data type', 'p4', 'sql-porichoy'],
   [15, 'টেবিল বানানো আর ভাঙা', 'CREATE, ALTER, DROP, TRUNCATE', 'p4', 'table-banano'],
@@ -120,7 +120,7 @@ const rows: Row[] = [
   ],
   [33, 'ডাটা কোথায় থাকে', 'Storage hierarchy, page, file organization, RAID', 'p6', 'storage'],
   [34, 'Indexing', 'Dense, sparse, composite, covering index', 'p6', 'indexing'],
-  [35, 'B-Tree আর B+ Tree', 'Search, split, merge — ধাপে ধাপে', 'p6', 'b-plus-tree'],
+  [35, 'B-Tree আর B+ Tree', 'Search, split, merge, ধাপে ধাপে', 'p6', 'b-plus-tree'],
   [36, 'Hashing', 'Static, extendible ও linear hashing', 'p6', 'hashing'],
   [
     37,
@@ -149,7 +149,7 @@ const rows: Row[] = [
   [49, 'NoSQL', 'Key-value, document, column, graph', 'p11', 'nosql'],
   [50, 'Data Warehouse', 'OLTP vs OLAP, star schema, ETL', 'p11', 'data-warehouse'],
   [51, 'নতুন বিপত্তি!', 'পরের বইয়ের হাতছানি', 'p12', 'notun-bipotti'],
-  [52, 'লেদুর কারিগর', 'লেখকের কথা — Reduan Ahmad · BornoSoft', 'p12', 'author'],
+  [52, 'লেদুর কারিগর', 'লেখকের কথা, Reduan Ahmad · BornoSoft', 'p12', 'author'],
 ];
 
 /** যে অধ্যায়গুলোর .mdx ফাইল লেখা হয়েছে (PROGRESS.md-এর সাথে মেলান) */

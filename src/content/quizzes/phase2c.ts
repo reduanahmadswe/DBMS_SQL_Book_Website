@@ -15,7 +15,7 @@ export const ch10: QuizQuestion[] = [
   {
     q: 'Candidate key কোনটি?',
     options: [
-      'ন্যূনতম super key — এর কোনো প্রকৃত উপসেট আর super key নয়',
+      'ন্যূনতম super key, এর কোনো প্রকৃত উপসেট আর super key নয়',
       'সবচেয়ে বড় super key',
       'foreign key',
       'NULL-able কলাম',
@@ -111,7 +111,7 @@ export const ch11: QuizQuestion[] = [
     options: ['মোছা সফল', 'ত্রুটি দিয়ে বাতিল', 'child মুছে যায়', 'FK NULL হয়'],
     answer: 1,
     explain:
-      'RESTRICT/NO ACTION অপারেশনটি প্রত্যাখ্যান করে (পার্থক্য: কখন যাচাই হয় — RESTRICT তাৎক্ষণিক, NO ACTION statement/transaction শেষে)।',
+      'RESTRICT/NO ACTION অপারেশনটি প্রত্যাখ্যান করে (পার্থক্য: কখন যাচাই হয়, RESTRICT তাৎক্ষণিক, NO ACTION statement/transaction শেষে)।',
   },
   {
     q: 'DEFAULT constraint কখন কাজ করে?',
@@ -179,7 +179,7 @@ export const ch12: QuizQuestion[] = [
     q: 'কোন ক্ষেত্রে Division (÷) ব্যবহার হয়?',
     options: ['"সবগুলো"-র (for all) ধরনের প্রশ্নে', 'সংখ্যা ভাগে', 'ডুপ্লিকেট মুছতে', 'sorting-এ'],
     answer: 0,
-    explain: 'যেমন "যে ছাত্র সব আবশ্যিক কোর্সে ভর্তি" — division।',
+    explain: 'যেমন "যে ছাত্র সব আবশ্যিক কোর্সে ভর্তি", division।',
   },
   {
     q: 'Rename (ρ) এর কাজ কী?',
@@ -200,7 +200,7 @@ export const ch13: QuizQuestion[] = [
     q: 'Tuple Relational Calculus-এর সাধারণ রূপ কোনটি?',
     options: ['{ t | P(t) }', '{ <x1,…,xn> | P }', 'σ(R)', 'SELECT'],
     answer: 0,
-    explain: 'TRC: { t | P(t) } — t একটি tuple variable, P predicate। { <x1,…,xn> | P } হলো DRC।',
+    explain: 'TRC: { t | P(t) }, t একটি tuple variable, P predicate। { <x1,…,xn> | P } হলো DRC।',
   },
   {
     q: 'Domain Relational Calculus-এর variable কী নির্দেশ করে?',
@@ -218,7 +218,7 @@ export const ch13: QuizQuestion[] = [
     ],
     answer: 0,
     explain:
-      'Safe TRC/DRC ও relational algebra expressive power-এ সমতুল্য — "relationally complete"।',
+      'Safe TRC/DRC ও relational algebra expressive power-এ সমতুল্য, "relationally complete"।',
   },
   {
     q: 'Unsafe expression-এর উদাহরণ কোনটি?',
@@ -246,6 +246,6 @@ export const ch13: QuizQuestion[] = [
       'ORDER BY দিয়ে',
     ],
     answer: 0,
-    explain: '∀x P ≡ ¬∃x ¬P — তাই ডাবল NOT EXISTS।',
+    explain: '∀x P ≡ ¬∃x ¬P, তাই ডাবল NOT EXISTS।',
   },
 ];

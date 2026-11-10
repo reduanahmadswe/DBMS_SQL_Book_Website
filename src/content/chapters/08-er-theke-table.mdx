@@ -2,13 +2,13 @@ import { ch08 as questions } from '@/content/quizzes/phase2b';
 
 ## গল্প: কাগজের নকশা থেকে আসল গুদাম
 
-নকশা তো আঁকা হলো। লেদু উৎসাহে বলল, "চাচা, এবার তো কোড করি?" কদম চাচা হাসলেন, "আগে নকশাকে টেবিলে বদলাও। এটা যান্ত্রিক কাজ — নিয়ম জানলে ভুল হয় না।"
+নকশা তো আঁকা হলো। লেদু উৎসাহে বলল, "চাচা, এবার তো কোড করি?" কদম চাচা হাসলেন, "আগে নকশাকে টেবিলে বদলাও। এটা যান্ত্রিক কাজ, নিয়ম জানলে ভুল হয় না।"
 
 <StoryImage name="er-to-table" n={1} caption="কদম চাচার নিয়ম: প্রতিটি এন্টিটি একটা টেবিল, প্রতিটি M:N একটা সংযোগ-টেবিল" alt="কদম চাচা বোর্ডে ER থেকে টেবিলে রূপান্তরের নিয়ম লিখছেন, লেদু মনোযোগ দিয়ে দেখছে" />
 
 ## সমস্যাটা আসলে কী
 
-ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে টেবিল। ER-এর প্রতিটি নির্মাণ (entity, attribute, relationship, weak entity, specialization…) টেবিল-কলাম-key-তে কীভাবে যাবে — এই স্পষ্ট ধাপগুলোই ER-to-relational mapping (Elmasri & Navathe-এর অ্যালগরিদম)।
+ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে টেবিল। ER-এর প্রতিটি নির্মাণ (entity, attribute, relationship, weak entity, specialization…) টেবিল-কলাম-key-তে কীভাবে যাবে, এই স্পষ্ট ধাপগুলোই ER-to-relational mapping (Elmasri & Navathe-এর অ্যালগরিদম)।
 
 ## কদম চাচার ক্লাস: ধাপে ধাপে নিয়ম
 
@@ -22,7 +22,7 @@ ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে ট�
 
 ### ধাপ ২: Weak entity
 
-নতুন টেবিল; owner-এর primary key এখানে **foreign key** হিসেবে আসে; owner-key + partial key মিলে **primary key**।
+নতুন টেবিল; owner-এর primary key এখানে foreign key হিসেবে আসে; owner-key + partial key মিলে primary key।
 
 <Figure n={2} caption="Weak entity → টেবিল: PK = (order_id, line_no), order_id একই সাথে FK" alt="Order ও Order_Item এর ERD, নিচে orders ও order_items টেবিল যেখানে order_items এর primary key order_id ও line_no" wide>
   <Erd d="weakEntityErd" />
@@ -36,25 +36,25 @@ ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে ট�
 
 ### ধাপ ৩: Binary 1:1
 
-তিনটি পদ্ধতি: **(ক) Foreign key পদ্ধতি** (সবচেয়ে প্রচলিত) — একদিকের টেবিলে অপর দিকের key FK হিসেবে রেখে `UNIQUE` করা; total participation-এর দিকে রাখাই ভালো (NULL এড়াতে)। **(খ) Merged relation** — দুই entity যদি দুদিকেই total হয়, এক টেবিলে মিলিয়ে ফেলা। **(গ) Cross-reference (relationship টেবিল)** — দুই key ও সম্পর্কের attribute নিয়ে আলাদা টেবিল (দুদিকেই partial হলে)।
+তিনটি পদ্ধতি: (ক) Foreign key পদ্ধতি (সবচেয়ে প্রচলিত), একদিকের টেবিলে অপর দিকের key FK হিসেবে রেখে `UNIQUE` করা; total participation-এর দিকে রাখাই ভালো (NULL এড়াতে)। (খ) Merged relation, দুই entity যদি দুদিকেই total হয়, এক টেবিলে মিলিয়ে ফেলা। (গ) Cross-reference (relationship টেবিল), দুই key ও সম্পর্কের attribute নিয়ে আলাদা টেবিল (দুদিকেই partial হলে)।
 
-আমাদের `deliveries.order_id UNIQUE` — প্রতিটি delivery একটি অর্ডারের, প্রতিটি অর্ডারের একটি delivery।
+আমাদের `deliveries.order_id UNIQUE`, প্রতিটি delivery একটি অর্ডারের, প্রতিটি অর্ডারের একটি delivery।
 
 ### ধাপ ৪: Binary 1:N
 
-**N-দিকের** টেবিলে 1-দিকের primary key **foreign key** হিসেবে। সম্পর্কের নিজস্ব attribute N-দিকের টেবিলে যায়।
+N-দিকের টেবিলে 1-দিকের primary key foreign key হিসেবে। সম্পর্কের নিজস্ব attribute N-দিকের টেবিলে যায়।
 
 | ER | টেবিল |
 |---|---|
-| Customer 1 — places — N Order | `orders(order_id PK, customer_id FK → customers, …)` |
+| Customer 1, places, N Order | `orders(order_id PK, customer_id FK → customers, …)` |
 
 ### ধাপ ৫: Binary M:N
 
-**নতুন সংযোগ-টেবিল (relationship/junction/associative table)**: দুই entity-র primary key দুটি FK, মিলে composite primary key; সম্পর্কের attribute-ও এখানে।
+নতুন সংযোগ-টেবিল (relationship/junction/associative table): দুই entity-র primary key দুটি FK, মিলে composite primary key; সম্পর্কের attribute-ও এখানে।
 
 | ER | টেবিল |
 |---|---|
-| Order M — contains — N Product (quantity) | `order_items(order_id FK, product_id FK, quantity, unit_price, PK(order_id, product_id))` |
+| Order M, contains, N Product (quantity) | `order_items(order_id FK, product_id FK, quantity, unit_price, PK(order_id, product_id))` |
 
 ### ধাপ ৬: Multi-valued attribute
 
@@ -66,7 +66,7 @@ ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে ট�
 
 ### ধাপ ৭: N-ary (ternary) সম্পর্ক
 
-নতুন টেবিল; **প্রতিটি** জড়িত entity-র key FK; PK সাধারণত সবকটির সমন্বয় (কার্ডিনালিটি অনুযায়ী ছোট হতে পারে); সম্পর্কের attribute যুক্ত।
+নতুন টেবিল; প্রতিটি জড়িত entity-র key FK; PK সাধারণত সবকটির সমন্বয় (কার্ডিনালিটি অনুযায়ী ছোট হতে পারে); সম্পর্কের attribute যুক্ত।
 
 `supplies(supplier_id FK, product_id FK, store_id FK, quantity, supply_date, PK(supplier_id, product_id, store_id))`।
 
@@ -89,7 +89,7 @@ ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে ট�
 | **৮C: একটি টেবিল + type কলাম** | disjoint | সব attribute এক টেবিলে; `emp_type` কলাম; অপ্রযোজ্যগুলো NULL |
 | **৮D: একটি টেবিল + একাধিক boolean কলাম** | overlapping | `is_rider`, `is_manager`… ফ্ল্যাগ |
 
-<Figure n={3} caption="Specialization-এর ম্যাপিং ৮A — সুপারক্লাস টেবিল + প্রতিটি subclass-এর টেবিল (PK একই সাথে FK)" alt="Employee টেবিল এবং riders, store_managers, support_agents টেবিল, যেখানে প্রতিটির primary key employee_id যা employees টেবিলের foreign key" wide>
+<Figure n={3} caption="Specialization-এর ম্যাপিং ৮A, সুপারক্লাস টেবিল + প্রতিটি subclass-এর টেবিল (PK একই সাথে FK)" alt="Employee টেবিল এবং riders, store_managers, support_agents টেবিল, যেখানে প্রতিটির primary key employee_id যা employees টেবিলের foreign key" wide>
   <TableRow>
     <TableView name="employees" columns={['employee_id', 'name', 'salary']} rows={[[4, 'রাকিব হাসান', 44000]]} pk={[0]} compact />
     <TableView name="riders" columns={['employee_id (PK,FK)', 'bike_no']} rows={[[21, 'ঢাকা মেট্রো-হ ১২-৩৪৫৬']]} pk={[0]} compact />
@@ -99,17 +99,17 @@ ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে ট�
 
 ### Category (Union)
 
-সাধারণত একটি **surrogate key** দিয়ে `payers(payer_id PK, …)` টেবিল; superclass-গুলোর টেবিলে `payer_id` FK যোগ। (Superclass-গুলোর key ভিন্ন ধরনের হলে surrogate অপরিহার্য।)
+সাধারণত একটি surrogate key দিয়ে `payers(payer_id PK, …)` টেবিল; superclass-গুলোর টেবিলে `payer_id` FK যোগ। (Superclass-গুলোর key ভিন্ন ধরনের হলে surrogate অপরিহার্য।)
 
 ### Aggregation
 
 সম্পর্ক-টেবিলটিকেই (`deliveries(order_id, rider_id)`) একটি entity-র মতো ধরে নতুন সম্পর্ক-টেবিলে সেটির PK-কে FK বানাও।
 
-## পূর্ণ লেদু মার্ট — ERD থেকে স্কিমা
+## পূর্ণ লেদু মার্ট: ERD থেকে স্কিমা
 
 ধাপ ১ (অধ্যায় ৫: entity) ও ধাপ ২ (অধ্যায় ৬: সম্পর্ক) পেরিয়ে এখন পূর্ণ নকশা, সাথে `Payment`, `Delivery`, `Rider`, `Store`, `Employee`:
 
-<Figure n={4} caption="চূড়ান্ত ধাপ — পূর্ণ লেদু মার্ট ERD (বড় করে দেখতে 'বড় করো' চাপো; Crow's Foot-এ টগল করো)" alt="লেদু মার্টের পূর্ণ ERD: Category, Product, Supplier, Customer, Order, Store, Payment, Delivery, Rider ও Employee এন্টিটি এবং তাদের সম্পর্ক" wide>
+<Figure n={4} caption="চূড়ান্ত ধাপ, পূর্ণ লেদু মার্ট ERD (বড় করে দেখতে 'বড় করো' চাপো; Crow's Foot-এ টগল করো)" alt="লেদু মার্টের পূর্ণ ERD: Category, Product, Supplier, Customer, Order, Store, Payment, Delivery, Rider ও Employee এন্টিটি এবং তাদের সম্পর্ক" wide>
   <Erd d="leduFullErd" />
 </Figure>
 
@@ -130,7 +130,7 @@ ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে ট�
 
 ফলাফল স্কিমার ছবি (অধ্যায় ০-তে দেখা) আবার:
 
-<Figure n={5} caption="ER থেকে ম্যাপ করা চূড়ান্ত স্কিমা — PK আন্ডারলাইনড, FK তীর" alt="ledu_mart-এর এগারোটি টেবিল ও তাদের foreign key সম্পর্ক" wide>
+<Figure n={5} caption="ER থেকে ম্যাপ করা চূড়ান্ত স্কিমা, PK আন্ডারলাইনড, FK তীর" alt="ledu_mart-এর এগারোটি টেবিল ও তাদের foreign key সম্পর্ক" wide>
   <LeduSchema />
 </Figure>
 
@@ -140,7 +140,7 @@ ER ডায়াগ্রাম ধারণাগত; DBMS বোঝে ট�
 
 ### ১. University
 
-**বর্ণনা:** প্রতিটি ছাত্র একটি বিভাগে পড়ে; বিভাগে অনেক শিক্ষক; প্রতিটি কোর্স একজন শিক্ষক পড়ান; ছাত্র অনেক কোর্সে ভর্তি হয়, কোর্সে অনেক ছাত্র; ভর্তিতে grade থাকে।
+বর্ণনা: প্রতিটি ছাত্র একটি বিভাগে পড়ে; বিভাগে অনেক শিক্ষক; প্রতিটি কোর্স একজন শিক্ষক পড়ান; ছাত্র অনেক কোর্সে ভর্তি হয়, কোর্সে অনেক ছাত্র; ভর্তিতে grade থাকে।
 
 <Figure n={6} caption="University ERD" alt="Department, Student, Course ও Teacher এন্টিটি এবং majors_in, employs, enrolls, teaches সম্পর্ক" wide>
   <Erd d="universityErd" />
@@ -183,7 +183,7 @@ ORDER BY s.name, c.title;`} expectRows={3} minRows={24} />
 
 ### ২. Library
 
-**বর্ণনা:** সদস্য বই ধার নেয় (তারিখসহ); একটি বইয়ের একাধিক লেখক ও একজন প্রকাশক।
+বর্ণনা: সদস্য বই ধার নেয় (তারিখসহ); একটি বইয়ের একাধিক লেখক ও একজন প্রকাশক।
 
 <Figure n={7} caption="Library ERD" alt="Member, Book, Author ও Publisher এন্টিটি; borrows (M:N) writes (M:N) এবং publishes (1:N) সম্পর্ক" wide>
   <Erd d="libraryErd" />
@@ -198,7 +198,7 @@ book_author(isbn FK, author_id FK, PK(isbn, author_id))
 borrow(member_id FK, isbn FK, issue_date, due_date, PK(member_id, isbn, issue_date))
 ```
 
-`borrow`-এর key-তে `issue_date` যুক্ত — একই সদস্য একই বই একাধিকবার নিতে পারে।
+`borrow`-এর key-তে `issue_date` যুক্ত, একই সদস্য একই বই একাধিকবার নিতে পারে।
 
 ### ৩. Hospital
 
@@ -216,7 +216,7 @@ consult(patient_id FK, doctor_id FK, visit_date, diagnosis, PK(patient_id, docto
 
 ### ৪. Bank
 
-<Figure n={9} caption="Bank ERD — ATM_Transaction একটি weak entity" alt="Customer, Account, Branch, Loan এবং weak entity ATM_Transaction সহ ব্যাংকের ERD" wide>
+<Figure n={9} caption="Bank ERD, ATM_Transaction একটি weak entity" alt="Customer, Account, Branch, Loan এবং weak entity ATM_Transaction সহ ব্যাংকের ERD" wide>
   <Erd d="bankErd" />
 </Figure>
 
@@ -244,7 +244,7 @@ guest(guest_id PK, name, phone)
 booking(guest_id FK, room_no FK, check_in, check_out, PK(guest_id, room_no, check_in))
 ```
 
-(একাধিক হোটেলে একই `room_no` থাকলে `room`-এর PK হবে `(hotel_id, room_no)` — তখন Room একটি weak entity!)
+(একাধিক হোটেলে একই `room_no` থাকলে `room`-এর PK হবে `(hotel_id, room_no)`, তখন Room একটি weak entity!)
 
 ### ৬. E-commerce
 
@@ -263,7 +263,7 @@ payment(payment_id PK, method, order_id FK→orders UNIQUE NOT NULL)   -- 1:1, �
 
 ## হাতে-কলমে
 
-ম্যাপ করা M:N সংযোগ-টেবিলের গঠন `sqlite_master` থেকে দেখো — composite primary key ও দুটি foreign key:
+ম্যাপ করা M:N সংযোগ-টেবিলের গঠন `sqlite_master` থেকে দেখো, composite primary key ও দুটি foreign key:
 
 <SqlRunner initialQuery={`SELECT sql
 FROM sqlite_master
@@ -272,23 +272,23 @@ WHERE name = 'order_items';`} expectRows={1} minRows={2} />
 ## ফটকার ভুল
 
 <Dialogue who="fotka">
-M:N? আমি দুই টেবিলেই অন্যের আইডি লিখে রাখি — কাস্টমারে অর্ডারের আইডির তালিকা, অর্ডারে কাস্টমারের!
+M:N? আমি দুই টেবিলেই অন্যের আইডি লিখে রাখি, কাস্টমারে অর্ডারের আইডির তালিকা, অর্ডারে কাস্টমারের!
 </Dialogue>
 
 <Dialogue who="kodom">
-ফটকা, তালিকা এক ঘরে রাখলে সেটা আর atomic থাকে না — একটা আইডি বদলাতে গেলে দুই জায়গায় আপডেট, একটায় ভুলেই গরমিল। সংযোগ-টেবিল এজন্যই।
+ফটকা, তালিকা এক ঘরে রাখলে সেটা আর atomic থাকে না, একটা আইডি বদলাতে গেলে দুই জায়গায় আপডেট, একটায় ভুলেই গরমিল। সংযোগ-টেবিল এজন্যই।
 </Dialogue>
 
-- **M:N-কে FK দিয়ে ম্যাপ করা** — সবসময় সংযোগ-টেবিল।
+- **M:N-কে FK দিয়ে ম্যাপ করা**: সবসময় সংযোগ-টেবিল।
 - **Weak entity-র PK-তে owner-key ভুলে যাওয়া**।
 - **Multi-valued attribute কমা-বিভক্ত কলামে রাখা**।
-- **1:N-এ FK ভুল পাশে রাখা** — FK সবসময় **N-দিকে** (বহু-র দিকে)।
+- **1:N-এ FK ভুল পাশে রাখা**: FK সবসময় **N-দিকে** (বহু-র দিকে)।
 - **Derived attribute কলাম বানানো**।
 
 ## পরীক্ষার টিপস
 
 <Callout type="exam">
-**লিখিত:** ER থেকে টেবিলে রূপান্তরের ধাপ (৭ ধাপ) তালিকা + ছোট উদাহরণ — প্রায় নিশ্চিত প্রশ্ন। ERD আঁকার প্রশ্নে *তিনটি* জিনিস দেখাও: ERD → টেবিল-স্কিমা (PK/FK চিহ্নিত) → বিবৃতি অনুযায়ী কার্ডিনালিটির যুক্তি। **MCQ ট্র্যাপ:** (১) 1:N-এ FK N-দিকে। (২) M:N-এ composite PK। (৩) n টেবিল ও m সংযোগ-টেবিল: "মোট টেবিল কয়টি" ধরনের গণনা — প্রতিটি entity + প্রতিটি M:N + প্রতিটি multi-valued attribute।
+লিখিত: ER থেকে টেবিলে রূপান্তরের ধাপ (৭ ধাপ) তালিকা + ছোট উদাহরণ, প্রায় নিশ্চিত প্রশ্ন। ERD আঁকার প্রশ্নে *তিনটি* জিনিস দেখাও: ERD → টেবিল-স্কিমা (PK/FK চিহ্নিত) → বিবৃতি অনুযায়ী কার্ডিনালিটির যুক্তি। MCQ ট্র্যাপ: (১) 1:N-এ FK N-দিকে। (২) M:N-এ composite PK। (৩) n টেবিল ও m সংযোগ-টেবিল: "মোট টেবিল কয়টি" ধরনের গণনা, প্রতিটি entity + প্রতিটি M:N + প্রতিটি multi-valued attribute।
 </Callout>
 
 <Summary>
@@ -296,7 +296,7 @@ M:N? আমি দুই টেবিলেই অন্যের আইডি �
 - Weak entity → টেবিল, PK = owner key + partial key।
 - 1:1 → একদিকে FK + UNIQUE; 1:N → N-দিকে FK; M:N → সংযোগ-টেবিল; multi-valued → আলাদা টেবিল; n-ary → সব key নিয়ে টেবিল।
 - Specialization-এর চার বিকল্প (৮A–৮D); category → surrogate key।
-- চূড়ান্ত `ledu_mart` ১১ টেবিল — এই নিয়মেই ER থেকে এসেছে।
+- চূড়ান্ত `ledu_mart` ১১ টেবিল, এই নিয়মেই ER থেকে এসেছে।
 </Summary>
 
 ## কুইজ
@@ -306,7 +306,7 @@ M:N? আমি দুই টেবিলেই অন্যের আইডি �
 ## অনুশীলন
 
 <Exercise n={1}>
-ER: `Student M — enrolls — N Course` (attribute: `grade`)। রিলেশনাল স্কিমা লেখো।
+ER: `Student M, enrolls, N Course` (attribute: `grade`)। রিলেশনাল স্কিমা লেখো।
 
 <Answer>
 `student(student_id PK, …)`, `course(course_code PK, …)`, `enrollment(student_id FK, course_code FK, grade, PK(student_id, course_code))`।
@@ -314,10 +314,10 @@ ER: `Student M — enrolls — N Course` (attribute: `grade`)। রিলেশ
 </Exercise>
 
 <Exercise n={2}>
-`Rider 1 — rides — 1 Bike` (Rider total participation)। কোন টেবিলে FK রাখবে?
+`Rider 1, rides, 1 Bike` (Rider total participation)। কোন টেবিলে FK রাখবে?
 
 <Answer>
-Total participation-এর দিকে, অর্থাৎ `rider` টেবিলে `bike_no FK UNIQUE NOT NULL` — যাতে NULL এড়ানো যায়। (বিকল্প: bike-এ `rider_id FK UNIQUE`, তখন যে বাইকের রাইডার নেই তার জন্য NULL।)
+Total participation-এর দিকে, অর্থাৎ `rider` টেবিলে `bike_no FK UNIQUE NOT NULL`, যাতে NULL এড়ানো যায়। (বিকল্প: bike-এ `rider_id FK UNIQUE`, তখন যে বাইকের রাইডার নেই তার জন্য NULL।)
 </Answer>
 </Exercise>
 

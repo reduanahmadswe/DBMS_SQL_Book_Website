@@ -22,8 +22,8 @@ export default function GlossaryPage() {
     <main id="main" className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <h1 className="font-display text-3xl sm:text-4xl">শব্দকোষ</h1>
       <p className="mt-1 text-ink-soft">
-        বাংলা ↔ English — প্রতিটি শব্দ কোন অধ্যায়ে প্রথম এসেছে, সেখানকার লিংকসহ। (অধ্যায় লেখার
-        সাথে সাথে তালিকা বাড়ছে।)
+        বাংলা ↔ English, প্রতিটি শব্দ কোন অধ্যায়ে প্রথম এসেছে, সেখানকার লিংকসহ। (অধ্যায় লেখার সাথে
+        সাথে তালিকা বাড়ছে।)
       </p>
       <label className="mt-5 block">
         <span className="sr-only">শব্দ খুঁজুন</span>

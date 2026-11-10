@@ -6,7 +6,7 @@ export const questions: QuizQuestion[] = [
     options: ['name', 'city', 'customer_id', 'email'],
     answer: 2,
     explain:
-      'customer_id হলো customers টেবিলের Primary Key — নাম বা শহর একাধিক কাস্টমারের এক হতে পারে, কিন্তু customer_id কখনো রিপিট হয় না।',
+      'customer_id হলো customers টেবিলের Primary Key, নাম বা শহর একাধিক কাস্টমারের এক হতে পারে, কিন্তু customer_id কখনো রিপিট হয় না।',
   },
   {
     q: 'SQL-এর পূর্ণরূপ কোনটি?',

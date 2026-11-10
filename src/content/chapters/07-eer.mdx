@@ -7,7 +7,7 @@ import { ch07 as questions } from '@/content/quizzes/phase2b';
 <StoryImage name="employee-types" n={1} caption="একই কর্মী-পরিবার, কিন্তু কাজ অনুযায়ী আলাদা বৈশিষ্ট্য" alt="লেদু ও কদম চাচা কর্মীদের ধরন নিয়ে আলোচনা করছেন" />
 
 <Dialogue who="kodom">
-সাধারণ ER-এর সাথে একটু বেশি জানার নাম EER — Enhanced (Extended) ER। সাধারণ থেকে বিশেষে নামার কৌশল।
+সাধারণ ER-এর সাথে একটু বেশি জানার নাম EER, Enhanced (Extended) ER। সাধারণ থেকে বিশেষে নামার কৌশল।
 </Dialogue>
 
 ## সমস্যাটা আসলে কী
@@ -18,23 +18,23 @@ import { ch07 as questions } from '@/content/quizzes/phase2b';
 
 ### Superclass ও Subclass
 
-- <KeyTerm en="Superclass" bn="সুপারক্লাস">সাধারণ entity set; এর সাবক্লাসগুলো এর উপসেট</KeyTerm> — `Employee`।
-- <KeyTerm en="Subclass" bn="সাবক্লাস">সুপারক্লাসের একটি বিশেষ উপ-গোষ্ঠী, যার নিজস্ব অতিরিক্ত attribute/সম্পর্ক থাকতে পারে</KeyTerm> — `Rider`, `Store_Manager`, `Support_Agent`।
+- <KeyTerm en="Superclass" bn="সুপারক্লাস">সাধারণ entity set; এর সাবক্লাসগুলো এর উপসেট</KeyTerm>: `Employee`।
+- <KeyTerm en="Subclass" bn="সাবক্লাস">সুপারক্লাসের একটি বিশেষ উপ-গোষ্ঠী, যার নিজস্ব অতিরিক্ত attribute/সম্পর্ক থাকতে পারে</KeyTerm>: `Rider`, `Store_Manager`, `Support_Agent`।
 
 Subclass-এর প্রতিটি entity সুপারক্লাসেরও একই entity (IS-A)। অর্থাৎ `Rider` "রাকিব" আসলে `Employee` "রাকিব"।
 
 ### Attribute Inheritance
 
-Subclass সুপারক্লাসের **সব attribute ও সম্পর্ক** উত্তরাধিকারসূত্রে পায়। তাই `Rider`-এর `name`, `salary` আলাদা করে লিখতে হয় না, শুধু নিজের `bike_no` লেখা হয়।
+Subclass সুপারক্লাসের সব attribute ও সম্পর্ক উত্তরাধিকারসূত্রে পায়। তাই `Rider`-এর `name`, `salary` আলাদা করে লিখতে হয় না, শুধু নিজের `bike_no` লেখা হয়।
 
 ### Specialization ও Generalization
 
 - <KeyTerm en="Specialization" bn="স্পেশালাইজেশন">top-down: একটি সাধারণ entity set থেকে বিশেষ উপ-গোষ্ঠী তৈরি</KeyTerm>।
-- <KeyTerm en="Generalization" bn="জেনারেলাইজেশন">bottom-up: কয়েকটি entity set-এর সাধারণ বৈশিষ্ট্য টেনে একটি সুপারক্লাস তৈরি</KeyTerm> — `Car`, `Truck` থেকে `Vehicle`।
+- <KeyTerm en="Generalization" bn="জেনারেলাইজেশন">bottom-up: কয়েকটি entity set-এর সাধারণ বৈশিষ্ট্য টেনে একটি সুপারক্লাস তৈরি</KeyTerm>: `Car`, `Truck` থেকে `Vehicle`।
 
 প্রক্রিয়া উল্টো, ফল একই ধরনের ডায়াগ্রাম।
 
-<Figure n={2} caption="Employee-এর specialization — d মানে disjoint; একক লাইন মানে partial" alt="Employee সুপারক্লাস থেকে d-চিহ্নিত বৃত্ত দিয়ে Rider, Store_Manager ও Support_Agent সাবক্লাস" wide>
+<Figure n={2} caption="Employee-এর specialization, d মানে disjoint; একক লাইন মানে partial" alt="Employee সুপারক্লাস থেকে d-চিহ্নিত বৃত্ত দিয়ে Rider, Store_Manager ও Support_Agent সাবক্লাস" wide>
   <Erd d="eerEmployeeErd" />
 </Figure>
 
@@ -49,13 +49,13 @@ Subclass সুপারক্লাসের **সব attribute ও সম্�
 
 চার সমন্বয়: disjoint-total, disjoint-partial, overlapping-total, overlapping-partial। আমাদের `Employee` disjoint-partial (কাউন্টারকর্মী কোনো subclass-এ পড়ে না)। নিচের `Person` overlapping-total: প্রতিটি ব্যক্তি ছাত্র বা শিক্ষক বা উভয়।
 
-<Figure n={3} caption="Overlapping ও total specialization — একজন Student এবং Teacher দুটোই হতে পারে" alt="Person সুপারক্লাস থেকে ডবল লাইনে o-চিহ্নিত বৃত্ত দিয়ে Student ও Teacher" wide>
+<Figure n={3} caption="Overlapping ও total specialization, একজন Student এবং Teacher দুটোই হতে পারে" alt="Person সুপারক্লাস থেকে ডবল লাইনে o-চিহ্নিত বৃত্ত দিয়ে Student ও Teacher" wide>
   <Erd d="eerOverlapErd" />
 </Figure>
 
 ### ISA ত্রিভুজ নোটেশন
 
-পুরনো পাঠ্যবইয়ে (যেমন Silberschatz) বৃত্তের জায়গায় নিচমুখী **ISA ত্রিভুজ** আঁকা হয়:
+পুরনো পাঠ্যবইয়ে (যেমন Silberschatz) বৃত্তের জায়গায় নিচমুখী ISA ত্রিভুজ আঁকা হয়:
 
 <Figure n={4} caption="Silberschatz-শৈলীর ISA ত্রিভুজ" alt="Employee সুপারক্লাস থেকে ISA ত্রিভুজের মাধ্যমে Rider ও Manager সাবক্লাস" wide>
   <Erd d="isaTriangleErd" />
@@ -65,30 +65,30 @@ Subclass সুপারক্লাসের **সব attribute ও সম্�
 
 ER-এ সম্পর্কের সাথে সম্পর্ক সরাসরি জোড়া যায় না। ধরো, সাপোর্ট এজেন্ট রাইডারের *নির্দিষ্ট ডেলিভারি* (Rider ও Order-এর `delivers` সম্পর্ক) মনিটর করে। এজেন্ট সম্পর্ক করছে একটা *সম্পর্কের* সাথে। সমাধান: <KeyTerm en="Aggregation" bn="অ্যাগ্রিগেশন">একটি সম্পর্ক (ও তার জড়িত entity) কে একটি একক বিমূর্ত entity হিসেবে ধরে অন্য সম্পর্কে অংশ নিতে দেওয়া</KeyTerm>।
 
-<Figure n={5} caption="Aggregation — ড্যাশ-বাক্সে ঘেরা delivers সম্পর্ক এখন একটি একক entity-র মতো" alt="Rider ও Order এর delivers সম্পর্ককে ড্যাশ বাক্সে ঘিরে Support_Agent এর monitors সম্পর্ক যুক্ত" wide>
+<Figure n={5} caption="Aggregation, ড্যাশ-বাক্সে ঘেরা delivers সম্পর্ক এখন একটি একক entity-র মতো" alt="Rider ও Order এর delivers সম্পর্ককে ড্যাশ বাক্সে ঘিরে Support_Agent এর monitors সম্পর্ক যুক্ত" wide>
   <Erd d="aggregationErd" />
 </Figure>
 
 ### Category (Union Type)
 
-কখনো একটি entity set-এর সদস্য আসে *একাধিক ভিন্ন* superclass থেকে — একটির থেকে। `Payer` হতে পারে `Customer` অথবা `Corporate_Client`, কিন্তু কোনো একটি payer কেবল একটি পূর্বসূরি থেকে। এটি <KeyTerm en="Category (Union Type)" bn="ক্যাটাগরি">একাধিক ভিন্ন superclass-এর union-এর একটি উপসেট</KeyTerm>। চিহ্ন: বৃত্তে `U`।
+কখনো একটি entity set-এর সদস্য আসে *একাধিক ভিন্ন* superclass থেকে, একটির থেকে। `Payer` হতে পারে `Customer` অথবা `Corporate_Client`, কিন্তু কোনো একটি payer কেবল একটি পূর্বসূরি থেকে। এটি <KeyTerm en="Category (Union Type)" bn="ক্যাটাগরি">একাধিক ভিন্ন superclass-এর union-এর একটি উপসেট</KeyTerm>। চিহ্ন: বৃত্তে `U`।
 
 <Figure n={6} caption="Category: Payer হলো Customer ∪ Corporate_Client-এর একটি উপসেট" alt="Customer ও Corporate_Client থেকে U-চিহ্নিত বৃত্ত দিয়ে Payer এন্টিটি" wide>
   <Erd d="categoryErd" />
 </Figure>
 
-Subclass (একাধিক superclass-এর *সবকটির* সদস্য হওয়া — shared subclass) আর category (*যেকোনো একটির* সদস্য) আলাদা।
+Subclass (একাধিক superclass-এর *সবকটির* সদস্য হওয়া, shared subclass) আর category (*যেকোনো একটির* সদস্য) আলাদা।
 
 ## টেকনিক্যাল গভীরে
 
-### Specialization না Generalization — কোনটা করব?
+### Specialization না Generalization: কোনটা করব?
 
 - সুপারক্লাস আগে থেকে জানা এবং তার ভেতরে বিশেষ গোষ্ঠী আছে → specialization।
 - আগে থেকে আলাদা কিছু entity, পরে দেখলাম অনেক মিল → generalization।
 
 ### Specialization hierarchy ও lattice
 
-প্রতিটি subclass একটি মাত্র superclass থেকে এলে **hierarchy** (গাছ)। একাধিক superclass থেকে (shared subclass) এলে **lattice**। সাবক্লাসের বৈশিষ্ট্য সব পূর্বসূরি থেকে আসে।
+প্রতিটি subclass একটি মাত্র superclass থেকে এলে hierarchy (গাছ)। একাধিক superclass থেকে (shared subclass) এলে lattice। সাবক্লাসের বৈশিষ্ট্য সব পূর্বসূরি থেকে আসে।
 
 ### কেন subclass আলাদা করব?
 
@@ -103,32 +103,32 @@ FROM employees
 GROUP BY role
 ORDER BY employees DESC;`} expectRows={6} minRows={4} />
 
-ছয়টি ধরন। বাস্তবে `riders` আলাদা টেবিল — কারণ রাইডারদের বাইক নম্বর আছে যা বাকিদের নেই। (অধ্যায় ৮-এ ম্যাপিং-বিকল্প দেখব।)
+ছয়টি ধরন। বাস্তবে `riders` আলাদা টেবিল, কারণ রাইডারদের বাইক নম্বর আছে যা বাকিদের নেই। (অধ্যায় ৮-এ ম্যাপিং-বিকল্প দেখব।)
 
 ## ফটকার ভুল
 
 <Dialogue who="fotka">
-আমার ম্যানেজার, রাইডার, ক্যাশিয়ার — সবাই এক টেবিলে। যার যা কলাম লাগে, ফাঁকা রাখি।
+আমার ম্যানেজার, রাইডার, ক্যাশিয়ার, সবাই এক টেবিলে। যার যা কলাম লাগে, ফাঁকা রাখি।
 </Dialogue>
 
 <Dialogue who="kodom">
-ফাঁকা মানে NULL — আর অর্ধেক কলাম সবসময় NULL মানে নকশার গলদ। subclass আলাদা করলে ঠিক ঠিক কলাম ঠিক ঠিক জায়গায় থাকে।
+ফাঁকা মানে NULL, আর অর্ধেক কলাম সবসময় NULL মানে নকশার গলদ। subclass আলাদা করলে ঠিক ঠিক কলাম ঠিক ঠিক জায়গায় থাকে।
 </Dialogue>
 
-- **Disjoint-কে overlapping ভাবা** (বা উল্টো) — "একজন একাধিক হতে পারে?" জিজ্ঞেস করো।
-- **Specialization ও Generalization একই ধারণা ভাবা** — দিক আলাদা (top-down / bottom-up)।
-- **Category ও shared subclass গুলিয়ে ফেলা** — union ("অথবা") বনাম intersection ("এবং")।
+- **Disjoint-কে overlapping ভাবা** (বা উল্টো): "একজন একাধিক হতে পারে?" জিজ্ঞেস করো।
+- **Specialization ও Generalization একই ধারণা ভাবা**: দিক আলাদা (top-down / bottom-up)।
+- **Category ও shared subclass গুলিয়ে ফেলা**: union ("অথবা") বনাম intersection ("এবং")।
 
 ## পরীক্ষার টিপস
 
 <Callout type="exam">
-**লিখিত:** (১) Specialization/Generalization-এর পার্থক্য ও উদাহরণ। (২) Disjoint/overlapping × total/partial চারটি সমন্বয় ব্যাখ্যা। (৩) Aggregation কেন দরকার — চিত্রসহ। **MCQ ট্র্যাপ:** (১) ডবল লাইন = total; d/o = disjoint/overlapping। (২) Category = union ("অথবা")। (৩) Inheritance শুধু attribute নয়, সম্পর্কও।
+লিখিত: (১) Specialization/Generalization-এর পার্থক্য ও উদাহরণ। (২) Disjoint/overlapping × total/partial চারটি সমন্বয় ব্যাখ্যা। (৩) Aggregation কেন দরকার, চিত্রসহ। MCQ ট্র্যাপ: (১) ডবল লাইন = total; d/o = disjoint/overlapping। (২) Category = union ("অথবা")। (৩) Inheritance শুধু attribute নয়, সম্পর্কও।
 </Callout>
 
 <Summary>
 - EER = ER + subclass/superclass, inheritance, specialization/generalization, aggregation, category।
 - Specialization (top-down), Generalization (bottom-up); subclass সুপারক্লাসের সব attribute ও সম্পর্ক পায়।
-- Constraint: disjoint/overlapping এবং total/partial — চারটি সমন্বয়।
+- Constraint: disjoint/overlapping এবং total/partial, চারটি সমন্বয়।
 - Aggregation: সম্পর্ককে একক entity ধরে অন্য সম্পর্কে অংশ নেওয়ানো। Category: একাধিক superclass-এর union-এর উপসেট।
 </Summary>
 
@@ -139,10 +139,10 @@ ORDER BY employees DESC;`} expectRows={6} minRows={4} />
 ## অনুশীলন
 
 <Exercise n={1}>
-`Vehicle` থেকে `Car` ও `Truck` — এটি specialization না generalization যদি আমরা আগে `Car`, `Truck` আলাদা পেয়ে পরে `Vehicle` বানাই?
+`Vehicle` থেকে `Car` ও `Truck`, এটি specialization না generalization যদি আমরা আগে `Car`, `Truck` আলাদা পেয়ে পরে `Vehicle` বানাই?
 
 <Answer>
-Generalization (bottom-up) — আলাদা entity-গুলোর সাধারণ বৈশিষ্ট্য টেনে সুপারক্লাস।
+Generalization (bottom-up), আলাদা entity-গুলোর সাধারণ বৈশিষ্ট্য টেনে সুপারক্লাস।
 </Answer>
 </Exercise>
 
@@ -166,7 +166,7 @@ SELECT name, salary FROM employees WHERE role = 'স্টোর ম্যান
 </Exercise>
 
 <Exercise n={4}>
-Aggregation কেন দরকার — একটি নিজস্ব উদাহরণ দাও।
+Aggregation কেন দরকার, একটি নিজস্ব উদাহরণ দাও।
 
 <Answer>
 উদাহরণ: `Doctor` `Patient`-কে `treats` করে; এখন `Nurse` সেই নির্দিষ্ট treats-সম্পর্কের উপর কাজ করে (যেমন সেবা দেয়)। সম্পর্কের সাথে সম্পর্ক ER-এ সরাসরি আঁকা যায় না; `treats`-কে aggregation করে একটি একক entity ধরে `Nurse assists treats` আঁকা হয়।

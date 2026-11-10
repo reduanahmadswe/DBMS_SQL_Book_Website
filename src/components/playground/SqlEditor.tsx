@@ -18,7 +18,7 @@ interface Props {
   minRows?: number;
 }
 
-/** textarea-র উপর রঙিন ওভারলে — হালকা, কোনো বাইরের এডিটর লাগে না। */
+/** textarea-র উপর রঙিন ওভারলে, হালকা, কোনো বাইরের এডিটর লাগে না। */
 export function SqlEditor({ value, onChange, onRun, label, minRows = 3 }: Props) {
   const pre = useRef<HTMLPreElement>(null);
   const tokens = useMemo(() => tokenize(value), [value]);

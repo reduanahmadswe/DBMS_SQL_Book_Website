@@ -5,24 +5,15 @@ export type Theme = 'light' | 'dark';
 const KEY = 'ledu:theme';
 const listeners = new Set<() => void>();
 
-function systemTheme(): Theme {
-  return typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light';
-}
-
 export function currentTheme(): Theme {
   if (typeof document === 'undefined') return 'light';
   const attr = document.documentElement.getAttribute('data-theme');
-  return attr === 'dark' || attr === 'light' ? attr : systemTheme();
+  return attr === 'dark' ? 'dark' : 'light';
 }
 
 export function applyStoredTheme(): void {
   const saved = safeGet(KEY);
-  document.documentElement.setAttribute(
-    'data-theme',
-    saved === 'dark' || saved === 'light' ? saved : systemTheme(),
-  );
+  document.documentElement.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
 }
 
 export function setTheme(t: Theme): void {
