@@ -1,0 +1,169 @@
+import { ch10 as questions } from '@/content/quizzes/phase2c';
+
+## গল্প: দুই রহিম, এক গোলমাল
+
+লেদু মার্টের কাস্টমার তালিকায় দুজন "রহিম উদ্দিন" — একজন সাভারের, একজন মিরপুরের। অ্যাপে "রহিম উদ্দিনের বাকি দেখাও" বলতেই কোন রহিমের হিসাব আসবে? লেদু হিমশিম। কদম চাচা বললেন, "লেদু বাপজান, নাম দিয়ে মানুষ চেনা যায় না। এমন একটা জিনিস দরকার যা কখনো রিপিট করে না — একটা **চাবি**।"
+
+<StoryImage name="key-bunch" n={1} caption="চাবির গোছা: কোন চাবিটা কোন তালার?" alt="লেদুর হাতে অনেক চাবি এবং কদম চাচা বলছেন কোনটা ন্যূনতম আর কখনো রিপিট করে না" />
+
+## সমস্যাটা আসলে কী
+
+রিলেশনাল মডেলে ডাটা সারির সমষ্টি। একটি সারিকে নির্ভুলভাবে খুঁজে পেতে ও অন্য টেবিল থেকে তাকে refer করতে **key** দরকার। Key-এর নানা প্রকার — প্রতিটির ভূমিকা আলাদা।
+
+## কদম চাচার ক্লাস
+
+### Super Key
+
+<KeyTerm en="Super Key" bn="সুপার কি">এক বা একাধিক attribute-এর সেট, যার মান দিয়ে relation-এর প্রতিটি tuple অনন্যভাবে চেনা যায়</KeyTerm> — বাড়তি attribute থাকলেও সমস্যা নেই।
+
+`customers(customer_id, name, phone, city, …)`: ধরি `customer_id` ও `phone` দুটোই unique। তাহলে super key: `{customer_id}`, `{phone}`, `{customer_id, name}`, `{phone, city}`, `{customer_id, phone, city}`…। শুধু `{name}` বা `{city}` নয় — দুই রহিম।
+
+### Candidate Key
+
+<KeyTerm en="Candidate Key" bn="ক্যান্ডিডেট কি">ন্যূনতম (minimal) super key — এর কোনো প্রকৃত উপসেট আর super key নয়</KeyTerm>। `{customer_id}` ও `{phone}` দুটোই candidate key; `{customer_id, name}` নয়, কারণ `name` বাদ দিলেও থাকে।
+
+### Primary Key
+
+Candidate key-গুলোর মধ্য থেকে ডিজাইনারের **বাছাই করা একটি**। নিয়ম: NULL নয়, অনন্য, সাধারণত ছোট ও অপরিবর্তনীয়। প্রতি টেবিলে একটিই।
+
+### Alternate Key
+
+বাছাই-না-হওয়া বাকি candidate key — `customers.phone` (UNIQUE NOT NULL হিসেবে)।
+
+### Foreign Key
+
+<KeyTerm en="Foreign Key" bn="ফরেন কি">এক টেবিলের এক বা একাধিক attribute, যা অন্য (বা একই) টেবিলের primary/candidate key-কে refer করে</KeyTerm>। মান হয় NULL, নয়তো রেফারকৃত টেবিলে থাকা মান। `orders.customer_id → customers.customer_id`।
+
+### Composite Key
+
+একাধিক attribute মিলে গঠিত key — `order_items(order_id, product_id)`। কোনো একটি একা unique নয়, জোড়াটি unique।
+
+### Surrogate Key
+
+<KeyTerm en="Surrogate Key" bn="সারোগেট কি">ব্যবসায়িক অর্থহীন, সিস্টেম-তৈরি কৃত্রিম আইডি (যেমন auto-increment)</KeyTerm>। বিপরীতে **natural key** বাস্তব জগতের অর্থযুক্ত (NID, ফোন)। `customer_id` একটি surrogate key।
+
+### Unique Key (UNIQUE constraint)
+
+যেকোনো কলাম/সেটে ডুপ্লিকেট নিষেধ। Primary key-র সাথে পার্থক্য: UNIQUE একাধিক থাকতে পারে, এবং (SQL স্ট্যান্ডার্ড, MySQL, PostgreSQL, SQLite-এ) NULL রাখা যায়; SQL Server-এ একটিমাত্র NULL চলে।
+
+### সব মিলিয়ে ছবি
+
+<Figure n={2} caption="Super key ⊃ Candidate key ⊃ Primary key; বাকি candidate = Alternate key" alt="বড় বৃত্ত super key, তার ভেতরে candidate key, তার ভেতরে primary key ও alternate key" wide>
+  <KeyHierarchy />
+</Figure>
+
+আর `customers` টেবিলে প্রতিটি key কোথায়:
+
+<Figure n={3} caption="customers টেবিলের key-গুলো" alt="customers টেবিলের কলাম; customer_id primary key, phone alternate key, city ও name key নয়">
+  <TableView name="customers" columns={['customer_id (PK)', 'name', 'phone (alternate)', 'city']} rows={[[1, 'রহিম উদ্দিন', '01710000000', 'সাভার'], [2, 'করিম মিয়া', '01810137531', 'সাভার'], [3, 'সালমা বেগম', '01910275062', 'সাভার']]} pk={[0]} hiCols={[2]} compact />
+</Figure>
+
+## টেকনিক্যাল গভীরে
+
+### Key নির্ধারণের নিয়ম
+
+Key হলো **স্কিমার বৈশিষ্ট্য** (ডিজাইনের সিদ্ধান্ত), বর্তমান ডাটার নয়। এখন কোনো কলামে ডুপ্লিকেট না থাকলেই সেটি key নয়; কারণ ভবিষ্যতে ঢুকতে পারে। অর্থ ও ব্যবসায়িক নিয়ম দেখে key ঠিক হয়।
+
+### Super key গণনা
+
+R-এ n টি attribute এবং শুধু একটি candidate key A (একটি attribute) হলে super key = A যুক্ত যেকোনো উপসেট = `2^(n−1)`। R(A,B,C) → ৪।
+
+### Natural না Surrogate?
+
+Natural key (NID, ISBN) অর্থবহ কিন্তু বদলে যেতে পারে/ভুল হতে পারে এবং বড় হতে পারে। Surrogate ছোট, স্থির, join-এ দ্রুত। বাস্তবে প্রায়ই surrogate PK + natural alternate key (UNIQUE)। আমাদের `customers`: `customer_id` (surrogate PK) + `phone` (UNIQUE)।
+
+### Foreign key-র নিয়ম
+
+- FK ও PK-র domain সামঞ্জস্যপূর্ণ।
+- FK NULL হতে পারে (অংশগ্রহণ ঐচ্ছিক হলে)।
+- FK একই টেবিলকেও refer করতে পারে (`employees.manager_id`)।
+- Composite PK-কে refer করলে FK-ও composite।
+
+## হাতে-কলমে
+
+কোন কলাম candidate key হতে পারে, ডাটা দেখে বোঝার প্রথম ধাপ: মোট সারি বনাম ভিন্ন মান।
+
+<SqlRunner initialQuery={`SELECT COUNT(*)                AS total,
+       COUNT(DISTINCT phone)   AS distinct_phone,
+       COUNT(DISTINCT name)    AS distinct_name,
+       COUNT(DISTINCT city)    AS distinct_city
+FROM customers;`} expectRows={1} minRows={5} />
+
+`phone`-এ ২০/২০ (সব ভিন্ন) — candidate-এর যোগ্য; `city`-তে মাত্র ৪ — কখনোই নয়। (মনে রাখো: এটা শুধু ইঙ্গিত; চূড়ান্ত সিদ্ধান্ত ব্যবসায়িক নিয়মে।)
+
+Alternate key `phone` কাজ করছে — ডুপ্লিকেট ফোন ঢোকানোর চেষ্টা:
+
+<SqlRunner initialQuery={`INSERT INTO customers (name, phone, city, joined_on)
+VALUES ('নকল রহিম', '01710000000', 'ঢাকা', '2024-11-01');`} expectError minRows={3} />
+
+Composite key `(order_id, product_id)` — একই পণ্য একই অর্ডারে দ্বিতীয়বার সারি হিসেবে ঢোকানো যাবে না (পরিমাণ বাড়াতে হলে আপডেট করো):
+
+<SqlRunner initialQuery={`INSERT INTO order_items (order_id, product_id, quantity, unit_price)
+VALUES (1, 1, 2, 72);`} expectError minRows={3} />
+
+## ফটকার ভুল
+
+<Dialogue who="fotka">
+আমি নামকেই PK রেখেছি। কাস্টমারের নাম তো সবসময় আলাদা!
+</Dialogue>
+
+<Dialogue who="kodom">
+ফটকা, নামে নামে দুই "করিম মিয়া" এলে সব শেষ। আর কেউ নাম বদলালে তার সব অর্ডারের FK-ও বদলাতে হবে! PK হবে ছোট, স্থির, অনন্য।
+</Dialogue>
+
+- **নাম/ঠিকানার মতো বদলানো-যায় এমন কলাম PK রাখা**।
+- **বর্তমান ডাটা দেখে key ঠিক করা**।
+- **Candidate key ও super key গুলিয়ে ফেলা** — candidate-ই minimal।
+- **"PK-তে NULL চলে"** — না; UNIQUE-তে চলতে পারে।
+- **Composite key-র একটি attribute-ও NULL রাখা**।
+
+## পরীক্ষার টিপস
+
+<Callout type="exam">
+**লিখিত:** সব key-র সংজ্ঞা ও উদাহরণ; super vs candidate; PK vs UNIQUE। **গণনা:** "R(A,B,C,D)-তে candidate key AB হলে super key কয়টি?" → AB যুক্ত উপসেট = `2^(4−2) = 4`। (বহু candidate key থাকলে inclusion-exclusion; অধ্যায় ২৯-এ FD দিয়ে key বের করা শিখব।) **MCQ ট্র্যাপ:** (১) প্রতি টেবিলে PK একটিই, candidate key একাধিক। (২) FK-এ ডুপ্লিকেট চলে।
+</Callout>
+
+<Summary>
+- **Super key** = অনন্যভাবে চেনায় এমন attribute-সেট; **Candidate key** = ন্যূনতম super key।
+- **Primary key** = বাছাই করা candidate (NOT NULL, অনন্য); বাকিরা **alternate key**।
+- **Foreign key** = অন্য টেবিলের key-র রেফারেন্স; **Composite key** = একাধিক attribute; **Surrogate key** = কৃত্রিম আইডি।
+- UNIQUE একাধিক হতে পারে, NULL (বেশিরভাগ DBMS-এ) চলে; PK-তে NULL নয়।
+</Summary>
+
+## কুইজ
+
+<Quiz questions={questions} />
+
+## অনুশীলন
+
+<Exercise n={1}>
+`R(A, B, C)`-এ কেবল `A` candidate key। সব super key লেখো।
+
+<Answer>
+`{A}`, `{A,B}`, `{A,C}`, `{A,B,C}` — মোট ৪টি।
+</Answer>
+</Exercise>
+
+<Exercise n={2}>
+`products` টেবিলে `product_id` PK। `name` কি candidate key হতে পারে? যুক্তি দাও।
+
+<Answer>
+এই মুহূর্তের ডাটায় সব নাম আলাদা হলেও ব্যবসায়িকভাবে একই নামে ভিন্ন সরবরাহকারীর পণ্য আসতে পারে (যেমন "চিনি")। নিয়ম নিশ্চিত না হলে `name` candidate key ঘোষণা করা ঠিক নয়। Key স্কিমার নিয়ম, বর্তমান ডাটার কাকতালীয় ঘটনা নয়।
+</Answer>
+</Exercise>
+
+<Exercise n={3}>
+`employees` টেবিলে foreign key কোনগুলো? কোনটি একই টেবিলকে refer করে?
+
+<Answer>
+`manager_id → employees(employee_id)` (self-reference) এবং `store_id → stores(store_id)`।
+</Answer>
+</Exercise>
+
+<Exercise n={4}>
+Surrogate ও natural key-র একটি করে সুবিধা-অসুবিধা লেখো।
+
+<Answer>
+Surrogate: সুবিধা — ছোট, স্থির, join দ্রুত; অসুবিধা — ব্যবসায়িক অর্থ নেই, আলাদা করে natural key-তে UNIQUE দিতে হয়। Natural: সুবিধা — অর্থবহ, বাড়তি কলাম লাগে না; অসুবিধা — বদলাতে/ভুল হতে পারে, বড় বা composite হতে পারে।
+</Answer>
+</Exercise>

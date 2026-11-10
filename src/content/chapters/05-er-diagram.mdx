@@ -1,0 +1,171 @@
+import { ch05 as questions } from '@/content/quizzes/phase2a';
+
+## গল্প: "জিনিস" খোঁজার খেলা
+
+কদম চাচা লেদুকে বললেন, "টেবিল বানানোর আগে কাগজ-কলম নাও। আগে আঁকো।" মিনু তাকে একটা প্রশ্ন ধরিয়ে দিল: "তোমার ব্যবসায় কী কী *জিনিস* আছে, আর প্রতিটি জিনিসের কী কী *তথ্য* রাখতে চাও?"
+
+লেদু লিখতে শুরু করল: কাস্টমার — নাম, ফোন, ঠিকানা, ইমেইল। পণ্য — নাম, দাম। অর্ডার — তারিখ, অবস্থা। হঠাৎ প্রশ্ন: "ঠিকানা তো রাস্তা আর এলাকা মিলিয়ে। ফোন নম্বর কারো দুটো। আর কাস্টমার কতদিন ধরে আছে সেটা কি আলাদা করে রাখব?" এখানেই শুরু অ্যাট্রিবিউটের ধরন বোঝা।
+
+<StoryImage name="entity-hunt" n={1} caption="মিনুর প্রশ্নে লেদু ব্যবসার 'জিনিস'গুলোর তালিকা বানাচ্ছে" alt="মিনু ও লেদু খাতায় কাস্টমার, পণ্য, অর্ডার ইত্যাদি জিনিসের তালিকা বানাচ্ছে" />
+
+## সমস্যাটা আসলে কী
+
+সরাসরি টেবিল বানালে প্রায়ই ভুল নকশা হয়। প্রথমে একটি **ধারণাগত নকশা** (conceptual design) দরকার, যা কারিগরি বিবরণে না গিয়ে ব্যবসার বাস্তবতা ধরে। এই কাজের জন্য আছে **Entity-Relationship (ER) মডেল** — Peter Chen, ১৯৭৬।
+
+## কদম চাচার ক্লাস
+
+### Entity ও Entity Set
+
+- <KeyTerm en="Entity" bn="এন্টিটি">বাস্তব জগতের এমন একটি জিনিস বা ধারণা, যাকে অন্য সব থেকে আলাদা করে চেনা যায়</KeyTerm> — যেমন কাস্টমার রহিম, পণ্য "মিনিকেট চাল", অর্ডার #১।
+- <KeyTerm en="Entity Set" bn="এন্টিটি সেট">একই ধরনের (একই অ্যাট্রিবিউটযুক্ত) সব entity-র সংগ্রহ</KeyTerm> — সব কাস্টমার = `Customer` entity set। ER ডায়াগ্রামে আমরা আসলে entity set আঁকি। (Navathe একে *entity type* বলেন।)
+
+Entity মূর্ত (physical: কাস্টমার, পণ্য) বা বিমূর্ত (conceptual: অর্ডার, পেমেন্ট) হতে পারে।
+
+### Attribute
+
+<KeyTerm en="Attribute" bn="অ্যাট্রিবিউট">entity-র বৈশিষ্ট্য বা তথ্য</KeyTerm>। প্রতিটি attribute-এর একটা **domain** (বৈধ মানের সেট) আছে। লেদু মার্টের `Customer`-এর সব ধরনের attribute এক ছবিতে:
+
+<Figure n={2} caption="Customer entity-র নানা ধরনের attribute (Chen নোটেশন; উপরের বোতামে Crow's Foot-এ বদলাও)" alt="Customer এন্টিটি, যার customer_id key, phone multi-valued, address composite (area, city), tenure_days derived এবং বাকি সাধারণ attribute" wide>
+  <Erd d="attrKindsErd" />
+</Figure>
+
+| ধরন | অর্থ | Chen চিহ্ন | উদাহরণ |
+|---|---|---|---|
+| **Simple (atomic)** | আর ভাগ করা যায় না | সাধারণ ellipse | `name`, `joined_on` |
+| **Composite** | ছোট অংশে ভাগ হয় | ellipse থেকে উপ-ellipse | `address` → `area`, `city` |
+| **Single-valued** | একটিই মান | সাধারণ ellipse | `customer_id` |
+| **Multi-valued** | একাধিক মান | দ্বিগুণ ellipse | `phone` |
+| **Stored** | সরাসরি সংরক্ষিত | সাধারণ ellipse | `joined_on` |
+| **Derived** | অন্য attribute থেকে হিসাব করা | ড্যাশ-করা ellipse | `tenure_days` |
+| **Key** | entity চেনার unique attribute | নামে আন্ডারলাইন | `customer_id` |
+| **Partial key** | weak entity-র discriminator | ড্যাশ আন্ডারলাইন | `line_no` |
+
+### NULL
+
+কোনো কাস্টমারের ইমেইল না থাকলে? <KeyTerm en="NULL" bn="নাল">"মান নেই" বোঝানোর বিশেষ চিহ্ন</KeyTerm>। এর তিন অর্থ হতে পারে: *প্রযোজ্য নয়* (not applicable), *অজানা* (unknown), বা *গোপন* (withheld)। NULL = ০ নয়, ফাঁকা স্ট্রিংও নয়।
+
+### Key attribute (ER স্তরে)
+
+যে attribute-এর মান প্রতিটি entity-র জন্য আলাদা, সেটি **key**। এক বা একাধিক attribute মিলেও key হতে পারে (composite key)। রিলেশনাল স্তরের সব key (super, candidate, primary…) অধ্যায় ১০-এ বিস্তারিত।
+
+### Chen বনাম Crow's Foot
+
+<Callout type="note" title="দুই নোটেশন, একই তথ্য">
+**Chen** — entity আয়তক্ষেত্র, attribute ellipse, relationship হীরা; ধারণাগত ভাবনার জন্য ভালো। **Crow's Foot** — entity একটি বাক্স যার ভেতরে attribute-তালিকা (PK, FK চিহ্নসহ); সম্পর্কের প্রান্তে কাকের-পায়ের চিহ্ন — টেবিল-নকশার কাছাকাছি, ইন্ডাস্ট্রিতে বেশি চলে। প্রতিটি ডায়াগ্রামের উপরের বোতামে দুটোই দেখতে পাবে।
+</Callout>
+
+### লেদু মার্টের ERD — ধাপ ১
+
+আমরা পুরো লেদু মার্টের ERD ধাপে ধাপে গড়ব। প্রথম ধাপে শুধু তিনটি মূল entity:
+
+<Figure n={3} caption="ধাপ ১ — লেদু মার্টের তিন মূল entity: Customer, Order, Product" alt="Customer, Order ও Product এন্টিটি, প্রতিটির নিজস্ব attribute সহ; এখনো কোনো সম্পর্ক আঁকা হয়নি" wide>
+  <Erd d="leduStep5" />
+</Figure>
+
+পরের অধ্যায়ে এগুলো জোড়া দেব, আরও entity যোগ করব।
+
+## টেকনিক্যাল গভীরে
+
+### ER নকশার নিয়মকানুন
+
+- Entity set-এর নাম একবচন বিশেষ্য (`Customer`, `Order`)।
+- প্রতিটি entity set-এর অন্তত একটি key থাকবে (weak entity ছাড়া)।
+- একটি তথ্য attribute হবে, নাকি আলাদা entity? ভালো নিয়ম: যদি তার নিজস্ব attribute বা সম্পর্ক থাকে, তবে entity। যেমন "ঠিকানা" শুধু নাম হলে attribute; কিন্তু ঠিকানা-সংক্রান্ত আলাদা তথ্য (এলাকার রাইডার-জোন) থাকলে entity।
+- Derived attribute সাধারণত সংরক্ষণ করা হয় না — প্রয়োজনে হিসাব হয়।
+
+### ER থেকে রিলেশনাল স্তরে এক ঝলক
+
+- Composite → উপাদানগুলো আলাদা কলাম (`area`, `city`)।
+- Multi-valued → আলাদা টেবিল (পূর্ণ নিয়ম অধ্যায় ৮-এ)।
+- Derived → কলাম নয়; কোয়েরিতে হিসাব।
+
+## হাতে-কলমে
+
+`customers` টেবিলে composite `address` ভেঙে `area` আর `city` কলাম হয়েছে — নিজে দেখো:
+
+<SqlRunner initialQuery={`SELECT name, area, city
+FROM customers
+LIMIT 5;`} expectRows={5} />
+
+Derived attribute `tenure_days` সংরক্ষণ করা হয়নি; দরকারের সময় হিসাব করি (গণনার দিন ধরা হলো ২০২৪-১২-৩১):
+
+<SqlRunner initialQuery={`SELECT name, joined_on,
+       CAST(julianday('2024-12-31') - julianday(joined_on) AS INTEGER) AS tenure_days
+FROM customers
+LIMIT 5;`} expectRows={5} minRows={4} />
+
+আর NULL-able attribute `email` — কাদের ইমেইল নেই?
+
+<SqlRunner initialQuery={`SELECT customer_id, name
+FROM customers
+WHERE email IS NULL;`} expectRows={4} />
+
+চারজন কাস্টমারের ইমেইল NULL। লক্ষ করো, `= NULL` নয়, `IS NULL` লিখতে হয় — কারণ NULL-এর সাথে কোনো তুলনাই "সত্য" হয় না (অধ্যায় ১৭)।
+
+## ফটকার ভুল
+
+<Dialogue who="fotka">
+আমার ডাটাবেসে `age` কলাম আছে। ২৫ লিখে রেখেছি — বছর বছর আপডেট করি!
+</Dialogue>
+
+<Dialogue who="kodom">
+ফটকা, বয়স হলো derived attribute। জন্মতারিখ রাখলে বয়স যেকোনো সময় হিসাব হয়ে যায়। `age` সংরক্ষণ করলে কেউ আপডেট ভুলে গেলেই ডাটা মিথ্যা হয়ে যাবে।
+</Dialogue>
+
+- **Derived attribute সংরক্ষণ** — ভুলে যাওয়া আপডেট = inconsistency।
+- **Multi-valued attribute-কে এক কলামে কমা দিয়ে ঢোকানো** (`"0171…, 0181…"`) — পরে খোঁজা ও constraint অসম্ভব। (1NF-এর ভঙ্গ, পর্ব ৫।)
+- **Entity ও attribute গুলিয়ে ফেলা** — "রাইডারের বাইক নম্বর" attribute; কিন্তু বাইকের নিজস্ব তথ্য বেশি থাকলে `Bike` entity।
+
+## পরীক্ষার টিপস
+
+<Callout type="exam">
+**লিখিত:** ছয়-সাত ধরনের attribute উদাহরণসহ ব্যাখ্যা + Chen চিহ্ন। **MCQ ট্র্যাপ:** (১) Multi-valued = দ্বিগুণ ellipse; Derived = ড্যাশ ellipse — উল্টো করে গুলিয়ে দেয়। (২) Entity = একটি, Entity set = সংগ্রহ। (৩) NULL ≠ 0।
+</Callout>
+
+<Summary>
+- **Entity** = আলাদা করে চেনা যায় এমন জিনিস; **Entity set** = একই ধরনের entity-র সংগ্রহ।
+- Attribute: simple/composite, single/multi-valued, stored/derived, key; NULL = মান নেই।
+- Chen (বাক্স-ellipse-হীরা) ও Crow's Foot (বাক্সে attribute-তালিকা) — দুটোই একই নকশা বোঝায়।
+- Derived attribute সংরক্ষণ নয়, composite ভেঙে কলাম, multi-valued আলাদা টেবিল।
+</Summary>
+
+## কুইজ
+
+<Quiz questions={questions} />
+
+## অনুশীলন
+
+<Exercise n={1}>
+Product entity-র জন্য কমপক্ষে পাঁচটি attribute ভাবো এবং প্রতিটির ধরন (simple/key/derived…) লেখো।
+
+<Answer>
+`product_id` (key), `name` (simple), `price` (simple), `stock` (simple), `unit` (simple); চাইলে `is_low_stock` (derived: stock এক সীমার নিচে কিনা)।
+</Answer>
+</Exercise>
+
+<Exercise n={2}>
+`Supplier` entity-তে একাধিক ফোন থাকতে পারে। ER-তে কীভাবে দেখাবে? রিলেশনাল স্কিমায় এটি কীভাবে আসবে?
+
+<Answer>
+ER-এ `phone` multi-valued attribute (Chen-এ দ্বিগুণ ellipse)। রিলেশনাল স্কিমায় আলাদা টেবিল: `supplier_phones(supplier_id, phone)`, যার primary key `(supplier_id, phone)` এবং `supplier_id` একটি foreign key।
+</Answer>
+</Exercise>
+
+<Exercise n={3}>
+`customers` টেবিল থেকে ঢাকার কাস্টমারদের নাম ও এলাকা দেখাও।
+
+<Answer>
+```sql
+SELECT name, area FROM customers WHERE city = 'ঢাকা';
+```
+৬টি সারি আসবে।
+</Answer>
+</Exercise>
+
+<Exercise n={4}>
+"এই ফোন নম্বরটি কে ব্যবহার করে" — Chen নোটেশনে `Customer`-এর `phone` multi-valued হলে ellipse কেমন হবে এবং কেন derived attribute সংরক্ষণ করা উচিত নয়?
+
+<Answer>
+দ্বিগুণ-সীমানার ellipse। Derived attribute (যেমন বয়স) অন্য attribute থেকে হিসাব করা যায়; সংরক্ষণ করলে মূল attribute বদলালেও এটি হালনাগাদ না হয়ে inconsistent হতে পারে।
+</Answer>
+</Exercise>

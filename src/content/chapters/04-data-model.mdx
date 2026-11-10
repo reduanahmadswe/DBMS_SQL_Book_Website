@@ -1,0 +1,149 @@
+import { ch04 as questions } from '@/content/quizzes/phase2a';
+
+## গল্প: লেদুর ক্যাটাগরির গাছ
+
+লেদু মার্টের পণ্যের ক্যাটাগরিগুলো সাজাতে গিয়ে লেদু আটকে গেল। "মুদি সামগ্রী" একটা ক্যাটাগরি, তার ভেতরে "চাল-ডাল" আর "তেল-মসলা"। আবার "পানীয়"-র ভেতরে "চা-কফি"। লেদু একটা গাছ এঁকে ফেলল। কিন্তু "চা পাতা" তো মুদি সামগ্রীও, আবার পানীয়-র অংশও! গাছে এক পণ্যের দুই বাবা — কীভাবে?
+
+<StoryImage name="model-tree" n={1} caption="ক্যাটাগরির গাছে এক পণ্য দুই ডালে — লেদু ধাঁধায়" alt="লেদু একটি গাছ আঁকা বোর্ডের সামনে দাঁড়িয়ে, চা পাতার প্যাকেট দুটি ডালের সাথে তীর দিয়ে জোড়া" />
+
+<Dialogue who="kodom">
+এই ধাঁধা নিয়েই ডাটাবেসের ইতিহাস। মানুষ ডাটা সাজানোর নানা পদ্ধতি বের করেছে — এগুলোকেই বলে ডাটা মডেল।
+</Dialogue>
+
+## সমস্যাটা আসলে কী
+
+<KeyTerm en="Data Model" bn="ডাটা মডেল">ডাটা কীভাবে উপস্থাপিত, সম্পর্কিত ও নিয়ন্ত্রিত হবে তার ধারণাগত কাঠামো — ডাটার গঠন, ডাটার উপর অপারেশন ও constraint সংজ্ঞায়িত করে</KeyTerm>। বিভিন্ন মডেল বিভিন্ন যুগে বিভিন্ন সমস্যা সামলাতে এসেছে।
+
+## কদম চাচার ক্লাস
+
+<Figure n={2} caption="তিন ক্লাসিক মডেলের আকার: গাছ, জাল ও টেবিল" alt="hierarchical মডেলে গাছ, network মডেলে জাল, relational মডেলে সম্পর্কিত টেবিল" wide>
+  <DataModelShapes />
+</Figure>
+
+### ১. Hierarchical মডেল
+
+- ১৯৬০-এর দশকে IBM IMS-এর মডেল। ডাটা **গাছের** (tree) মতো: একটি root, তার child, তাদের child…
+- প্রতিটি child-এর **ঠিক একটি parent**। তাই 1:N সহজ, কিন্তু M:N সরাসরি অসম্ভব (ডাটা ডুপ্লিকেট করতে হয়)।
+- অ্যাক্সেস পথ নির্দিষ্ট — root থেকে নেমে যেতে হয়।
+
+### ২. Network মডেল
+
+- CODASYL (১৯৬০-এর শেষ ভাগ)। ডাটা **গ্রাফ/জাল**; রেকর্ড ও set (সম্পর্ক)।
+- এক child-এর একাধিক parent সম্ভব — M:N মডেল করা যায়।
+- নেভিগেশন pointer ধরে, প্রোগ্রামারকে পথ জানতে হয় — জটিল।
+
+### ৩. Relational মডেল
+
+- E. F. Codd, ১৯৭০। ডাটা **টেবিলে (relation)**; সম্পর্ক **key**-এর মান দিয়ে (pointer নয়)।
+- ভিত্তি: সেট-তত্ত্ব ও predicate logic। প্রশ্ন করা হয় *কী চাই* বলে (declarative, SQL) — *কীভাবে* নয়।
+- আজকের ডাটাবেসের প্রধান মডেল (MySQL, PostgreSQL, Oracle, SQL Server, SQLite)। বাকি বইয়ের প্রায় সবটাই এ নিয়ে।
+
+আমাদের ক্যাটাগরি-গাছ রিলেশনাল মডেলে `parent_id` কলাম দিয়ে ধরা হয়েছে:
+
+<SqlRunner initialQuery={`SELECT category_id, name, parent_id
+FROM categories;`} expectRows={8} minRows={2} />
+
+আটটি সারি — `parent_id` NULL মানে root ক্যাটাগরি (মুদি সামগ্রী, পানীয়, দুগ্ধজাত, শাকসবজি, স্ন্যাকস)। আর "চা পাতা কোন ক্যাটাগরিতে" তা `products.category_id` দিয়ে ঠিক হয়; M:N লাগলে আলাদা সংযোগ-টেবিল বানানো যায় (অধ্যায় ৬ ও ৮-এ দেখব)।
+
+### ৪. ER মডেল
+
+Peter Chen, ১৯৭৬। **Conceptual (high-level)** মডেল — বাস্তবায়নের আগে নকশা। এন্টিটি, অ্যাট্রিবিউট, সম্পর্ক। পরের পর্ব (অধ্যায় ৫–৮) পুরোটা এ নিয়ে।
+
+### ৫. Object-Oriented মডেল
+
+ডাটাকে **অবজেক্ট** হিসেবে রাখা — অবজেক্টে ডাটা ও আচরণ (method) একসাথে, class, inheritance, encapsulation। OODBMS-এর উদাহরণ ObjectDB, db4o। জটিল ডাটা (CAD, মাল্টিমিডিয়া)-তে সুবিধা, কিন্তু রিলেশনাল স্ট্যান্ডার্ডের মতো জনপ্রিয় হয়নি।
+
+### ৬. Object-Relational মডেল
+
+রিলেশনাল মডেলের উপর অবজেক্ট ফিচার (user-defined type, inheritance, nested table, array)। SQL:1999 থেকে মানকে যুক্ত। PostgreSQL ও Oracle এর উদাহরণ।
+
+### ৭. NoSQL-এর প্রথম ঝলক
+
+"Not only SQL" — বড় স্কেল ও নমনীয় স্কিমার জন্য: **key-value** (Redis), **document** (MongoDB), **column-family** (Cassandra), **graph** (Neo4j)। অধ্যায় ৪৯-এ বিস্তারিত। একটা document-এর চেহারা:
+
+<StaticCode lang="json" note="MongoDB-র মতো document ডাটাবেসে একটি অর্ডার একটি JSON ডকুমেন্ট — এটি তথ্য-দেখানোর জন্য, প্লেগ্রাউন্ডে চলবে না">
+
+```json
+{
+  "order_id": 1,
+  "customer": { "name": "মাসুদ রানা", "city": "ঢাকা" },
+  "items": [
+    { "product": "মিনিকেট চাল", "qty": 3, "price": 72 },
+    { "product": "মরিচ গুঁড়া", "qty": 4, "price": 55 }
+  ]
+}
+```
+
+</StaticCode>
+
+## টেকনিক্যাল গভীরে: তুলনা
+
+| মডেল | ডাটার আকার | সম্পর্ক | প্রধান সীমাবদ্ধতা |
+|---|---|---|---|
+| Hierarchical | গাছ | 1:N (parent-child) | M:N কঠিন, নির্দিষ্ট পথ |
+| Network | গ্রাফ | M:N সম্ভব | pointer-নেভিগেশন জটিল |
+| Relational | টেবিল | key-মান দিয়ে join | খুব গভীর/গ্রাফ-ডাটায় join ব্যয়বহুল |
+| Object-oriented | অবজেক্ট | রেফারেন্স/inheritance | স্ট্যান্ডার্ড ও টুলিং কম |
+| Document (NoSQL) | JSON/BSON ডকুমেন্ট | embedding/reference | join দুর্বল, ডাটা ডুপ্লিকেট হতে পারে |
+
+ডাটা-মডেলের আরেক শ্রেণিবিভাগ (Elmasri & Navathe): **High-level (conceptual)** — ER; **Representational (implementation)** — relational, network, hierarchical; **Low-level (physical)** — ফাইল-ফরম্যাট, ইনডেক্স।
+
+## ফটকার ভুল
+
+<Dialogue who="fotka">
+NoSQL এসে গেছে, রিলেশনাল তো মরা ঘোড়া! সব ডাটা MongoDB-তে রাখো!
+</Dialogue>
+
+<Dialogue who="kodom">
+ফটকা, হাতুড়ি পেয়েছ বলে সব কিছুতে পেরেক দেখছ। টাকার হিসাবে ACID আর constraint লাগে — সেখানে রিলেশনাল দারুণ। NoSQL-ও দরকারি, তবে ঠিক জায়গায়।
+</Dialogue>
+
+- **"Relational মানে টেবিলের মধ্যে relationship"** — না! "Relation" মানে *টেবিল* (গণিতের সেট-অর্থে)। সম্পর্ক বোঝাতে আমরা বলি relationship বা foreign key।
+- **"NoSQL মানে SQL নেই"** — বরং "Not only SQL"; অনেক NoSQL সিস্টেমে SQL-সদৃশ ভাষা আছে।
+- **"ER মডেল ডাটাবেসে সরাসরি চলে"** — না, ER শুধু নকশা; টেবিলে রূপান্তর করতে হয় (অধ্যায় ৮)।
+
+## পরীক্ষার টিপস
+
+<Callout type="exam">
+**লিখিত:** Hierarchical, Network, Relational মডেলের তুলনা (টেবিলে)। Relational মডেলের সুবিধা। **MCQ ট্র্যাপ:** (১) Codd = relational (১৯৭০), Chen = ER (১৯৭৬)। (২) IMS = hierarchical, CODASYL = network। (৩) Hierarchical-এ M:N সরাসরি সম্ভব নয়।
+</Callout>
+
+<Summary>
+- ডাটা মডেল = ডাটার গঠন, অপারেশন ও constraint-এর ধারণাগত কাঠামো।
+- Hierarchical (গাছ, এক parent) → Network (জাল, M:N) → **Relational (টেবিল, key দিয়ে সম্পর্ক)**, Codd ১৯৭০।
+- ER = conceptual নকশা মডেল (Chen ১৯৭৬)। Object-oriented/object-relational অবজেক্ট ধারণা আনে।
+- NoSQL (key-value, document, column, graph) বড় স্কেল ও নমনীয় স্কিমায় কাজে লাগে।
+</Summary>
+
+## কুইজ
+
+<Quiz questions={questions} />
+
+## অনুশীলন
+
+<Exercise n={1}>
+Hierarchical মডেল M:N সম্পর্ক কেন ভালোভাবে সামলাতে পারে না?
+
+<Answer>
+কারণ প্রতিটি child-এর ঠিক একটি parent থাকে। M:N (যেমন পণ্য ↔ ক্যাটাগরি) দেখাতে হলে child রেকর্ড একাধিক parent-এর নিচে ডুপ্লিকেট করতে হয়, ফলে redundancy ও inconsistency হয়।
+</Answer>
+</Exercise>
+
+<Exercise n={2}>
+`categories` টেবিল থেকে root ক্যাটাগরিগুলো (যাদের `parent_id` NULL) দেখাও।
+
+<Answer>
+```sql
+SELECT category_id, name FROM categories WHERE parent_id IS NULL;
+```
+৫টি root ক্যাটাগরি আসবে।
+</Answer>
+</Exercise>
+
+<Exercise n={3}>
+Relational ও Network মডেলের তিনটি পার্থক্য লেখো।
+
+<Answer>
+(১) Relational-এ ডাটা টেবিল, Network-এ রেকর্ড ও set (গ্রাফ)। (২) Relational-এ সম্পর্ক key-মান দিয়ে, Network-এ pointer দিয়ে। (৩) Relational-এ declarative ভাষা (SQL), Network-এ প্রোগ্রামার pointer ধরে নেভিগেট করে। (৪) Relational-এর ভিত্তি গণিত (set theory/logic)।
+</Answer>
+</Exercise>

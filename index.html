@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>লেদুর ডাটাবেস অভিযান</title>
+    <meta name="description" content="গল্পে গল্পে DBMS আর SQL — একদম শূন্য থেকে অ্যাডভান্সড পর্যন্ত, পুরোটা বাংলায়।" />
+    <meta name="theme-color" content="#6E14A9" />
+    <link rel="canonical" href="https://ledu-database-odhiyan.example.com/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="bn_BD" />
+    <meta property="og:site_name" content="লেদুর ডাটাবেস অভিযান" />
+    <meta property="og:title" content="লেদুর ডাটাবেস অভিযান" />
+    <meta property="og:description" content="গল্পে গল্পে DBMS আর SQL — একদম শূন্য থেকে অ্যাডভান্সড পর্যন্ত, পুরোটা বাংলায়।" />
+    <meta property="og:url" content="https://ledu-database-odhiyan.example.com/" />
+    <meta property="og:image" content="/og-default.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="লেদুর ডাটাবেস অভিযান" />
+    <meta name="twitter:description" content="গল্পে গল্পে DBMS আর SQL — একদম শূন্য থেকে অ্যাডভান্সড পর্যন্ত, পুরোটা বাংলায়।" />
+    <script>
+      // থিম ফ্ল্যাশ এড়াতে রেন্ডারের আগেই থিম বসাই
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('ledu:theme'); } catch (e) {}
+        if (t !== 'dark' && t !== 'light') t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>এই বইয়ের জন্য JavaScript চালু থাকতে হবে।</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

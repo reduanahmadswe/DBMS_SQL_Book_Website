@@ -1,0 +1,281 @@
+import { questions } from '@/content/quizzes/ch02';
+
+## গল্প: গুদামে ম্যানেজার চাই
+
+লেদু বুঝল, ফাইল আর খাতায় আর চলবে না। রাত জেগে সে একটা নতুন সিদ্ধান্ত নিল: "সব তথ্য এক জায়গায় রাখব।" একটা বিশাল ফোল্ডারে সব এক্সেল আর টেক্সট ফাইল জড়ো করে বলল, "এই তো, এবার সব এক জায়গায়!"
+
+পরদিন সকালে কদম চাচা এসে ফোল্ডারটা দেখে হেসে ফেললেন।
+
+<Dialogue who="kodom">
+লেদু বাপজান, এক গুদামে মাল ঠেসে রাখলেই গুদাম হয় না। ম্যানেজার চাই, যে বলবে কোন তাকে কী থাকবে, কে কোন মাল নিতে পারবে, আর একই মাল দুজন একসাথে তুলতে গেলে কে আগে পাবে। এই ম্যানেজারের নামই **DBMS**।
+</Dialogue>
+
+<StoryImage name="dbms-storeroom" n={1} caption="কদম চাচার গোছানো গুদাম — প্রতিটি তাকে লেবেল, আর পুরোটা সামলায় একজন ম্যানেজার" />
+
+## সমস্যাটা আসলে কী
+
+গত অধ্যায়ে আমরা দেখেছি, ফাইল-সিস্টেম কোথায় আটকে যায়। কিন্তু সমাধান শুধু "সব ডাটা এক জায়গায় রাখা" নয়। দরকার এমন ব্যবস্থা, যা:
+
+- ডাটা সুসংগঠিতভাবে রাখে (কাঠামো আছে),
+- ডাটা খোঁজা, বদলানো, মোছার ভাষা দেয়,
+- ভুল ডাটা ঢুকতে দেয় না,
+- একসাথে অনেকজনকে নিরাপদে কাজ করতে দেয়,
+- সার্ভার বন্ধ হলেও ডাটা হারাতে দেয় না।
+
+এই সবকিছু দেয় <KeyTerm en="DBMS" bn="ডাটাবেস ম্যানেজমেন্ট সিস্টেম">ডাটাবেস তৈরি, ব্যবহার ও নিয়ন্ত্রণের জন্য সফটওয়্যার</KeyTerm>। আর যে ডাটা সে সামলায়, তার নাম <KeyTerm en="Database" bn="ডাটাবেস">পরস্পর সম্পর্কিত ডাটার সুসংগঠিত সংগ্রহ</KeyTerm>।
+
+## কদম চাচার ক্লাস: ডাটাবেস, DBMS আর অ্যাপ্লিকেশন
+
+<Dialogue who="kodom">
+তিনটা জিনিস গুলিয়ে ফেলো না: গুদামের মাল, গুদামের ম্যানেজার, আর যে দোকানি মাল বেচে।
+</Dialogue>
+
+| তিনটি জিনিস | লেদু মার্টের উদাহরণ | গুদামের তুলনা |
+|---|---|---|
+| **Database** — ডাটার সংগ্রহ | `ledu_mart` ডাটাবেসের ১১টি টেবিল | গুদামের মাল |
+| **DBMS** — ডাটাবেস সামলানোর সফটওয়্যার | PostgreSQL, MySQL, SQLite… | গুদামের ম্যানেজার |
+| **Application** — যে প্রোগ্রাম ইউজারকে সেবা দেয় | লেদু মার্ট অ্যাপ, রাইডার অ্যাপ | দোকানি |
+
+DBMS, ডাটাবেস আর অ্যাপ্লিকেশন মিলে পুরো ব্যবস্থাকে বলে **Database System**।
+
+### DBMS-এর উদাহরণ
+
+- **MySQL / MariaDB** — ওয়েব অ্যাপে খুব জনপ্রিয়, ওপেন সোর্স
+- **PostgreSQL** — শক্তিশালী ওপেন সোর্স, অ্যাডভান্সড ফিচারে ভালো
+- **Oracle Database** — ব্যাংক ও বড় প্রতিষ্ঠানে বহুল ব্যবহৃত (বাণিজ্যিক)
+- **Microsoft SQL Server** — Windows-কেন্দ্রিক প্রতিষ্ঠানে জনপ্রিয় (বাণিজ্যিক)
+- **SQLite** — একটি ফাইলেই পুরো ডাটাবেস; সার্ভার লাগে না। মোবাইল অ্যাপ ও আমাদের প্লেগ্রাউন্ডে ব্যবহৃত
+- **MongoDB, Redis, Cassandra** — NoSQL ধরনের (পর্ব ১১)
+
+<Figure n={2} caption="DBMS-এর অবস্থান: উপরে অ্যাপ্লিকেশন, নিচে ডিস্কের ডাটা, মাঝখানে DBMS" alt="তিন স্তরের ডায়াগ্রাম: উপরে অ্যাপ্লিকেশন স্তর, মাঝে DBMS যার ভেতরে query processor, transaction manager ও storage manager, নিচে ডিস্কে সংরক্ষিত ডাটা" wide>
+  <DbmsLayers />
+</Figure>
+
+### DBMS-এর সুবিধা
+
+১. **কম ও নিয়ন্ত্রিত redundancy** — একই তথ্য এক জায়গায়।
+২. **ডাটা consistency** — কপি না মেলার ভয় কম।
+৩. **ডাটা শেয়ারিং** — একাধিক ইউজার/অ্যাপ একই ডাটা ব্যবহার করে।
+৪. **Integrity constraint প্রয়োগ** — ভুল ডাটা ঢুকতেই পারে না।
+৫. **Security** — কে কোন ডাটা দেখতে/বদলাতে পারবে তার সূক্ষ্ম নিয়ন্ত্রণ।
+৬. **Backup ও recovery** — ক্র্যাশের পর ডাটা ফেরত আনা।
+৭. **Concurrency control** — একসাথে অনেকের কাজে গোলমাল না হওয়া।
+৮. **Data independence** — কাঠামো বদলালেও অ্যাপ অক্ষত থাকা (পরের অধ্যায়ে বিস্তারিত)।
+৯. **দ্রুত অ্যাক্সেস** — ইন্ডেক্স ও কোয়েরি অপটিমাইজার (পর্ব ৬)।
+১০. **মান-ভাষা** — SQL দিয়ে যেকোনো প্রশ্ন।
+
+### DBMS-এর অসুবিধা
+
+- **খরচ:** হার্ডওয়্যার, লাইসেন্স (বাণিজ্যিক DBMS হলে), এবং প্রশিক্ষণ।
+- **জটিলতা:** সাধারণ ফাইলের চেয়ে বুঝতে ও চালাতে বেশি জ্ঞান লাগে।
+- **ছোট কাজে ওভারহেড:** খুব সরল, একক-ইউজারের কাজে DBMS-এর বাড়তি ভার অপ্রয়োজনীয় হতে পারে।
+- **ব্যর্থতার প্রভাব বড়:** সব ডাটা এক জায়গায় থাকলে সেই DBMS বা সার্ভার বিকল হলে অনেক কিছু একসাথে থেমে যায় — তাই replication ও backup দরকার।
+
+## টেকনিক্যাল গভীরে
+
+### ডাটাবেস ব্যবহারকারীর প্রকারভেদ
+
+ডাটাবেসের সাথে নানা মানুষ নানাভাবে জড়িত:
+
+<Figure n={3} caption="ডাটাবেস ব্যবহারকারীদের শ্রেণি — সবাই DBMS-এর মাধ্যমে ডাটাবেসে পৌঁছায়" alt="চার ধরনের ব্যবহারকারী: এন্ড ইউজার, অ্যাপ প্রোগ্রামার, ডাটাবেস ডিজাইনার ও DBA — সবাই DBMS-এর মধ্য দিয়ে ledu_mart ডাটাবেসে" wide>
+  <DbmsUsers />
+</Figure>
+
+**১. End users (শেষ ব্যবহারকারী):**
+- **Naive / parametric users** — পূর্বলিখিত অ্যাপের বোতাম, ফর্ম ব্যবহার করে। যেমন: ক্যাশিয়ার, ব্যাংকের টেলার, লেদু মার্টের কাস্টমার।
+- **Casual users** — মাঝেমধ্যে ডাটাবেসে প্রশ্ন করে (সাধারণত ম্যানেজার-পর্যায়ের)।
+- **Sophisticated users** — নিজে কোয়েরি লেখে বা টুল ব্যবহার করে (ডাটা অ্যানালিস্ট, বিজ্ঞানী)।
+
+**২. Application programmers** — অ্যাপ বা ওয়েবসাইট লেখে, যা DBMS-এর সাথে কথা বলে (লেদুর অ্যাপ ডেভেলপাররা)।
+
+**৩. Database designers** — কোন তথ্য ডাটাবেসে থাকবে, টেবিল কেমন হবে, সম্পর্ক কী — এই নকশা করে (পর্ব ২–৩, ৫-এর বিষয়)।
+
+**৪. Database Administrator (DBA)** — ডাটাবেসের তত্ত্বাবধায়ক।
+
+### DBA-র দায়িত্ব
+
+<Dialogue who="kodom">
+আমি ব্যাংকে ত্রিশ বছর DBA ছিলাম। কাজের তালিকা মুখস্থ — পরীক্ষায় লিখো।
+</Dialogue>
+
+- **Schema definition** — মূল স্কিমা তৈরি (DDL দিয়ে)।
+- **Storage structure ও access method নির্ধারণ** — ডাটা ডিস্কে কীভাবে থাকবে, কোন ইন্ডেক্স লাগবে।
+- **Schema ও physical organization পরিবর্তন** — চাহিদা বদলালে।
+- **অ্যাক্সেস অধিকার প্রদান** (authorization) — কে কী পারবে (GRANT/REVOKE)।
+- **Routine maintenance** — নিয়মিত backup, ডিস্কের জায়গা নজরদারি, পারফরম্যান্স টিউনিং, নিরাপত্তা আপডেট, recovery পরিকল্পনা।
+- **Integrity constraint নির্দিষ্টকরণ**।
+
+### DBMS-এর ভাষা: SQL-এর পাঁচ ভাগ
+
+ডাটাবেসের সাথে কথা বলার জন্য সব রিলেশনাল DBMS-এ SQL (Structured Query Language) ব্যবহার হয়। এর কাজ অনুযায়ী ভাগগুলো:
+
+<Figure n={4} caption="SQL-এর পাঁচ ভাগ — DDL, DML, DQL, DCL ও TCL" alt="SQL থেকে পাঁচটি শাখা: DDL (CREATE, ALTER, DROP), DML (INSERT, UPDATE, DELETE), DQL (SELECT), DCL (GRANT, REVOKE), TCL (COMMIT, ROLLBACK, SAVEPOINT)" wide>
+  <DbmsLanguages />
+</Figure>
+
+| ভাষা | পূর্ণরূপ | কাজ | প্রধান কমান্ড |
+|---|---|---|---|
+| **DDL** | Data Definition Language | ডাটাবেসের কাঠামো বানানো, বদলানো, মোছা | `CREATE`, `ALTER`, `DROP`, `TRUNCATE` |
+| **DML** | Data Manipulation Language | ডাটা ঢোকানো, বদলানো, মোছা | `INSERT`, `UPDATE`, `DELETE` |
+| **DQL** | Data Query Language | ডাটা খোঁজা/পড়া | `SELECT` |
+| **DCL** | Data Control Language | অ্যাক্সেস অধিকার নিয়ন্ত্রণ | `GRANT`, `REVOKE` |
+| **TCL** | Transaction Control Language | ট্রানজ্যাকশন নিয়ন্ত্রণ | `COMMIT`, `ROLLBACK`, `SAVEPOINT` |
+
+<Callout type="note" title="DQL আলাদা নাকি DML-এর অংশ?">
+Silberschatz-এর বইয়ে ডাটা খোঁজাও (query) DML-এর অংশ। অনেক পাঠ্যক্রমে ও ওয়েব-টিউটোরিয়ালে `SELECT`-কে আলাদা DQL ধরা হয়। দুটোই চলে — পরীক্ষায় তোমার পাঠ্যবইয়ের শ্রেণিবিভাগ অনুসরণ করো। এই বইয়ে সুবিধার জন্য আলাদা DQL ধরা হয়েছে।
+</Callout>
+
+DML-কে আরেকভাবে ভাগ করা হয়: **procedural DML** (ব্যবহারকারী বলে *কীভাবে* ডাটা পেতে হবে) এবং **declarative / non-procedural DML** (ব্যবহারকারী শুধু বলে *কী* চাই; কীভাবে আনা হবে সেটা DBMS ঠিক করে)। SQL হলো declarative — এটাই তার জনপ্রিয়তার একটা বড় কারণ।
+
+### DBMS ভেতরে কীভাবে সাজানো (এক ঝলক)
+
+DBMS কয়েকটি উপাদানে গঠিত: **Query Processor** (SQL বুঝে সবচেয়ে ভালো পরিকল্পনা বানায়), **Transaction Manager** (লেনদেনের নিরাপত্তা), এবং **Storage Manager** (ডিস্ক ও বাফার সামলায়)। এগুলোর বিস্তারিত পাবে পরের অধ্যায়ে।
+
+## হাতে-কলমে: পাঁচ ভাষা এক ঝলকে
+
+SQLite-এ DDL, DML আর DQL একসাথে চালিয়ে দেখি। নতুন একটা `coupons` টেবিল বানাই (DDL), ডাটা ঢোকাই ও বদলাই (DML), তারপর দেখি (DQL):
+
+<SqlRunner initialQuery={`-- DDL: নতুন টেবিল বানানো
+CREATE TABLE coupons (
+  coupon_id INTEGER PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
+  discount_percent INTEGER CHECK (discount_percent BETWEEN 1 AND 90)
+);
+
+-- DML: ডাটা ঢোকানো ও বদলানো
+INSERT INTO coupons (code, discount_percent) VALUES ('EID10', 10), ('NEWYEAR20', 20);
+UPDATE coupons SET discount_percent = 15 WHERE code = 'EID10';
+
+-- DQL: ডাটা দেখা
+SELECT * FROM coupons;`} expectRows={2} minRows={12} />
+
+ফলাফলে দুটি সারি আসবে: `EID10` (১৫%) আর `NEWYEAR20` (২০%)। এবার `DELETE` চালিয়ে একটি মুছে গুনে দেখি:
+
+<SqlRunner initialQuery={`CREATE TABLE coupons (
+  coupon_id INTEGER PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
+  discount_percent INTEGER CHECK (discount_percent BETWEEN 1 AND 90)
+);
+INSERT INTO coupons (code, discount_percent) VALUES ('EID10', 10), ('NEWYEAR20', 20);
+
+-- DML: একটি মুছে ফেলা
+DELETE FROM coupons WHERE code = 'NEWYEAR20';
+
+SELECT COUNT(*) AS remaining FROM coupons;`} expectRows={1} minRows={10} />
+
+`remaining` হবে ১। তুমি `DELETE` লাইনটা মুছে ফেললে ২ পাবে।
+
+এবার ডিসকাউন্ট ১০০ দিয়ে ঢোকানোর চেষ্টা করো — CHECK constraint আটকে দেবে:
+
+<SqlRunner initialQuery={`CREATE TABLE coupons (
+  coupon_id INTEGER PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
+  discount_percent INTEGER CHECK (discount_percent BETWEEN 1 AND 90)
+);
+INSERT INTO coupons (code, discount_percent) VALUES ('MEGA', 100);`} expectError minRows={7} />
+
+### DCL: প্লেগ্রাউন্ডে চলবে না, তবে দেখো
+
+SQLite-এ ইউজার-অধিকার ব্যবস্থা নেই, তাই `GRANT`/`REVOKE` এখানে চলে না। MySQL-এ লেদুর ক্যাশিয়ারকে শুধু পড়ার অধিকার দেওয়ার উদাহরণ:
+
+<StaticCode lang="mysql">
+
+```sql
+-- ক্যাশিয়ার শুধু products আর orders দেখতে পারবে, বদলাতে পারবে না
+CREATE USER 'cashier'@'localhost' IDENTIFIED BY 'strong_password_here';
+GRANT SELECT ON ledu_mart.products TO 'cashier'@'localhost';
+GRANT SELECT ON ledu_mart.orders   TO 'cashier'@'localhost';
+
+-- পরে অধিকার তুলে নিতে চাইলে
+REVOKE SELECT ON ledu_mart.orders FROM 'cashier'@'localhost';
+```
+
+</StaticCode>
+
+## ফটকার ভুল
+
+<Dialogue who="fotka">
+আমার দোকানের হিসাব MySQL-এ আছে, তাই আমার তো ডাটাবেস আছে। MySQL-ই আমার ডাটাবেস!
+</Dialogue>
+
+<Dialogue who="kodom">
+না ফটকা, MySQL হলো DBMS — ম্যানেজার। তোমার দোকানের আসল ডাটা সংরক্ষিত টেবিল-ফাইলগুলোই ডাটাবেস। ম্যানেজার আর গুদামের মাল এক জিনিস না।
+</Dialogue>
+
+সাধারণ ভুল ধারণা:
+
+- **"DBMS আর ডাটাবেস একই কথা"** — না। ডাটাবেস = ডাটা; DBMS = সফটওয়্যার। যদিও কথোপকথনে লোকে মিলিয়ে ফেলে, পরীক্ষায় আলাদা লিখতে হবে।
+- **"SQL মানে MySQL"** — না। SQL হলো ভাষা; MySQL একটি DBMS যা SQL বোঝে। PostgreSQL, Oracle, SQLite-ও SQL বোঝে।
+- **"ডাটাবেস মানেই শুধু ডাটা রাখা"** — না। এর কাজ ডাটা সুরক্ষিত, সংগঠিত, দ্রুত অ্যাক্সেসযোগ্য ও বহু-ব্যবহারকারী-বান্ধব রাখা।
+- **"DBA আর ডাটাবেস ডিজাইনার একই"** — না। ডিজাইনার নকশা করে, DBA তা চালু রাখে ও দেখভাল করে (যদিও ছোট প্রতিষ্ঠানে একজনই দুটো কাজ করে)।
+
+## পরীক্ষার টিপস
+
+<Callout type="exam">
+**সম্ভাব্য লিখিত প্রশ্ন:** (১) Database ও DBMS-এর সংজ্ঞা ও পার্থক্য। (২) DBMS-এর সুবিধা-অসুবিধা। (৩) DBA-র কাজ। (৪) ডাটাবেস ব্যবহারকারীদের শ্রেণিবিভাগ। (৫) DDL, DML, DCL, TCL-এর পার্থক্য উদাহরণসহ।
+
+**MCQ ট্র্যাপ:** (১) `TRUNCATE` DDL, DML নয় (বেশিরভাগ বইয়ে)। (২) `GRANT/REVOKE` DCL। (৩) `SELECT` DQL বা DML — প্রশ্নের শর্ত দেখো। (৪) "DBA-র কাজ নয়" টাইপ প্রশ্নে অ্যাপ্লিকেশনের UI ডিজাইন বা কোড লেখা উত্তর হতে পারে। (৫) SQL "non-procedural/declarative" ভাষা।
+</Callout>
+
+<Dialogue who="minu">
+লেদুভাই, ব্যাংক আইটি পরীক্ষায় প্রশ্ন আসে "নিচের কোনটি DBMS নয়?" — অপশনে Excel বা Notepad থাকে। মনে রেখো: স্প্রেডশিট DBMS নয়।
+</Dialogue>
+
+<Summary>
+- **Database** = সম্পর্কিত ডাটার সংগ্রহ; **DBMS** = তা সামলানোর সফটওয়্যার; দুটো আলাদা।
+- DBMS-এর সুবিধা: controlled redundancy, consistency, sharing, integrity, security, backup/recovery, concurrency control, data independence, দ্রুত অ্যাক্সেস।
+- অসুবিধা: খরচ, জটিলতা, ছোট কাজে বাড়তি ভার, ব্যর্থতার প্রভাব বেশি।
+- ব্যবহারকারী: end user (naive, casual, sophisticated), application programmer, database designer, **DBA**।
+- DBA: স্কিমা, storage structure, অ্যাক্সেস অধিকার, ব্যাকআপ, টিউনিং, নিরাপত্তা।
+- SQL: DDL (কাঠামো), DML (ডাটা বদল), DQL (খোঁজা), DCL (অধিকার), TCL (ট্রানজ্যাকশন)।
+</Summary>
+
+## কুইজ
+
+<Quiz questions={questions} />
+
+## অনুশীলন
+
+<Exercise n={1}>
+লেদু মার্টের পরিপ্রেক্ষিতে Database, DBMS ও Application — তিনটির একটি করে উদাহরণ দাও।
+
+<Answer>
+Database: `ledu_mart`-এর `customers`, `orders` ইত্যাদি টেবিল। DBMS: PostgreSQL (বা MySQL)। Application: লেদু মার্টের মোবাইল অ্যাপ বা রাইডার অ্যাপ।
+</Answer>
+</Exercise>
+
+<Exercise n={2}>
+নিচের প্রতিটি কমান্ড কোন শ্রেণির (DDL/DML/DQL/DCL/TCL) বলো: `ALTER`, `DELETE`, `SELECT`, `GRANT`, `ROLLBACK`, `DROP`।
+
+<Answer>
+`ALTER` — DDL; `DELETE` — DML; `SELECT` — DQL (বা DML); `GRANT` — DCL; `ROLLBACK` — TCL; `DROP` — DDL।
+</Answer>
+</Exercise>
+
+<Exercise n={3}>
+`coupons` টেবিলে (উপরের উদাহরণের মতো) আরও একটি কুপন `'PUJA25'` (২৫%) ঢুকিয়ে সব কুপন ডিসকাউন্ট অনুযায়ী বড় থেকে ছোট সাজিয়ে দেখাও। (ইঙ্গিত: `ORDER BY ... DESC`)
+
+<Answer>
+```sql
+CREATE TABLE coupons (
+  coupon_id INTEGER PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
+  discount_percent INTEGER CHECK (discount_percent BETWEEN 1 AND 90)
+);
+INSERT INTO coupons (code, discount_percent)
+VALUES ('EID10', 10), ('NEWYEAR20', 20), ('PUJA25', 25);
+SELECT * FROM coupons ORDER BY discount_percent DESC;
+```
+প্রথমে DDL, তারপর DML, শেষে DQL — তিনটি ভাষাই ব্যবহার হলো।
+</Answer>
+</Exercise>
+
+<Exercise n={4}>
+DBA-র পাঁচটি দায়িত্ব লেখো। একজন database designer আর DBA-র মূল পার্থক্য কী?
+
+<Answer>
+DBA-র দায়িত্ব: স্কিমা সংজ্ঞায়িত করা; storage structure ও access method ঠিক করা; ইউজারদের অ্যাক্সেস অধিকার দেওয়া; নিয়মিত backup ও recovery নিশ্চিত করা; পারফরম্যান্স টিউনিং ও নিরাপত্তা বজায় রাখা।
+
+পার্থক্য: designer ডাটাবেসের **নকশা** (কী থাকবে, কীভাবে সাজানো) তৈরি করে, DBA সেই ডাটাবেস **চালু রেখে দেখভাল** করে। ছোট প্রতিষ্ঠানে একই ব্যক্তি দুটো ভূমিকা পালন করতে পারে।
+</Answer>
+</Exercise>

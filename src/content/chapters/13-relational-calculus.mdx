@@ -1,0 +1,199 @@
+import { ch13 as questions } from '@/content/quizzes/phase2c';
+
+## গল্প: "কী চাই" বনাম "কীভাবে আনব"
+
+লেদু ফোনে পিৎজা অর্ডার করছে। সে বলে না, "প্রথমে ভাঁড়ার থেকে ময়দা আনো, তারপর চুলায় বসাও…"; সে শুধু বলে, "একটা ডাবল-চিজ পিৎজা চাই।" মিনু বলল, "লেদুভাই, তুমি এইমাত্র relational calculus-এর নিয়ম মেনেছ — কী চাই বললে, কীভাবে পাবে সেটা ডাটাবেসের কাজ।"
+
+<StoryImage name="wish-list" n={1} caption="লেদু বলছে 'কী চাই' — 'কীভাবে' ভাবার দায়িত্ব ডাটাবেসের" alt="লেদু তার চাওয়ার তালিকা লিখছে আর কদম চাচা হাসছেন" />
+
+## সমস্যাটা আসলে কী
+
+Relational algebra বলে *কোন ধাপে* ফল তৈরি হবে (procedural)। Relational calculus বলে *ফল কেমন হবে* (declarative) — শুধু শর্ত (predicate)। দুটোর ক্ষমতা সমান; SQL-এর মূল ভাবনা এখান থেকেই।
+
+## কদম চাচার ক্লাস
+
+### Tuple Relational Calculus (TRC)
+
+সাধারণ রূপ: `{ t | P(t) }` — "সব tuple `t` যাদের জন্য predicate `P(t)` সত্য।" `t` একটি **tuple variable**; `t ∈ R` মানে t, relation R-এর একটি tuple; `t.A` মানে A attribute-এর মান।
+
+**উদাহরণ ১:** ৫০০-র বেশি দামের পণ্য:
+
+`{ t | t ∈ products ∧ t.price > 500 }`
+
+**উদাহরণ ২:** শুধু নাম ও দাম (কিছু attribute চাইলে):
+
+`{ t.name, t.price | t ∈ products ∧ t.price > 500 }`
+
+### Quantifier: ∃ ও ∀
+
+- `∃ s (s ∈ R ∧ …)` — "অন্তত একটি tuple আছে যার জন্য…"।
+- `∀ s (s ∈ R → …)` — "R-এর প্রতিটি tuple-এর জন্য…"। `∀x P ≡ ¬∃x ¬P`।
+
+**উদাহরণ ৩ (∃):** যে কাস্টমার অন্তত একটি অর্ডার দিয়েছে:
+
+`{ c | c ∈ customers ∧ ∃ o (o ∈ orders ∧ o.customer_id = c.customer_id) }`
+
+**উদাহরণ ৪ (¬∃):** যারা কখনো অর্ডার দেয়নি:
+
+`{ c | c ∈ customers ∧ ¬∃ o (o ∈ orders ∧ o.customer_id = c.customer_id) }`
+
+### Domain Relational Calculus (DRC)
+
+Variable tuple নয়, প্রতিটি attribute-এর **domain-এর মান**: `{ <x₁, x₂, …, xₙ> | P(x₁, …, xₙ) }`।
+
+**উদাহরণ ৫:** ৫০০-র বেশি দামের পণ্যের নাম ও দাম:
+
+`{ <n, p> | ∃ id, c, s, st, u ( <id, n, c, s, p, st, u> ∈ products ∧ p > 500 ) }`
+
+অর্থাৎ products-এর সাত attribute-এর জন্য সাতটি variable; যেগুলো চাই না সেগুলো ∃ দিয়ে বাঁধা।
+
+### Safe Expression
+
+`{ t | ¬(t ∈ products) }` — "যা products-এ নেই এমন সব tuple" — অসীম ফল (সব সম্ভাব্য tuple)! এমন **unsafe** expression-কে নিষিদ্ধ করা হয়। **Safe expression**-এর ফল সবসময় সসীম এবং তার মান আসে ডাটাবেসে থাকা মান থেকে। Codd-এর উপপাদ্য: **safe TRC, safe DRC ও relational algebra সমান ক্ষমতার** (relationally complete)।
+
+<Figure n={2} caption="তিন ভাষার সম্পর্ক: সবই সমান ক্ষমতার; পার্থক্য প্রকাশের ধরনে" alt="Relational algebra, TRC ও DRC তিনটি বাক্স, মাঝে সমান ক্ষমতার চিহ্ন, নিচে SQL" wide>
+  <svg viewBox="0 0 820 220" style={{ width: '100%', height: 'auto', minWidth: 560 }} role="img" aria-label="Relational algebra, tuple calculus ও domain calculus সমান ক্ষমতার; SQL মূলত tuple calculus-ভিত্তিক">
+    <g className="dg-text" fontSize="16" fontWeight="700" textAnchor="middle">
+      <rect x="20" y="20" width="230" height="86" rx="12" className="dg-box-brand" />
+      <text x="135" y="55">Relational Algebra</text>
+      <text x="135" y="82" fontWeight="400" fontSize="14">procedural — "কীভাবে"</text>
+      <rect x="295" y="20" width="230" height="86" rx="12" className="dg-box-teal" />
+      <text x="410" y="55">Tuple Calculus (TRC)</text>
+      <text x="410" y="82" fontWeight="400" fontSize="14">declarative — "কী চাই"</text>
+      <rect x="570" y="20" width="230" height="86" rx="12" className="dg-box-teal" />
+      <text x="685" y="55">Domain Calculus (DRC)</text>
+      <text x="685" y="82" fontWeight="400" fontSize="14">declarative, মান-ভিত্তিক</text>
+      <text x="272" y="68" fontSize="26">≡</text>
+      <text x="548" y="68" fontSize="26">≡</text>
+      <rect x="260" y="150" width="300" height="56" rx="12" className="dg-good" />
+      <text x="410" y="184">SQL (TRC-ভিত্তিক + অ্যালজেব্রার plan)</text>
+    </g>
+  </svg>
+</Figure>
+
+## টেকনিক্যাল গভীরে: Calculus বনাম Algebra বনাম SQL
+
+| | Relational Algebra | Relational Calculus | SQL |
+|---|---|---|---|
+| ধরন | Procedural | Declarative | Declarative (+ কিছু procedural এক্সটেনশন) |
+| বলে | ধাপগুলো | কেমন ফল চাই | কেমন ফল চাই |
+| ভিত্তি | সেট-তত্ত্ব | predicate logic | TRC + bag semantics |
+| ডুপ্লিকেট | নেই (সেট) | নেই | আছে (`DISTINCT` লাগে) |
+
+### Calculus → SQL ছক
+
+| Calculus | SQL |
+|---|---|
+| `t ∈ R` | `FROM R t` |
+| `t.A > c` | `WHERE t.A > c` |
+| `∃ s (s ∈ S ∧ …)` | `EXISTS (SELECT 1 FROM S s WHERE …)` |
+| `¬∃ …` | `NOT EXISTS (…)` |
+| `∀ s (…)` | `NOT EXISTS (… NOT EXISTS …)` |
+| `∧ / ∨ / ¬` | `AND / OR / NOT` |
+
+## হাতে-কলমে
+
+উদাহরণ ৩ (∃) — অন্তত একটি অর্ডার দিয়েছে এমন কাস্টমার:
+
+<SqlRunner initialQuery={`SELECT c.name
+FROM customers c
+WHERE EXISTS (
+  SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id
+);`} expectRows={13} minRows={5} />
+
+উদাহরণ ৪ (¬∃) — যারা কখনো অর্ডার দেয়নি:
+
+<SqlRunner initialQuery={`SELECT c.name
+FROM customers c
+WHERE NOT EXISTS (
+  SELECT 1 FROM orders o WHERE o.customer_id = c.customer_id
+);`} expectRows={7} minRows={5} />
+
+১৩ + ৭ = ২০ জন কাস্টমার — দুটো কোয়েরি একে অপরের পরিপূরক।
+
+∀ ধরনের প্রশ্ন: "যে পণ্য *প্রতিটি* স্টোরের অন্তত একটি অর্ডারে আছে" — ডাবল `NOT EXISTS`:
+
+<SqlRunner initialQuery={`SELECT p.name
+FROM products p
+WHERE NOT EXISTS (
+  SELECT 1 FROM stores s
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM order_items oi
+    JOIN orders o ON o.order_id = oi.order_id
+    WHERE oi.product_id = p.product_id AND o.store_id = s.store_id
+  )
+);`} minRows={13} />
+
+(কোনো পণ্যই সব স্টোরে বিক্রি না হলে ফল ফাঁকা — সেটাও বৈধ উত্তর।)
+
+## ফটকার ভুল
+
+<Dialogue who="fotka">
+Calculus আর algebra তো আলাদা — calculus বেশি শক্তিশালী, কারণ ∀ আছে!
+</Dialogue>
+
+<Dialogue who="kodom">
+ফটকা, ∀ আসলে ¬∃¬। আর algebra-য় division আছে। safe calculus আর algebra-র ক্ষমতা সমান — Codd প্রমাণ করেছেন।
+</Dialogue>
+
+- **"Calculus বেশি শক্তিশালী"** — নিরাপদ (safe) অংশে সমান।
+- **Unsafe expression-কে বৈধ ভাবা**।
+- **TRC ও DRC-র variable-এর ধরন গুলিয়ে ফেলা** — TRC: tuple; DRC: attribute-মান।
+- **SQL-কে শুধু algebra ভাবা** — গঠন calculus-এর কাছাকাছি।
+
+## পরীক্ষার টিপস
+
+<Callout type="exam">
+**লিখিত:** TRC/DRC-তে কোয়েরি লেখা ও algebra/SQL-এ রূপান্তর; safe expression ব্যাখ্যা; algebra বনাম calculus তুলনা (টেবিল)। **MCQ ট্র্যাপ:** (১) TRC variable = tuple; DRC variable = domain-এর মান। (২) ∀ = ¬∃¬। (৩) Calculus declarative, algebra procedural। (৪) Relationally complete = algebra-র সমান ক্ষমতা।
+</Callout>
+
+<Summary>
+- Calculus = declarative; শুধু ফলের শর্ত (predicate) বলে।
+- **TRC** `{ t | P(t) }` — tuple variable; **DRC** `{ <x₁…xₙ> | P }` — domain variable।
+- ∃ ও ∀ কোয়ান্টিফায়ার; `∀x P ≡ ¬∃x ¬P`।
+- Safe expression-এর ফল সসীম; safe calculus ≡ relational algebra (Codd)।
+- SQL: `EXISTS`/`NOT EXISTS` দিয়ে ∃/∀।
+</Summary>
+
+## কুইজ
+
+<Quiz questions={questions} />
+
+## অনুশীলন
+
+<Exercise n={1}>
+TRC-তে লেখো: ঢাকার সব কাস্টমারের নাম।
+
+<Answer>
+`{ c.name | c ∈ customers ∧ c.city = 'ঢাকা' }`
+
+SQL: `SELECT name FROM customers WHERE city = 'ঢাকা';`
+</Answer>
+</Exercise>
+
+<Exercise n={2}>
+TRC-তে লেখো: যে পণ্য কোনো অর্ডারে নেই।
+
+<Answer>
+`{ p | p ∈ products ∧ ¬∃ i (i ∈ order_items ∧ i.product_id = p.product_id) }`
+
+SQL-এ `NOT EXISTS (SELECT 1 FROM order_items i WHERE i.product_id = p.product_id)`। (৩টি পণ্য আসে।)
+</Answer>
+</Exercise>
+
+<Exercise n={3}>
+কেন `{ t | ¬(t ∈ customers) }` unsafe?
+
+<Answer>
+এটি "customers-এ নেই এমন সব সম্ভাব্য tuple" চায়, যার সংখ্যা অসীম হতে পারে (যেকোনো মান-সমন্বয়)। Safe expression-এ ফল সসীম হতে হবে এবং মান ডাটাবেসের বিদ্যমান মান থেকে আসতে হবে।
+</Answer>
+</Exercise>
+
+<Exercise n={4}>
+Algebra ও calculus-এর দুটি পার্থক্য লেখো।
+
+<Answer>
+(১) Algebra procedural (ধাপে ধাপে বলে কীভাবে), calculus declarative (কেমন ফল চাই তা বলে)। (২) Algebra-য় অপারেশন-ক্রম গুরুত্বপূর্ণ; calculus-এ predicate-এ নির্ধারিত। (৩) ক্ষমতায় সমান (safe অংশে)।
+</Answer>
+</Exercise>

@@ -1,0 +1,169 @@
+import { ch03 as questions } from '@/content/quizzes/phase2a';
+
+## গল্প: ক্যাশিয়ার হঠাৎ "ঘি" দেখছে না
+
+লেদু মার্টে নতুন ক্যাশিয়ার রুবেল। তার স্ক্রিনে শুধু পণ্যের নাম আর দাম দেখা যাওয়ার কথা। একদিন লেদু মনে করল, "পণ্যের জন্য একটা বারকোড কলাম যোগ করি।" কলাম যোগ করার পরদিন ক্যাশিয়ারের অ্যাপ বন্ধ! কারণ অ্যাপটা `SELECT * FROM products` চালিয়ে কলামের ক্রম ধরে ধরে পড়ছিল — নতুন কলামে সব এলোমেলো।
+
+<StoryImage name="schema-change" n={1} caption="গুদামে নতুন তাক বসাতেই দোকানির খাতা গুলিয়ে গেল" alt="লেদু গুদামে নতুন তাক বসাচ্ছে আর ক্যাশিয়ার রুবেল হতবুদ্ধি হয়ে স্ক্রিনের দিকে তাকিয়ে আছে" />
+
+<Dialogue who="kodom">
+লেদু বাপজান, ক্যাশিয়ারের দরকার ছোট্ট একটা জানালা, পুরো গুদামের নকশা নয়। জানালা আর গুদামের মাঝে একটা পর্দা থাকলে গুদামে যা-ই বদলাও, জানালা অক্ষত থাকে। এই পর্দার ধারণাই ডাটা ইনডিপেন্ডেন্স।
+</Dialogue>
+
+## সমস্যাটা আসলে কী
+
+ডাটাবেসের ভেতরে পরিবর্তন তো আসবেই — নতুন কলাম, নতুন ইনডেক্স, ডিস্ক বদল। প্রশ্ন হলো, প্রতিটি পরিবর্তনে কি সব অ্যাপ ভাঙবে? উত্তর: **না**, যদি ডাটাবেসের আর্কিটেকচার স্তরে স্তরে ভাগ করা থাকে।
+
+## কদম চাচার ক্লাস
+
+### Schema আর Instance
+
+- <KeyTerm en="Schema" bn="স্কিমা">ডাটাবেসের কাঠামোর বর্ণনা — কোন টেবিল, কোন কলাম, কী type, কী constraint</KeyTerm>। এটি খুব কম বদলায়। একে intension-ও বলে।
+- <KeyTerm en="Instance (Database State)" bn="ইনস্ট্যান্স">নির্দিষ্ট একটি মুহূর্তে ডাটাবেসে থাকা প্রকৃত ডাটা</KeyTerm>। এটি প্রতিমুহূর্তে বদলায়। একে extension বা snapshot-ও বলে।
+
+নাটকের তুলনা: স্কিমা হলো চিত্রনাট্য, ইনস্ট্যান্স হলো আজ রাতের মঞ্চে যে অভিনয় হচ্ছে।
+
+### তিন-স্কিমা আর্কিটেকচার (ANSI/SPARC)
+
+১৯৭০-এর দশকে ANSI/SPARC কমিটি প্রস্তাব করে, ডাটাবেস বর্ণনা তিন স্তরে হবে:
+
+<Figure n={2} caption="ANSI/SPARC তিন-স্কিমা আর্কিটেকচার" alt="বাইরের স্তরে তিনটি view, মাঝে conceptual schema, নিচে internal schema ও ডিস্ক; দুই মাপিং দুই ধরনের ইনডিপেন্ডেন্স দেয়" wide>
+  <ThreeSchema />
+</Figure>
+
+১. **External level (View level)** — প্রতিটি ব্যবহারকারী-গোষ্ঠী ডাটাবেসের যতটুকু অংশ দেখে। ক্যাশিয়ার দেখে নাম-দাম; ম্যানেজার দেখে বিক্রির রিপোর্ট। একাধিক external schema থাকে।
+
+২. **Conceptual level (Logical level)** — সমগ্র ডাটাবেসের নকশা: কোন এন্টিটি, কী সম্পর্ক, কী constraint। একটিই। ডাটা ডিস্কে কীভাবে আছে সেই বিবরণ এখানে নেই।
+
+৩. **Internal level (Physical level)** — ডাটা ডিস্কে কীভাবে সংরক্ষিত: ফাইলের সংগঠন, ইনডেক্স, কম্প্রেশন, পেজের আকার।
+
+### Data Independence
+
+স্তরগুলোর মাঝের **মাপিং** (mapping) দুই ধরনের স্বাধীনতা দেয়:
+
+- <KeyTerm en="Logical Data Independence" bn="লজিক্যাল ডাটা ইনডিপেন্ডেন্স">conceptual schema বদলালেও (যেমন কলাম যোগ) external schema ও অ্যাপ্লিকেশন প্রোগ্রাম বদলাতে না হওয়া</KeyTerm>।
+- <KeyTerm en="Physical Data Independence" bn="ফিজিক্যাল ডাটা ইনডিপেন্ডেন্স">internal schema বদলালেও (যেমন নতুন ইনডেক্স, ভিন্ন ফাইল সংগঠন) conceptual schema অপরিবর্তিত থাকা</KeyTerm>।
+
+<Callout type="exam">
+Physical independence অর্জন করা তুলনামূলক সহজ এবং বেশিরভাগ DBMS দেয়। Logical independence অর্জন কঠিন, কারণ অ্যাপ্লিকেশন প্রায়ই নির্দিষ্ট কলাম/টেবিলের উপর নির্ভর করে — এ প্রশ্ন ভাইভায় খুব আসে।
+</Callout>
+
+### 1-tier, 2-tier ও 3-tier আর্কিটেকচার
+
+<Figure n={3} caption="অ্যাপ্লিকেশন-আর্কিটেকচারের তিন রূপ" alt="১-টিয়ারে সবকিছু এক মেশিনে, ২-টিয়ারে ক্লায়েন্ট ও ডাটাবেস সার্ভার, ৩-টিয়ারে ক্লায়েন্ট, অ্যাপ সার্ভার ও ডাটাবেস সার্ভার" wide>
+  <Tiers />
+</Figure>
+
+- **1-tier:** অ্যাপ, DBMS ও ডাটা একই কম্পিউটারে (যেমন একজনের ডেস্কটপে SQLite বা Access)।
+- **2-tier:** ক্লায়েন্ট অ্যাপ সরাসরি ডাটাবেস সার্ভারের সাথে কথা বলে (ODBC/JDBC দিয়ে)। সহজ, কিন্তু ক্লায়েন্টে ডাটাবেস-পরিচয় (ইউজার/পাসওয়ার্ড) রাখতে হয়, স্কেল করা কঠিন।
+- **3-tier:** ক্লায়েন্ট → অ্যাপ সার্ভার (business logic) → ডাটাবেস সার্ভার। ওয়েব ও মোবাইল অ্যাপের মানক রূপ। ক্লায়েন্ট সরাসরি ডাটাবেস দেখে না — তাই নিরাপদ ও স্কেলযোগ্য। লেদু মার্ট এখন এটাই।
+
+## টেকনিক্যাল গভীরে: DBMS-এর উপাদান
+
+<Figure n={4} caption="DBMS-এর প্রধান উপাদান" alt="উপরে query processor-এর চার উপাদান, মাঝে storage manager-এর চার উপাদান, নিচে ডিস্কে ডাটা ফাইল, ইনডেক্স ও ডাটা ডিকশনারি" wide>
+  <DbmsComponents />
+</Figure>
+
+**Query Processor:**
+- **DDL interpreter** — DDL স্টেটমেন্ট বুঝে ডাটা ডিকশনারিতে (metadata) লেখে।
+- **DML compiler** — SQL-কে নিম্নস্তরের নির্দেশে অনুবাদ করে; **Query optimizer**-কে সবচেয়ে কম খরচের plan বাছাই করতে দেয়।
+- **Query evaluation (execution) engine** — plan চালায়।
+
+**Storage Manager:**
+- **Authorization ও integrity manager** — অধিকার ও constraint যাচাই।
+- **Transaction manager** — ACID ও concurrency/recovery নিশ্চিত করে।
+- **File manager** — ডিস্ক স্পেস বরাদ্দ ও ডাটা-কাঠামো।
+- **Buffer manager** — ডিস্ক থেকে ডাটা মেইন মেমোরির বাফারে আনা ও রাখা।
+
+ডিস্কে থাকে **data files**, **indices**, **data dictionary** (metadata — স্কিমার তথ্য) এবং পরিসংখ্যান (optimizer-এর জন্য)।
+
+## হাতে-কলমে: View দিয়ে logical independence দেখা
+
+স্কিমা সরাসরি দেখি — SQLite-এ টেবিলের নকশা `sqlite_master`-এ থাকে:
+
+<SqlRunner initialQuery={`SELECT name, type FROM sqlite_master
+WHERE type = 'table'
+ORDER BY name;`} expectRows={11} minRows={3} />
+
+এটা **স্কিমা** (১১টি টেবিলের নাম)। আর টেবিলের ভেতরের সারিগুলো **ইনস্ট্যান্স**। ক্যাশিয়ারের জন্য একটা view (external schema) বানাই, তারপর `products`-এ কলাম যোগ করি — view-র ফল অপরিবর্তিত:
+
+<SqlRunner initialQuery={`CREATE VIEW cashier_products AS
+  SELECT product_id, name, price FROM products;
+
+ALTER TABLE products ADD COLUMN barcode TEXT;
+
+SELECT * FROM cashier_products LIMIT 3;`} expectRows={3} minRows={6} />
+
+`products` টেবিলে নতুন কলাম এলেও ক্যাশিয়ারের view আগের মতোই তিনটি কলাম দেখাচ্ছে — এটাই **logical data independence**। (View নিয়ে পূর্ণ অধ্যায়: পর্ব ৪, অধ্যায় ২৩।)
+
+## ফটকার ভুল
+
+<Dialogue who="fotka">
+আমি সবাইকে সরাসরি ডাটাবেসের পাসওয়ার্ড দিয়ে দিই — ক্যাশিয়ারও সরাসরি সব টেবিল খুলে দেখে। সহজ না?
+</Dialogue>
+
+<Dialogue who="kodom">
+সহজ, কিন্তু বিপজ্জনক। ক্যাশিয়ার ভুলে `DELETE` চালালে, কিংবা ল্যাপটপ চুরি গেলে চোর সরাসরি তোমার ডাটাবেসে ঢুকবে। এজন্যই view আর অ্যাপ সার্ভারের স্তর।
+</Dialogue>
+
+- **"Schema আর ডাটাবেস একই কথা"** — না; স্কিমা কাঠামো, ডাটাবেস (instance) তার ভেতরের ডাটা।
+- **"Physical independence মানে ডাটা মুছলেও সমস্যা নেই"** — না; এটি শুধু ডিস্ক-সংগঠন বদলের কথা।
+- **"3-tier মানে তিনটি সার্ভার মেশিন লাগবেই"** — না; tier হলো লজিক্যাল স্তর, একই মেশিনেও থাকতে পারে।
+
+## পরীক্ষার টিপস
+
+<Callout type="exam">
+**লিখিত:** তিন-স্কিমা ডায়াগ্রাম এঁকে প্রতিটি স্তরের ব্যাখ্যা + দুই ধরনের independence। DBMS উপাদানের ব্লক ডায়াগ্রাম। 2-tier vs 3-tier পার্থক্য।
+
+**MCQ ট্র্যাপ:** (১) তিন স্তরের ক্রম উপর থেকে নিচে: External → Conceptual → Internal। (২) Logical independence conceptual বদলালে external অক্ষত। (৩) Data dictionary-তে থাকে metadata, ব্যবহারকারীর ডাটা নয়।
+</Callout>
+
+<Summary>
+- **Schema** = কাঠামো (কম বদলায়); **Instance** = বর্তমান ডাটা (বদলায়)।
+- তিন-স্কিমা: External (view), Conceptual (পুরো নকশা), Internal (ডিস্কের সংগঠন)।
+- **Logical independence:** conceptual বদলালে external অক্ষত। **Physical independence:** internal বদলালে conceptual অক্ষত।
+- **1/2/3-tier:** একমেশিন / ক্লায়েন্ট-ডাটাবেস / ক্লায়েন্ট-অ্যাপসার্ভার-ডাটাবেস।
+- DBMS উপাদান: query processor (DDL/DML, optimizer, engine) ও storage manager (transaction, file, buffer, authorization manager)।
+</Summary>
+
+## কুইজ
+
+<Quiz questions={questions} />
+
+## অনুশীলন
+
+<Exercise n={1}>
+Schema ও Instance-এর পার্থক্য লেদু মার্টের `customers` টেবিলের উদাহরণসহ লেখো।
+
+<Answer>
+Schema: `customers(customer_id, name, phone, city, area, joined_on, email)` — কলাম ও type-এর বর্ণনা। Instance: এই মুহূর্তে টেবিলে থাকা ২০টি সারি। নতুন কাস্টমার ঢুকলে instance বদলায়, schema নয়; কলাম যোগ করলে schema বদলায়।
+</Answer>
+</Exercise>
+
+<Exercise n={2}>
+নিচের পরিবর্তনগুলো কোন independence-এর উদাহরণ? (ক) `orders.status`-এ ইনডেক্স যোগ। (খ) `customers`-এ `birthday` কলাম যোগ, কিন্তু পুরনো view অপরিবর্তিত।
+
+<Answer>
+(ক) Physical data independence — internal schema বদলেছে, conceptual অপরিবর্তিত। (খ) Logical data independence — conceptual schema বদলেছে, external view (ও অ্যাপ) অক্ষত।
+</Answer>
+</Exercise>
+
+<Exercise n={3}>
+`orders` টেবিল থেকে শুধু `order_id` ও `status` দেখায় — এমন একটি view `order_status_view` বানিয়ে প্রথম ৫টি সারি দেখাও।
+
+<Answer>
+```sql
+CREATE VIEW order_status_view AS
+  SELECT order_id, status FROM orders;
+SELECT * FROM order_status_view LIMIT 5;
+```
+</Answer>
+</Exercise>
+
+<Exercise n={4}>
+2-tier আর 3-tier আর্কিটেকচারের দুটি পার্থক্য লেখো।
+
+<Answer>
+(১) 2-tier-এ ক্লায়েন্ট সরাসরি ডাটাবেসে কানেক্ট করে; 3-tier-এ মাঝে অ্যাপ সার্ভার থাকে। (২) 3-tier-এ business logic কেন্দ্রীভূত, নিরাপত্তা ও স্কেলিং ভালো; 2-tier-এ ক্লায়েন্টে ডাটাবেস-ক্রেডেনশিয়াল ও লজিক ছড়িয়ে থাকে।
+</Answer>
+</Exercise>

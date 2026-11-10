@@ -1,0 +1,266 @@
+import { ch12 as questions } from '@/content/quizzes/phase2c';
+
+## গল্প: লেদুর "না-লেখা" প্রশ্ন
+
+কদম চাচা বললেন, "SQL শেখার আগে একটা জিনিস শিখে নাও — কোয়েরির *গণিত*। SQL-কে ডাটাবেস ভেতরে ভেতরে যে ভাষায় অনুবাদ করে, সেটাই রিলেশনাল অ্যালজেব্রা।" লেদু নাক সিঁটকাল, "গণিত? আমি তো কোডার!" মিনু বলল, "ভয় নেই লেদুভাই — এটা পাটিগণিতের মতো: সারি বাছো, কলাম বাছো, টেবিল জোড়ো।"
+
+<StoryImage name="algebra-class" n={1} caption="মিনুর ক্লাস: σ সারি বাছে, π কলাম বাছে, ⋈ টেবিল জোড়ে" alt="মিনু বোর্ডে σ, π ও ⋈ চিহ্ন এঁকে রিলেশনাল অ্যালজেব্রা বোঝাচ্ছে" />
+
+## সমস্যাটা আসলে কী
+
+SQL একটি declarative ভাষা — "কী চাই" বলা হয়, "কীভাবে" নয়। DBMS-কে তা কার্যকর করতে হলে একটি নির্দিষ্ট ধাপের তালিকা বানাতে হয়। সেই তালিকার ভিত্তি **relational algebra** — relation-এর উপর কাজ করা একটি procedural query language, যার প্রতিটি অপারেশনের ইনপুট relation ও আউটপুট relation।
+
+## কদম চাচার ক্লাস: মৌলিক অপারেশন
+
+ছয়টি **মৌলিক** অপারেশন: σ, π, ∪, −, ×, ρ। বাকি সব (∩, ⋈, ÷) এগুলো থেকে তৈরি করা যায়।
+
+### ১. Selection — σ (সিগমা): সারি বাছাই
+
+`σ_শর্ত(R)` — শর্ত সত্য এমন tuple-গুলো। উদাহরণ: `σ_{price > 500}(products)`।
+
+<Figure n={2} caption="σ: শর্ত মেনে সারি বাছা — হাইলাইট করা সারিগুলোই ফল" alt="products টেবিলের চারটি সারি, যার মধ্যে দাম ৫০০-র বেশি দুটি সারি হাইলাইট করা" wide>
+  <TableView name="σ price > 500 (products)" columns={['product_id', 'name', 'price']} rows={[[22, 'ঘি', 780], [3, 'মসুর ডাল', 135], [20, 'গুঁড়া দুধ', 650], [11, 'লবণ', 40]]} hiRows={[0, 2]} compact />
+</Figure>
+
+শর্তে তুলনা (`=`, `≠`, `<`, `≤`, `>`, `≥`) ও যুক্তি (`∧`, `∨`, `¬`) ব্যবহার করা যায়। ডিগ্রি অপরিবর্তিত, cardinality কমে বা সমান।
+
+### ২. Projection — π (পাই): কলাম বাছাই
+
+`π_{A₁,…,Aₖ}(R)` — শুধু নির্দিষ্ট কলাম; **ডুপ্লিকেট মুছে যায়** (সেট)।
+
+<Figure n={3} caption="π: নির্দিষ্ট কলাম বাছা — হাইলাইট করা কলাম দুটিই ফল" alt="products টেবিলের name ও price কলাম হাইলাইট করা" wide>
+  <TableView name="π name, price (products)" columns={['product_id', 'name', 'price']} rows={[[22, 'ঘি', 780], [3, 'মসুর ডাল', 135], [20, 'গুঁড়া দুধ', 650]]} hiCols={[1, 2]} compact />
+</Figure>
+
+### ৩. Set Operations — ∪, ∩, −
+
+শর্ত: দুই relation **union-compatible** — একই degree ও সংশ্লিষ্ট attribute-গুলোর domain সামঞ্জস্যপূর্ণ।
+
+- `R ∪ S` — R বা S (বা দুটোতে) থাকা tuple।
+- `R ∩ S` — উভয়ে থাকা। (`R ∩ S = R − (R − S)`)
+- `R − S` — R-এ আছে, S-এ নেই। **commutative নয়।**
+
+### ৪. Cartesian Product — ×
+
+`R × S` — R-এর প্রতিটি tuple S-এর প্রতিটির সাথে জোড়া। Degree = d(R) + d(S); cardinality = |R| × |S|। নিজে খুব কম কাজের; তার সাথে σ জুড়ে join হয়।
+
+### ৫. Rename — ρ (রো)
+
+`ρ_{S(B₁,…,Bₙ)}(R)` — নতুন নাম। Self-join-এ অপরিহার্য।
+
+### Join — ⋈
+
+- **Theta join:** `R ⋈_θ S = σ_θ(R × S)` — যেকোনো শর্ত।
+- **Equi join:** θ শুধু `=`।
+- **Natural join:** `R ⋈ S` — একই নামের সব attribute-এ সমান মান, ফলে সেই attribute একবারই থাকে।
+
+<Figure n={4} caption="Join = Cartesian product + selection (+ প্রয়োজনে projection)" alt="কাস্টমার ও অর্ডার টেবিল জোড়া হয়ে customer_id মেলে এমন সারিগুলো একত্রে দেখানো" wide>
+  <TableRow>
+    <TableView name="customers" columns={['customer_id', 'name']} rows={[[1, 'রহিম'], [2, 'করিম']]} compact />
+    <TableView name="orders" columns={['order_id', 'customer_id']} rows={[[10, 1], [11, 1], [12, 2]]} compact />
+    <TableView name="customers ⋈ orders" columns={['customer_id', 'name', 'order_id']} rows={[[1, 'রহিম', 10], [1, 'রহিম', 11], [2, 'করিম', 12]]} goodRows={[0, 1, 2]} compact />
+  </TableRow>
+</Figure>
+
+### Outer Join
+
+Inner join মিলহীন tuple ফেলে দেয়। Outer join রাখে, অপর পাশ NULL দিয়ে:
+
+- **Left outer ⟕** — বাঁ-পাশের সব tuple।
+- **Right outer ⟖** — ডান-পাশের সব।
+- **Full outer ⟗** — দুই পাশেরই সব।
+
+### Division — ÷
+
+`R ÷ S` — "R-এর যে অংশগুলো S-এর **সব** tuple-এর সাথে সম্পর্কিত"। R(A, B), S(B) হলে `R ÷ S` = সেই A-মান, যাদের জন্য S-এর প্রতিটি B-মান R-এ আছে।
+
+<Figure n={5} caption="Division: কোন ছাত্র সব আবশ্যিক কোর্সে ভর্তি? (ফল: A ও C)" alt="enrolled টেবিলে ছাত্র-কোর্স জোড়া, required টেবিলে DB ও OS, ফলাফলে A ও C" wide>
+  <TableRow>
+    <TableView name="enrolled (R)" columns={['student', 'course']} rows={[['A', 'DB'], ['A', 'OS'], ['B', 'DB'], ['C', 'DB'], ['C', 'OS']]} compact />
+    <TableView name="required (S)" columns={['course']} rows={[['DB'], ['OS']]} compact />
+    <TableView name="enrolled ÷ required" columns={['student']} rows={[['A'], ['C']]} goodRows={[0, 1]} compact />
+  </TableRow>
+</Figure>
+
+সূত্র: `R ÷ S = π_A(R) − π_A((π_A(R) × S) − R)`।
+
+### Extended: Aggregation — 𝒢 (বা γ)
+
+`_{গ্রুপ-attribute}𝒢_{F(attr)}(R)` — যেমন `_{city}𝒢_{COUNT(customer_id)}(customers)`। SQL-এর `GROUP BY`-এর অ্যালজেব্রিক রূপ।
+
+## Query Tree
+
+DBMS অ্যালজেব্রা এক্সপ্রেশনকে একটি গাছে সাজায় — পাতায় relation, ভেতরের নোডে অপারেশন। (অপটিমাইজেশনে এই গাছই বদলানো হয়, অধ্যায় ৩৭।)
+
+<Figure n={6} caption="π name, price (σ category_id = 5 (products ⋈ suppliers)) — এর query tree" alt="নিচে products ও suppliers, তার উপরে join, তার উপরে selection, সবার উপরে projection" wide>
+  <QueryTree />
+</Figure>
+
+## টেকনিক্যাল গভীরে: সমাধান-করা পরীক্ষার সমস্যা
+
+নিচের প্রতিটিতে অ্যালজেব্রা, তারপর সমতুল্য SQL (চালিয়ে দেখো)। ডাটা: `ledu_mart`।
+
+### সমস্যা ১ — দামি পণ্যের নাম ও দাম (দাম ৫০০-র বেশি)
+
+`π_{name, price}(σ_{price > 500}(products))`
+
+<SqlRunner initialQuery={`SELECT name, price FROM products WHERE price > 500;`} expectRows={3} minRows={1} />
+
+### সমস্যা ২ — কাস্টমারদের ভিন্ন ভিন্ন শহর
+
+`π_{city}(customers)` — ডুপ্লিকেট আপনাআপনি বাদ; SQL-এ `DISTINCT` লাগে।
+
+<SqlRunner initialQuery={`SELECT DISTINCT city FROM customers;`} expectRows={4} minRows={1} />
+
+### সমস্যা ৩ — যে কাস্টমার সাভারে থাকে এবং অর্ডার দিয়েছে (Intersection)
+
+`π_{customer_id}(σ_{city='সাভার'}(customers)) ∩ π_{customer_id}(orders)`
+
+<SqlRunner initialQuery={`SELECT customer_id FROM customers WHERE city = 'সাভার'
+INTERSECT
+SELECT customer_id FROM orders;`} expectRows={8} minRows={3} />
+
+### সমস্যা ৪ — যারা কখনো অর্ডার দেয়নি (Difference)
+
+`π_{customer_id}(customers) − π_{customer_id}(orders)`
+
+<SqlRunner initialQuery={`SELECT customer_id FROM customers
+EXCEPT
+SELECT customer_id FROM orders;`} expectRows={7} minRows={3} />
+
+(MySQL-এ `EXCEPT`-এর জায়গায় `NOT IN`/`LEFT JOIN … IS NULL`; Oracle-এ `MINUS`।)
+
+### সমস্যা ৫ — যে কাস্টমারের অর্ডার বাতিল হয়েছে, তার নাম (Natural/equi join)
+
+`π_{name}(customers ⋈ σ_{status='CANCELLED'}(orders))`
+
+<SqlRunner initialQuery={`SELECT DISTINCT c.name
+FROM customers c
+JOIN orders o ON o.customer_id = c.customer_id
+WHERE o.status = 'CANCELLED';`} expectRows={2} minRows={4} />
+
+### সমস্যা ৬ — যে পণ্য কখনো বিক্রি হয়নি
+
+`π_{product_id}(products) − π_{product_id}(order_items)` — তারপর নাম জানতে products-এর সাথে join।
+
+<SqlRunner initialQuery={`SELECT p.name
+FROM products p
+WHERE p.product_id IN (
+  SELECT product_id FROM products
+  EXCEPT
+  SELECT product_id FROM order_items
+);`} expectRows={3} minRows={6} />
+
+### সমস্যা ৭ — Division: সব আবশ্যিক কোর্সে ভর্তি ছাত্র
+
+`enrolled ÷ required`। SQL-এ divison সরাসরি নেই — ডাবল `NOT EXISTS`:
+
+<SqlRunner initialQuery={`WITH enrolled(student, course) AS (
+  VALUES ('A','DB'), ('A','OS'), ('B','DB'), ('C','DB'), ('C','OS')
+), required(course) AS (
+  VALUES ('DB'), ('OS')
+)
+SELECT DISTINCT e.student
+FROM enrolled e
+WHERE NOT EXISTS (
+  SELECT r.course FROM required r
+  WHERE NOT EXISTS (
+    SELECT 1 FROM enrolled x
+    WHERE x.student = e.student AND x.course = r.course
+  )
+);`} expectRows={2} minRows={16} />
+
+### সমস্যা ৮ — Rename ও self-join: কর্মী ও তার ম্যানেজার
+
+`π_{e.name, m.name}(ρ_e(employees) ⋈_{e.manager_id = m.employee_id} ρ_m(employees))`
+
+<SqlRunner initialQuery={`SELECT e.name AS employee, m.name AS manager
+FROM employees e
+JOIN employees m ON e.manager_id = m.employee_id;`} expectRows={11} minRows={3} />
+
+এগারো সারি — লেদু (manager NULL) inner join-এ বাদ। Outer join দিলে ১২।
+
+### সমস্যা ৯ — Cartesian product-এর মাপ
+
+`customers × stores`: degree = ৭ + ৪ = **১১**, cardinality = ২০ × ৩ = **৬০**।
+
+<SqlRunner initialQuery={`SELECT COUNT(*) AS rows_in_product
+FROM customers CROSS JOIN stores;`} expectRows={1} minRows={2} />
+
+## ফটকার ভুল
+
+<Dialogue who="fotka">
+Projection করলে সারি তো একই থাকে, শুধু কলাম কমে। তাই সারি সংখ্যা সবসময় সমান!
+</Dialogue>
+
+<Dialogue who="kodom">
+ফটকা, অ্যালজেব্রায় relation সেট। শুধু `city` কলাম রাখলে বিশটা সারি কমে মাত্র চারটি দাঁড়াবে — ডুপ্লিকেট চলে যায়। (SQL-এ `DISTINCT` না দিলে থেকে যায়।)
+</Dialogue>
+
+- **π-তে ডুপ্লিকেট থাকে ভাবা** — অ্যালজেব্রায় নয়, SQL-এ হ্যাঁ।
+- **σ ও WHERE গুলিয়ে π-এর সাথে** — SQL-এর `SELECT` = π, `WHERE` = σ (নাম উল্টো মনে হয়!)।
+- **R − S আর S − R এক ভাবা**।
+- **Union-compatibility ভুলে যাওয়া**।
+- **Natural join-এ আকস্মিক একই-নামের কলাম ধরা** (যেমন দুই টেবিলেই `name`) — অপ্রত্যাশিত join।
+
+## পরীক্ষার টিপস
+
+<Callout type="exam">
+**লিখিত:** "…এর relational algebra লেখো" — প্রায় নিশ্চিত। কৌশল: (১) প্রয়োজনীয় টেবিল চিহ্নিত, (২) join, (৩) σ, (৪) শেষে π। "সব ... যে" → division বা ডাবল-negation। "কখনো করেনি" → difference। **গণনা:** ×-এর degree/cardinality; join-এ সর্বোচ্চ/সর্বনিম্ন সারি। **MCQ ট্র্যাপ:** (১) মৌলিক ৬টি: σ, π, ∪, −, ×, ρ — ∩, ⋈, ÷ নয়। (২) π সেট — ডুপ্লিকেট নেই। (৩) Natural join = equi-join + ডুপ্লিকেট কলাম বাদ।
+</Callout>
+
+<Summary>
+- Relational algebra = relation-এর উপর procedural query ভাষা; SQL-এর ভেতরের রূপ।
+- মৌলিক ৬: σ (সারি), π (কলাম, ডুপ্লিকেট বাদ), ∪, −, ×, ρ। উদ্ভূত: ∩, ⋈, ÷।
+- Join: theta, equi, natural; outer: ⟕ ⟖ ⟗।
+- "সব…" প্রশ্নে division; "কখনো না" প্রশ্নে difference।
+- Query tree = অ্যালজেব্রা এক্সপ্রেশনের গাছ; অপটিমাইজারের ভিত্তি।
+</Summary>
+
+## কুইজ
+
+<Quiz questions={questions} />
+
+## অনুশীলন
+
+<Exercise n={1}>
+`products`-এ দাম ১০০-এর বেশি এমন পণ্যের নাম ও ইউনিট দেখানোর অ্যালজেব্রা ও SQL লেখো।
+
+<Answer>
+`π_{name, unit}(σ_{price > 100}(products))`
+
+```sql
+SELECT name, unit FROM products WHERE price > 100;
+```
+</Answer>
+</Exercise>
+
+<Exercise n={2}>
+`R(A,B,C)` (degree ৩, ৪টি tuple) ও `S(D,E)` (degree ২, ৫টি tuple)-এর জন্য `R × S`-এর degree ও cardinality কত?
+
+<Answer>
+Degree = ৩ + ২ = ৫; cardinality = ৪ × ৫ = ২০।
+</Answer>
+</Exercise>
+
+<Exercise n={3}>
+যে কাস্টমার অর্ডার দিয়েছে কিন্তু কোনোটিই বাতিল হয়নি — তাদের `customer_id` বের করার অ্যালজেব্রা লেখো।
+
+<Answer>
+`π_{customer_id}(orders) − π_{customer_id}(σ_{status='CANCELLED'}(orders))`
+
+```sql
+SELECT customer_id FROM orders
+EXCEPT
+SELECT customer_id FROM orders WHERE status = 'CANCELLED';
+```
+</Answer>
+</Exercise>
+
+<Exercise n={4}>
+কোন কাস্টমার *সব* ধরনের payment method (bKash, Nagad, Cash, Card) ব্যবহার করেছে — কোন অপারেশন লাগবে? (ইঙ্গিত: "সব")
+
+<Answer>
+Division। `π_{customer_id, method}(orders ⋈ payments) ÷ π_{method}(payments)` — বাস্তবে ডাটায় এমন কাস্টমার থাকবে না হয়তো; উদ্দেশ্য কৌশল শেখা: "সব"-র শর্তে division/ডাবল NOT EXISTS।
+</Answer>
+</Exercise>

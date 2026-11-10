@@ -1,0 +1,211 @@
+import { ch06 as questions } from '@/content/quizzes/phase2a';
+
+## গল্প: সুতোর জট
+
+লেদু এবার জিনিসগুলো জোড়া দিতে বসল। কাস্টমার অর্ডার দেয় — ঠিক আছে। কিন্তু একটা অর্ডারে তিনটি পণ্য, আবার সেই একই পণ্য অন্য একশো অর্ডারেও। সুতো টানতে টানতে সব জট পাকিয়ে গেল!
+
+<StoryImage name="relationship-knots" n={1} caption="সম্পর্কের সুতো জট পাকালে মাঝে একটা নতুন গিঁট (টেবিল) লাগে" alt="লেদু সুতোয় জড়ানো, মিনু বলছে M:N সম্পর্কে মাঝে আরেকটা টেবিল লাগে" />
+
+<Dialogue who="minu">
+লেদুভাই, এটা পরীক্ষার সবচেয়ে প্রিয় প্রশ্ন! সম্পর্ক তিন দিক থেকে বুঝতে হয়: কতজন জড়িত (degree), কতগুলোর সাথে (cardinality), আর বাধ্যতামূলক কিনা (participation)।
+</Dialogue>
+
+## সমস্যাটা আসলে কী
+
+Entity আলাদা আলাদা পড়ে থাকলে ডাটাবেস অর্থহীন। বাস্তব ব্যবসার প্রাণ হলো সম্পর্ক: কে কার অর্ডার দিল, কোন পণ্য কোন সরবরাহকারীর। ঠিকভাবে সম্পর্ক ধরতে না পারলে ভুল টেবিল-নকশা তৈরি হয়।
+
+## কদম চাচার ক্লাস
+
+### Relationship ও Relationship Set
+
+- <KeyTerm en="Relationship" bn="রিলেশনশিপ">এক বা একাধিক entity-র মধ্যে সংযোগ</KeyTerm> — "রহিম অর্ডার #১ দিয়েছে"।
+- <KeyTerm en="Relationship Set" bn="রিলেশনশিপ সেট">একই ধরনের relationship-এর সংগ্রহ</KeyTerm> — `places`। Chen-এ হীরা।
+
+একই entity set কখনো কখনো একই সম্পর্কে একাধিক **role** পালন করে (manager / subordinate)।
+
+### Degree — কয়টি entity set জড়িত
+
+- **Unary (degree ১, recursive):** একই entity set নিজের সাথে — `Employee supervises Employee`।
+- **Binary (degree ২):** দুটি — সবচেয়ে সাধারণ; `Customer places Order`।
+- **Ternary (degree ৩):** তিনটি — `Supplier supplies Product to Store`।
+
+<Figure n={2} caption="Unary: Employee ও তার manager — একই entity set দুই role-এ" alt="Employee এন্টিটির supervises সম্পর্ক, যেখানে একই এন্টিটি manager ও subordinate দুই role-এ যুক্ত" wide>
+  <Erd d="relUnaryErd" />
+</Figure>
+
+<Figure n={3} caption="Ternary: একই সাথে Supplier, Product ও Store জড়িত; সম্পর্কের নিজস্ব attribute আছে (quantity, supply_date)" alt="Supplier, Product ও Store এন্টিটি supplies সম্পর্কে যুক্ত; সম্পর্কের quantity ও supply_date attribute আছে" wide>
+  <Erd d="relTernaryErd" />
+</Figure>
+
+<Callout type="note" title="Ternary ভেঙে দুটি binary করা যায় কি?">
+সবসময় নয়। "কোন সরবরাহকারী কোন স্টোরে কোন পণ্য কত পরিমাণে দিল" — তিনটি একসাথে না জানলে তথ্য হারায়। তবে তিনটি আলাদা binary দিয়ে প্রায়ই অর্থ বদলে যায়; তাই ternary দরকার হয়। (বিস্তারিত নরমালাইজেশনে, 4NF/5NF।)
+</Callout>
+
+### Cardinality Ratio
+
+একটি entity set-এর কয়টি entity অন্য সেটের কতগুলোর সাথে যুক্ত হতে পারে:
+
+- **1:1** — একজন রাইডারের একটিই নির্ধারিত বাইক, একটি বাইক একজনেরই।
+- **1:N** — একজন কাস্টমার অনেক অর্ডার দেয়, একটি অর্ডার একজনের।
+- **M:N** — অর্ডার ও পণ্য।
+
+<Figure n={4} caption="১:১ সম্পর্ক — Rider rides Bike" alt="Rider ও Bike এন্টিটির মধ্যে rides সম্পর্ক, দুই দিকেই ১" wide>
+  <Erd d="rel11Erd" />
+</Figure>
+
+আমাদের মূল ERD-র ধাপ ২: কাস্টমার–অর্ডার (1:N), অর্ডার–পণ্য (M:N, `quantity`সহ), ক্যাটাগরি–পণ্য (1:N), সরবরাহকারী–পণ্য (1:N):
+
+<Figure n={5} caption="ধাপ ২ — Chen: সম্পর্কসহ লেদু মার্ট। 'quantity' সম্পর্কের নিজস্ব attribute" alt="Customer, Order, Product, Category ও Supplier এন্টিটি এবং places, contains, belongs_to, supplies সম্পর্ক" wide>
+  <Erd d="leduStep6" />
+</Figure>
+
+### Participation (অংশগ্রহণ)
+
+- **Total participation (বাধ্যতামূলক):** সেটের *প্রতিটি* entity অন্তত একটি সম্পর্কে থাকবে — Chen-এ **ডবল লাইন**। প্রতিটি অর্ডারের একজন কাস্টমার থাকতেই হবে।
+- **Partial participation:** কেউ কেউ নাও থাকতে পারে — একক লাইন। একজন কাস্টমার এখনো কোনো অর্ডার না-ও দিতে পারে।
+
+### (min, max) নোটেশন
+
+লাইনের গায়ে `(min,max)`: `(0,N)` — অংশগ্রহণ ঐচ্ছিক, অনেক হতে পারে (partial, many); `(1,1)` — ঠিক একটি, বাধ্যতামূলক; `(1,N)` — অন্তত একটি। ডায়াগ্রামের চেকবক্স "(min,max) নোটেশন" চালু করে দেখো।
+
+<Callout type="warning" title="দুই নোটেশনে min-এর দিক আলাদা!">
+Chen-এ (Elmasri) `(min,max)` লাইনের পাশের entity-র নিজের অংশগ্রহণ বোঝায়। Crow's Foot-এ প্রান্তের চিহ্ন *অপর প্রান্তের* entity-র সাপেক্ষে পড়তে হয়। পরীক্ষায় যে বইয়ের নিয়ম, সেটা ধরে চলো।
+</Callout>
+
+### Weak Entity ও Identifying Relationship
+
+<KeyTerm en="Weak Entity" bn="উইক এন্টিটি">নিজস্ব পূর্ণ key নেই; অন্য একটি owner (strong) entity-র সাহায্যে চেনা যায়</KeyTerm>। বৈশিষ্ট্য:
+
+- Chen-এ **দ্বিগুণ আয়তক্ষেত্র**; সংযোগী সম্পর্ক **দ্বিগুণ হীরা** (identifying relationship)।
+- নিজের **partial key (discriminator)** আছে — ড্যাশ আন্ডারলাইন।
+- Weak entity-র participation identifying সম্পর্কে **total**।
+- পূর্ণ key = owner-এর key + partial key।
+
+<Figure n={6} caption="Weak entity: Order_Item চেনা যায় order_id + line_no দিয়ে" alt="Order এবং দ্বিগুণ আয়তক্ষেত্রের Order_Item এন্টিটি, মাঝে দ্বিগুণ হীরার has সম্পর্ক এবং line_no partial key" wide>
+  <Erd d="weakEntityErd" />
+</Figure>
+
+### Relationship-এর Attribute
+
+সম্পর্কেরও attribute থাকে। `contains`-এর `quantity` অর্ডারের নয়, পণ্যেরও নয় — *এই অর্ডারে এই পণ্য কত*। 1:N সম্পর্কের attribute N-দিকের entity-তে সরানো যায়; কিন্তু **M:N-এর attribute সরানো যায় না**।
+
+## টেকনিক্যাল গভীরে
+
+### Structural constraint-এর সারসংক্ষেপ
+
+| ধারণা | প্রশ্ন | মান |
+|---|---|---|
+| Cardinality ratio | সর্বোচ্চ কতগুলোর সাথে? | 1:1, 1:N, M:N |
+| Participation | সর্বনিম্ন কতটি? | total (min=1) / partial (min=0) |
+| (min,max) | একসাথে দুটো | (0,1), (1,1), (0,N), (1,N) |
+
+### রিলেশনাল স্কিমায় এক ঝলক (অধ্যায় ৮-এ পূর্ণ নিয়ম)
+
+- 1:N → N-দিকের টেবিলে foreign key (`orders.customer_id`)।
+- M:N → আলাদা সংযোগ-টেবিল (`order_items(order_id, product_id, quantity)`)।
+- 1:1 → যেকোনো একদিকে foreign key + UNIQUE (`deliveries.order_id UNIQUE`)।
+
+## হাতে-কলমে
+
+**1:N** — কাস্টমারপ্রতি অর্ডার গোনা (বাঁয়ের টেবিলের সবাই আসে, অর্ডার না থাকলে ০):
+
+<SqlRunner initialQuery={`SELECT c.name, COUNT(o.order_id) AS orders
+FROM customers c
+LEFT JOIN orders o ON o.customer_id = c.customer_id
+GROUP BY c.customer_id
+ORDER BY orders DESC
+LIMIT 5;`} expectRows={5} minRows={6} />
+
+**M:N** — অর্ডার #১-এ কোন পণ্য কত পরিমাণে (সংযোগ-টেবিল `order_items` দিয়ে):
+
+<SqlRunner initialQuery={`SELECT o.order_id, p.name, oi.quantity, oi.unit_price
+FROM order_items oi
+JOIN orders o   ON o.order_id = oi.order_id
+JOIN products p ON p.product_id = oi.product_id
+WHERE o.order_id = 1;`} expectRows={3} minRows={5} />
+
+**Unary** — কর্মী ও তার ম্যানেজার (self join):
+
+<SqlRunner initialQuery={`SELECT e.name AS employee, m.name AS manager
+FROM employees e
+LEFT JOIN employees m ON m.employee_id = e.manager_id;`} expectRows={12} minRows={3} />
+
+বারোজন কর্মীর মধ্যে লেদু নিজে প্রতিষ্ঠাতা — তার ম্যানেজার NULL। **1:1** — `deliveries.order_id`-এ UNIQUE থাকায় একটি অর্ডারের ডেলিভারি একটিই; এটি ভাঙার চেষ্টা:
+
+<SqlRunner initialQuery={`INSERT INTO deliveries (delivery_id, order_id, rider_id, status)
+VALUES (100, 1, 1, 'ON_THE_WAY');`} expectError minRows={3} />
+
+UNIQUE constraint failed — অর্ডার #১-এর ডেলিভারি আগে থেকেই আছে।
+
+## ফটকার ভুল
+
+<Dialogue who="fotka">
+অর্ডার আর পণ্যের মধ্যে সম্পর্ক? সহজ! `orders` টেবিলে `product1, product2, product3` কলাম রাখি!
+</Dialogue>
+
+<Dialogue who="kodom">
+আর চার নম্বর পণ্য কিনলে? নতুন কলাম? আর কোন অর্ডারে "মরিচ গুঁড়া" ছিল খুঁজতে তিনটা কলামেই খুঁজবে? M:N-কে কখনো কলাম দিয়ে সামলানো যায় না — সংযোগ-টেবিল লাগবেই।
+</Dialogue>
+
+- **M:N-কে 1:N-এর মতো ট্রিট করা** — repeating group কলাম, 1NF ভঙ্গ।
+- **Cardinality-র দিক উল্টে পড়া** — "Customer : Order = 1:N" অর্থাৎ কাস্টমারের দিকে ১।
+- **Weak entity-কে সাধারণ entity ভাবা** — owner ছাড়া ঝুলে থাকে।
+- **Participation ও cardinality গুলিয়ে ফেলা** — একটা সর্বোচ্চ সংখ্যা, অন্যটা ন্যূনতম বাধ্যবাধকতা।
+
+## পরীক্ষার টিপস
+
+<Callout type="exam">
+**লিখিত:** (১) Degree, cardinality, participation ব্যাখ্যা + চিত্র। (২) Weak entity ও strong entity-র পার্থক্য। (৩) প্রদত্ত বর্ণনা থেকে ERD আঁকা: "একজন শিক্ষক অনেক কোর্স পড়ান; একটি কোর্স একজনই পড়ান; শিক্ষক বিভাগে কাজ করেন…" — প্রতিটি বাক্য থেকে একটি সম্পর্ক ও কার্ডিনালিটি টুকে নাও। **MCQ ট্র্যাপ:** Ternary সম্পর্ক ভেঙে সবসময় binary করা যায় না; M:N-এর attribute সম্পর্কেরই।
+</Callout>
+
+<Summary>
+- Relationship = entity-দের সংযোগ। Degree: unary, binary, ternary।
+- Cardinality: 1:1, 1:N, M:N। Participation: total (ডবল লাইন) বা partial।
+- (min,max) = participation ও cardinality একসাথে।
+- Weak entity: owner + identifying relationship (দ্বিগুণ হীরা) + partial key।
+- সম্পর্কের নিজস্ব attribute থাকতে পারে; M:N-এর attribute সংযোগ-টেবিলে যায়।
+</Summary>
+
+## কুইজ
+
+<Quiz questions={questions} />
+
+## অনুশীলন
+
+<Exercise n={1}>
+নিচের প্রতিটির কার্ডিনালিটি বলো: (ক) Store–Employee (এক স্টোরে অনেক কর্মী, এক কর্মী এক স্টোরে); (খ) Customer–Product (পছন্দের তালিকা); (গ) Order–Payment (এক অর্ডারে একাধিক পেমেন্ট করা যায়)।
+
+<Answer>
+(ক) Store : Employee = 1:N। (খ) M:N — অনেক কাস্টমার অনেক পণ্য পছন্দ করে। (গ) Order : Payment = 1:N।
+</Answer>
+</Exercise>
+
+<Exercise n={2}>
+`Order_Item` কেন weak entity? এর পূর্ণ key কী?
+
+<Answer>
+`line_no` একা অর্ডার-ভেদে রিপিট হয়, তাই একা key নয়; অর্ডার ছাড়া এর অস্তিত্ব অর্থহীন। পূর্ণ key = `(order_id, line_no)`। (আমাদের `ledu_mart`-এ সুবিধার জন্য `order_items`-এর key `(order_id, product_id)`।)
+</Answer>
+</Exercise>
+
+<Exercise n={3}>
+প্রতিটি ডেলিভারির রাইডারের নাম দেখাও (`deliveries` ও `riders` জোড়া দিয়ে), প্রথম ৫টি সারি।
+
+<Answer>
+```sql
+SELECT d.delivery_id, d.order_id, r.name AS rider
+FROM deliveries d
+JOIN riders r ON r.rider_id = d.rider_id
+ORDER BY d.delivery_id
+LIMIT 5;
+```
+</Answer>
+</Exercise>
+
+<Exercise n={4}>
+"একজন ডাক্তার অনেক রোগী দেখেন, একজন রোগী অনেক ডাক্তারকে দেখান; প্রতিবার তারিখ ও রোগনির্ণয় লেখা হয়" — এটি কোন সম্পর্ক, এবং `visit_date` ও `diagnosis` কোথায় যাবে?
+
+<Answer>
+M:N সম্পর্ক (`consults`)। `visit_date` ও `diagnosis` সম্পর্কের attribute — রিলেশনাল স্কিমায় সংযোগ-টেবিল `consults(patient_id, doctor_id, visit_date, diagnosis)`-এ যাবে, কোনো একটি entity-র টেবিলে নয়।
+</Answer>
+</Exercise>
